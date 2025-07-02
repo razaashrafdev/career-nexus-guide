@@ -1,12 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Users, BookOpen, Star, CheckCircle, Target, Brain, TrendingUp, Award, Globe, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Building2, Zap, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+  return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex justify-between items-center">
@@ -25,7 +22,7 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
+      <section className="container mx-auto px-4 text-center py-[64px]">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
             Discover Your Perfect Career Path with AI
@@ -192,20 +189,7 @@ const Index = () => {
         </div>
 
         {/* Featured Success Story */}
-        <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100">
-          <div className="flex items-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-6">
-              JS
-            </div>
-            <div>
-              <h4 className="text-xl font-bold text-gray-800">Jessica Smith</h4>
-              <p className="text-purple-600 font-medium">Marketing Graduate → Senior UX Designer at Google</p>
-            </div>
-          </div>
-          <blockquote className="text-lg text-gray-700 italic leading-relaxed">
-            "I was completely lost after graduation with a marketing degree I wasn't passionate about. CareerCompass revealed my hidden talents in design and user psychology. Within 6 months, I had built a portfolio, completed a bootcamp, and landed my dream job at Google. The AI counselor was like having a personal career coach available 24/7."
-          </blockquote>
-        </div>
+        
       </section>
 
       {/* Powerful Features */}
@@ -278,9 +262,7 @@ const Index = () => {
           <Card className="border-0 shadow-lg bg-white">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
+                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
               </div>
               <p className="text-gray-600 mb-4">
                 "CareerCompass helped me discover my passion for UX design. The personality test was incredibly accurate, and I landed my dream internship at a tech startup!"
@@ -300,9 +282,7 @@ const Index = () => {
           <Card className="border-0 shadow-lg bg-white">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
+                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
               </div>
               <p className="text-gray-600 mb-4">
                 "The AI counselor gave me amazing step-by-step guidance on switching from marketing to data science. The skill gap analysis was spot-on!"
@@ -322,9 +302,7 @@ const Index = () => {
           <Card className="border-0 shadow-lg bg-white">
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
+                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
               </div>
               <p className="text-gray-600 mb-4">
                 "I was completely lost after graduation, but this platform opened my eyes to careers I never considered. Now I'm thriving as a product manager!"
@@ -381,7 +359,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/signup">
-              <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-purple-600 px-8 py-6 text-lg font-semibold">
+              <Button size="lg" variant="outline" className="border-2 border-white hover:bg-white px-8 py-6 text-lg font-semibold text-purple-600">
                 Create Account
               </Button>
             </Link>
@@ -468,11 +446,7 @@ const Index = () => {
               <div className="mt-6">
                 <h5 className="text-sm font-semibold mb-2 text-white">Newsletter</h5>
                 <div className="flex">
-                  <input 
-                    type="email" 
-                    placeholder="Your email" 
-                    className="bg-gray-800 text-white px-3 py-2 rounded-l-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500"
-                  />
+                  <input type="email" placeholder="Your email" className="bg-gray-800 text-white px-3 py-2 rounded-l-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500" />
                   <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-md rounded-l-none">
                     Subscribe
                   </Button>
@@ -497,8 +471,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
