@@ -1,9 +1,12 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Users, BookOpen, Star, CheckCircle, Target, Brain, TrendingUp, Award, Globe, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Building2, Zap, Shield } from "lucide-react";
+import { ArrowRight, Users, BookOpen, Star, CheckCircle, Target, Brain, TrendingUp, Award, Globe, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Building2, Zap, Shield, Play, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
+
 const Index = () => {
-  return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex justify-between items-center">
@@ -96,108 +99,165 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Success Stories Section - Redesigned */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-800 mb-6">Success Stories That Inspire</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover how our AI-powered platform has transformed careers and helped students achieve their professional goals
+      {/* Success Stories Section - Enhanced */}
+      <section className="container mx-auto px-4 py-20 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-purple-500 rounded-full"></div>
+          <div className="absolute top-32 right-20 w-16 h-16 bg-blue-500 rounded-full"></div>
+          <div className="absolute bottom-20 left-32 w-12 h-12 bg-indigo-500 rounded-full"></div>
+          <div className="absolute bottom-40 right-10 w-24 h-24 bg-purple-400 rounded-full"></div>
+        </div>
+
+        <div className="text-center mb-16 relative z-10">
+          <div className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full mb-6">
+            <Award className="h-5 w-5 text-purple-600 mr-2" />
+            <span className="text-sm font-semibold text-purple-800">Success Stories</span>
+          </div>
+          <h2 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            Transforming <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Careers</span>,
+            <br />Inspiring <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Dreams</span>
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Discover how thousands of students have transformed their career trajectories with our AI-powered platform
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-          {/* Left side - Key metrics */}
-          <div className="space-y-8">
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                  <CheckCircle className="h-6 w-6 text-white" />
+        {/* Main Stats Grid */}
+        <div className="grid lg:grid-cols-3 gap-8 mb-16 relative z-10">
+          {/* Left Column - Big Impact */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 border border-green-100 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center">
+                  <TrendingUp className="h-8 w-8 text-white" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">89% Success Rate</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Students who complete our assessment and follow recommendations successfully transition to aligned careers within 8 months
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">47% Salary Increase</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Average income improvement reported by graduates who followed their personalized career paths
-                  </p>
+                <div className="text-right">
+                  <div className="text-4xl font-bold text-green-700 mb-1">89%</div>
+                  <div className="text-sm text-green-600 font-medium">Success Rate</div>
                 </div>
               </div>
+              <p className="text-gray-700 leading-relaxed">
+                Students who complete our assessment successfully transition to aligned careers within 8 months
+              </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                  <Award className="h-6 w-6 text-white" />
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center">
+                  <Globe className="h-8 w-8 text-white" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">Global Recognition</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Trusted by Fortune 500 companies and featured in universities across 50+ countries worldwide
-                  </p>
+                <div className="text-right">
+                  <div className="text-4xl font-bold text-blue-700 mb-1">50+</div>
+                  <div className="text-sm text-blue-600 font-medium">Countries</div>
+                </div>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                Trusted by universities and Fortune 500 companies worldwide
+              </p>
+            </div>
+          </div>
+
+          {/* Center Column - Featured Testimonial */}
+          <div className="lg:col-span-1">
+            <div className="bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl p-8 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 h-full flex flex-col justify-center relative overflow-hidden">
+              {/* Background Quote Icon */}
+              <Quote className="absolute top-6 right-6 h-24 w-24 text-white/10" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center mb-6">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400 mr-1" />
+                  ))}
+                </div>
+                
+                <blockquote className="text-xl leading-relaxed mb-8 font-medium">
+                  "CareerCompass didn't just help me find a job—it helped me discover my purpose. The AI analysis revealed strengths I never knew I had."
+                </blockquote>
+                
+                <div className="flex items-center">
+                  <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold mr-4">
+                    E
+                  </div>
+                  <div>
+                    <p className="font-semibold text-lg">Emily Rodriguez</p>
+                    <p className="text-purple-200">Psychology → UX Designer</p>
+                    <p className="text-purple-300 text-sm mt-1">Google, San Francisco</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right side - Statistics */}
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">94%</div>
-              <div className="text-sm text-gray-600 font-medium">Job Satisfaction</div>
-              <div className="text-xs text-gray-500 mt-1">Feel fulfilled in new careers</div>
+          {/* Right Column - Key Metrics */}
+          <div className="lg:col-span-1 space-y-6">
+            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl p-8 border border-orange-100 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center">
+                  <Zap className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-right">
+                  <div className="text-4xl font-bold text-orange-700 mb-1">47%</div>
+                  <div className="text-sm text-orange-600 font-medium">Salary Increase</div>
+                </div>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                Average income improvement reported by our graduates
+              </p>
             </div>
-            
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">5.2</div>
-              <div className="text-sm text-gray-600 font-medium">Months Average</div>
-              <div className="text-xs text-gray-500 mt-1">Assessment to job offer</div>
-            </div>
-            
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">750+</div>
-              <div className="text-sm text-gray-600 font-medium">Partner Companies</div>
-              <div className="text-xs text-gray-500 mt-1">Actively hiring graduates</div>
-            </div>
-            
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">99%</div>
-              <div className="text-sm text-gray-600 font-medium">Recommend Us</div>
-              <div className="text-xs text-gray-500 mt-1">Would use again</div>
+
+            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-100 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                  <Building2 className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-right">
+                  <div className="text-4xl font-bold text-purple-700 mb-1">750+</div>
+                  <div className="text-sm text-purple-600 font-medium">Partners</div>
+                </div>
+              </div>
+              <p className="text-gray-700 leading-relaxed">
+                Companies actively hiring our certified graduates
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Featured testimonial */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-8 text-white text-center">
-          <div className="max-w-3xl mx-auto">
-            <div className="mb-6">
-              {[...Array(5)].map((_, i) => <Star key={i} className="inline h-5 w-5 fill-yellow-400 text-yellow-400 mr-1" />)}
-            </div>
-            <blockquote className="text-xl leading-relaxed mb-6">
-              "CareerCompass completely changed my perspective on career planning. The AI analysis was incredibly accurate, and within 6 months, I landed my dream job as a UX Designer. The personalized learning path made all the difference."
-            </blockquote>
-            <div className="flex items-center justify-center space-x-4">
-              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-lg font-bold">
-                E
-              </div>
-              <div>
-                <p className="font-semibold">Emily Rodriguez</p>
-                <p className="text-purple-200">Psychology Graduate → UX Designer</p>
-              </div>
-            </div>
+        {/* Bottom Stats Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
+            <div className="text-3xl font-bold text-purple-600 mb-2">94%</div>
+            <div className="text-sm text-gray-600 font-medium">Job Satisfaction</div>
+            <div className="text-xs text-gray-500 mt-1">Feel fulfilled in new roles</div>
           </div>
+          
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
+            <div className="text-3xl font-bold text-blue-600 mb-2">5.2</div>
+            <div className="text-sm text-gray-600 font-medium">Months Average</div>
+            <div className="text-xs text-gray-500 mt-1">Assessment to job offer</div>
+          </div>
+          
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
+            <div className="text-3xl font-bold text-indigo-600 mb-2">99%</div>
+            <div className="text-sm text-gray-600 font-medium">Recommend Us</div>
+            <div className="text-xs text-gray-500 mt-1">Would use again</div>
+          </div>
+          
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
+            <div className="text-3xl font-bold text-green-600 mb-2">3.8M</div>
+            <div className="text-sm text-gray-600 font-medium">Assessments</div>
+            <div className="text-xs text-gray-500 mt-1">Completed globally</div>
+          </div>
+        </div>
+
+        {/* CTA Button */}
+        <div className="text-center mt-16 relative z-10">
+          <Link to="/personality-test">
+            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-6 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
+              <Play className="mr-3 h-5 w-5" />
+              Start Your Success Story
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -382,9 +442,9 @@ const Index = () => {
       {/* Enhanced Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Brand Section */}
-            <div className="md:col-span-1">
+            <div className="lg:col-span-1">
               <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
                 CareerCompass
               </div>
@@ -436,27 +496,31 @@ const Index = () => {
               <h4 className="text-lg font-semibold mb-4 text-white">Contact</h4>
               <ul className="space-y-3 text-gray-400">
                 <li className="flex items-center">
-                  <Mail className="h-4 w-4 mr-2" />
-                  <a href="mailto:support@careercompass.com" className="hover:text-purple-400 transition-colors">
+                  <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <a href="mailto:support@careercompass.com" className="hover:text-purple-400 transition-colors break-all">
                     support@careercompass.com
                   </a>
                 </li>
                 <li className="flex items-center">
-                  <Phone className="h-4 w-4 mr-2" />
+                  <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
                   <a href="tel:+1-555-0123" className="hover:text-purple-400 transition-colors">
                     +1 (555) 012-3456
                   </a>
                 </li>
                 <li className="flex items-center">
-                  <MapPin className="h-4 w-4 mr-2" />
+                  <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
                   <span>San Francisco, CA</span>
                 </li>
               </ul>
               <div className="mt-6">
                 <h5 className="text-sm font-semibold mb-2 text-white">Newsletter</h5>
-                <div className="flex">
-                  <input type="email" placeholder="Your email" className="bg-gray-800 text-white px-3 py-2 rounded-l-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500" />
-                  <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-md rounded-l-none">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input 
+                    type="email" 
+                    placeholder="Your email" 
+                    className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" 
+                  />
+                  <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-sm whitespace-nowrap">
                     Subscribe
                   </Button>
                 </div>
@@ -466,20 +530,21 @@ const Index = () => {
 
           {/* Bottom Footer */}
           <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-gray-400 text-sm mb-4 md:mb-0">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-gray-400 text-sm text-center md:text-left">
                 © 2025 CareerCompass. All rights reserved.
               </div>
-              <div className="flex space-x-6 text-sm text-gray-400">
+              <div className="flex flex-wrap justify-center md:justify-end gap-4 sm:gap-6 text-sm text-gray-400">
                 <Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link>
                 <Link to="/terms" className="hover:text-purple-400 transition-colors">Terms of Service</Link>
                 <Link to="/cookie-policy" className="hover:text-purple-400 transition-colors">Cookie Policy</Link>
-                <Link to="/accessibility" className="hover:text-purple-400 transition-colors">Accessibility</Link>
               </div>
             </div>
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
