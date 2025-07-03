@@ -1,392 +1,247 @@
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Users, BookOpen, Star, CheckCircle, Target, Brain, TrendingUp, Award, Globe, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Building2, Zap, Shield, Play, Quote } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { 
+  ArrowRight, 
+  CheckCircle, 
+  Star, 
+  Users, 
+  TrendingUp, 
+  Award, 
+  BookOpen,
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram
+} from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import MobileNavbar from "@/components/MobileNavbar";
+
 const Index = () => {
-  return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+  const location = useLocation();
+
+  // Scroll to top when route changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
+  const features = [
+    {
+      icon: <CheckCircle className="h-6 w-6" />,
+      title: "Personality Assessment",
+      description: "Discover your unique personality type and career preferences"
+    },
+    {
+      icon: <TrendingUp className="h-6 w-6" />,
+      title: "Career Matching",
+      description: "Get matched with careers that align with your personality and skills"
+    },
+    {
+      icon: <Award className="h-6 w-6" />,
+      title: "Skills Analysis",
+      description: "Identify your strengths and areas for development"
+    },
+    {
+      icon: <BookOpen className="h-6 w-6" />,
+      title: "Learning Pathways",
+      description: "Receive personalized learning recommendations for your career goals"
+    }
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Chen",
+      role: "Computer Science Student",
+      image: "/placeholder.svg",
+      quote: "CareerCompass helped me discover my passion for UX design. The personality test was incredibly insightful!",
+      rating: 5
+    },
+    {
+      name: "Michael Rodriguez",
+      role: "Business Major",
+      image: "/placeholder.svg", 
+      quote: "The career recommendations were spot-on. I'm now pursuing a career in data analytics and loving it!",
+      rating: 5
+    },
+    {
+      name: "Emily Watson",
+      role: "Psychology Student",
+      image: "/placeholder.svg",
+      quote: "The AI career coach feature is amazing. It's like having a personal mentor available 24/7.",
+      rating: 5
+    }
+  ];
+
+  const stats = [
+    { number: "50,000+", label: "Students Helped" },
+    { number: "95%", label: "Satisfaction Rate" },
+    { number: "200+", label: "Career Paths" },
+    { number: "24/7", label: "AI Support" }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex justify-between items-center">
           <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
             CareerCompass
           </div>
-          <div className="space-x-4">
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link to="/about" className="text-gray-700 hover:text-purple-600 transition-colors">
+              About
+            </Link>
             <Link to="/login">
-              <Button variant="ghost">Sign In</Button>
+              <Button variant="outline">Sign In</Button>
             </Link>
             <Link to="/signup">
-              <Button>Sign Up</Button>
+              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                Sign Up
+              </Button>
             </Link>
           </div>
+
+          {/* Mobile Navigation */}
+          <MobileNavbar />
         </nav>
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 text-center py-[64px]">
+      <section className="container mx-auto px-4 py-16 text-center">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent leading-tight">
-            Discover Your Perfect Career Path with AI
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            Discover Your Perfect Career Path
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Our advanced AI analyzes your personality, skills, and career goals to provide personalized career recommendations, skill gap analysis, and learning pathways tailored just for you.
+          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Let AI-powered insights guide you to a career that matches your personality, skills, and aspirations. Start your journey to professional success today.
           </p>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link to="/personality-test">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-6 text-lg group">
-                Take Free Assessment
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-3 w-full sm:w-auto">
+                Start Free Assessment
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/resume-upload">
-              <Button size="lg" variant="outline" className="border-2 border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-6 text-lg">
-                Upload Resume
+            <Link to="/about">
+              <Button size="lg" variant="outline" className="text-lg px-8 py-3 w-full sm:w-auto">
+                Learn More
               </Button>
             </Link>
-          </div>
-
-          {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">50,000+</div>
-              <div className="text-gray-600">Students Helped</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">95%</div>
-              <div className="text-gray-600">Accuracy Rate</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">1,200+</div>
-              <div className="text-gray-600">Career Paths</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">24/7</div>
-              <div className="text-gray-600">AI Support</div>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="container mx-auto px-4 py-16 bg-white/50 backdrop-blur-sm rounded-3xl mx-4 mb-16">
-        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">How CareerCompass Works</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Brain className="h-8 w-8 text-white" />
+      {/* Stats Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">{stat.number}</div>
+              <div className="text-gray-600">{stat.label}</div>
             </div>
-            <h3 className="text-xl font-semibold mb-3">1. Take Assessment</h3>
-            <p className="text-gray-600">Complete our comprehensive personality and skills assessment to understand your strengths and preferences.</p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Target className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold mb-3">2. Get Matched</h3>
-            <p className="text-gray-600">Our AI analyzes your profile and matches you with ideal career paths based on your unique combination of traits.</p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <TrendingUp className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-xl font-semibold mb-3">3. Grow & Succeed</h3>
-            <p className="text-gray-600">Receive personalized learning recommendations and career guidance to bridge skill gaps and achieve your goals.</p>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Success Stories Section - Enhanced */}
-      <section className="container mx-auto px-4 py-20 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-10 w-20 h-20 bg-purple-500 rounded-full"></div>
-          <div className="absolute top-32 right-20 w-16 h-16 bg-blue-500 rounded-full"></div>
-          <div className="absolute bottom-20 left-32 w-12 h-12 bg-indigo-500 rounded-full"></div>
-          <div className="absolute bottom-40 right-10 w-24 h-24 bg-purple-400 rounded-full"></div>
-        </div>
-
-        <div className="text-center mb-16 relative z-10">
-          <div className="inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 rounded-full mb-6">
-            <Award className="h-5 w-5 text-purple-600 mr-2" />
-            <span className="text-sm font-semibold text-purple-800">Success Stories</span>
-          </div>
-          <h2 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-            Transforming <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Careers</span>,
-            <br />Inspiring <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Dreams</span>
+      {/* Features Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
+            Everything You Need to Find Your Dream Career
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Discover how thousands of students have transformed their career trajectories with our AI-powered platform
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Our comprehensive platform combines personality science, AI technology, and career expertise to guide your professional journey.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {features.map((feature, index) => (
+            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white mx-auto mb-4">
+                  {feature.icon}
+                </div>
+                <CardTitle className="text-xl">{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-center text-gray-600">
+                  {feature.description}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* Success Stories Section */}
+      <section className="container mx-auto px-4 py-20 bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 rounded-3xl mx-4 my-16">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            Success Stories That Inspire
+          </h2>
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            Join thousands of students who have transformed their careers with our AI-powered guidance and personalized insights.
           </p>
         </div>
 
-        {/* Main Stats Grid */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-16 relative z-10">
-          {/* Left Column - Big Impact */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl p-8 border border-green-100 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center">
-                  <TrendingUp className="h-8 w-8 text-white" />
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          {testimonials.map((testimonial, index) => (
+            <Card key={index} className="border-0 shadow-xl bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+              <CardContent className="p-8">
+                <div className="flex items-center mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
+                    {testimonial.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg text-gray-800">{testimonial.name}</h4>
+                    <p className="text-purple-600 font-medium">{testimonial.role}</p>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-4xl font-bold text-green-700 mb-1">89%</div>
-                  <div className="text-sm text-green-600 font-medium">Success Rate</div>
+                <div className="flex mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
                 </div>
-              </div>
-              <p className="text-gray-700 leading-relaxed">
-                Students who complete our assessment successfully transition to aligned careers within 8 months
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-8 border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center">
-                  <Globe className="h-8 w-8 text-white" />
-                </div>
-                <div className="text-right">
-                  <div className="text-4xl font-bold text-blue-700 mb-1">50+</div>
-                  <div className="text-sm text-blue-600 font-medium">Countries</div>
-                </div>
-              </div>
-              <p className="text-gray-700 leading-relaxed">
-                Trusted by universities and Fortune 500 companies worldwide
-              </p>
-            </div>
-          </div>
-
-          {/* Center Column - Featured Testimonial */}
-          <div className="lg:col-span-1">
-            
-          </div>
-
-          {/* Right Column - Key Metrics */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-3xl p-8 border border-orange-100 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center">
-                  <Zap className="h-8 w-8 text-white" />
-                </div>
-                <div className="text-right">
-                  <div className="text-4xl font-bold text-orange-700 mb-1">47%</div>
-                  <div className="text-sm text-orange-600 font-medium">Salary Increase</div>
-                </div>
-              </div>
-              <p className="text-gray-700 leading-relaxed">
-                Average income improvement reported by our graduates
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl p-8 border border-purple-100 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
-                  <Building2 className="h-8 w-8 text-white" />
-                </div>
-                <div className="text-right">
-                  <div className="text-4xl font-bold text-purple-700 mb-1">750+</div>
-                  <div className="text-sm text-purple-600 font-medium">Partners</div>
-                </div>
-              </div>
-              <p className="text-gray-700 leading-relaxed">
-                Companies actively hiring our certified graduates
-              </p>
-            </div>
-          </div>
+                <p className="text-gray-700 italic leading-relaxed">"{testimonial.quote}"</p>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Bottom Stats Row */}
-        
+        <div className="text-center">
+          <Badge variant="secondary" className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+            <Users className="w-5 h-5 mr-2" />
+            Join 50,000+ Happy Students
+          </Badge>
+        </div>
+      </section>
 
-        {/* CTA Button */}
-        <div className="text-center mt-16 relative z-10">
+      {/* CTA Section */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="max-w-3xl mx-auto bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 md:p-12 text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to Transform Your Career?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Take the first step towards your dream career. Our AI-powered assessment takes just 10 minutes.
+          </p>
           <Link to="/personality-test">
-            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-6 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
-              <Play className="mr-3 h-5 w-5" />
-              Start Your Success Story
+            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 text-lg px-8 py-4">
+              Start Free Assessment
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>
       </section>
 
-      {/* Powerful Features */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">Powerful Features</h2>
-        <div className="grid md:grid-cols-3 gap-8">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center mb-4">
-                <Users className="h-6 w-6 text-white" />
-              </div>
-              <CardTitle className="text-xl">Personality Analysis</CardTitle>
-              <CardDescription>
-                Advanced psychometric assessment analyzing 16 personality dimensions to identify your ideal work environment and career preferences.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Big Five personality traits</li>
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Work style preferences</li>
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Team dynamics assessment</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center mb-4">
-                <BookOpen className="h-6 w-6 text-white" />
-              </div>
-              <CardTitle className="text-xl">Smart Resume Analysis</CardTitle>
-              <CardDescription>
-                AI-powered resume parsing that extracts skills, experience, and achievements to provide detailed career insights and improvement suggestions.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Skill extraction & ranking</li>
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Gap analysis</li>
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Resume optimization tips</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white/80 backdrop-blur-sm">
-            <CardHeader>
-              <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center mb-4">
-                <Star className="h-6 w-6 text-white" />
-              </div>
-              <CardTitle className="text-xl">AI Career Counselor</CardTitle>
-              <CardDescription>
-                24/7 personalized career guidance powered by advanced AI, providing tailored advice for career transitions, skill development, and job searching.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Instant career advice</li>
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Learning path recommendations</li>
-                <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Interview preparation</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">What Our Students Say</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="border-0 shadow-lg bg-white">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "CareerCompass helped me discover my passion for UX design. The personality test was incredibly accurate, and I landed my dream internship at a tech startup!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                  S
-                </div>
-                <div>
-                  <p className="font-semibold">Sarah Chen</p>
-                  <p className="text-sm text-gray-500">Computer Science Student</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg bg-white">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "The AI counselor gave me amazing step-by-step guidance on switching from marketing to data science. The skill gap analysis was spot-on!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                  M
-                </div>
-                <div>
-                  <p className="font-semibold">Marcus Johnson</p>
-                  <p className="text-sm text-gray-500">Business Administration</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg bg-white">
-            <CardContent className="p-6">
-              <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />)}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "I was completely lost after graduation, but this platform opened my eyes to careers I never considered. Now I'm thriving as a product manager!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                  A
-                </div>
-                <div>
-                  <p className="font-semibold">Aisha Patel</p>
-                  <p className="text-sm text-gray-500">Engineering Graduate</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="container mx-auto px-4 py-16 bg-white/50 backdrop-blur-sm rounded-3xl mx-4 mb-16">
-        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">Frequently Asked Questions</h2>
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div>
-            <h3 className="text-lg font-semibold mb-3 text-purple-700">How accurate is the personality assessment?</h3>
-            <p className="text-gray-600">Our assessment is based on validated psychometric principles and has a 95% accuracy rate, validated by career counselors and HR professionals.</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-3 text-purple-700">Is my data secure?</h3>
-            <p className="text-gray-600">Absolutely. We use enterprise-grade encryption and never share your personal information with third parties. Your privacy is our top priority.</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-3 text-purple-700">How long does the assessment take?</h3>
-            <p className="text-gray-600">The personality test takes about 10-15 minutes, and resume analysis is instant. You'll get your results immediately after completion.</p>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold mb-3 text-purple-700">Can I retake the assessment?</h3>
-            <p className="text-gray-600">Yes! You can retake the assessment anytime as you grow and your preferences change. We recommend retaking it every 6-12 months.</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-8 md:p-12 text-center text-white">
-          <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6">Ready to Discover Your Dream Career?</h2>
-          <p className="text-lg md:text-xl mb-6 md:mb-8 opacity-90 max-w-2xl mx-auto">
-            Join thousands of students who have already found their perfect career path. Start your journey today with our free assessment.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
-            <Link to="/personality-test">
-              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-6 py-4 md:px-8 md:py-6 text-base md:text-lg font-semibold w-full sm:w-auto">
-                Start Free Assessment
-                <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button size="lg" variant="outline" className="border-2 border-white hover:bg-white px-6 py-4 md:px-8 md:py-6 text-base md:text-lg font-semibold text-purple-600 w-full sm:w-auto">
-                Create Account
-              </Button>
-            </Link>
-          </div>
-          <div className="mt-6 md:mt-8 text-xs md:text-sm opacity-75">
-            ✓ No credit card required  ✓ 5-minute setup  ✓ Instant results
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Footer */}
+      {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
@@ -462,7 +317,11 @@ const Index = () => {
               <div className="mt-6">
                 <h5 className="text-sm font-semibold mb-2 text-white">Newsletter</h5>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <input type="email" placeholder="Your email" className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" />
+                  <input 
+                    type="email" 
+                    placeholder="Your email" 
+                    className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" 
+                  />
                   <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-sm whitespace-nowrap">
                     Subscribe
                   </Button>
@@ -486,6 +345,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;

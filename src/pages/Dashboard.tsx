@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -31,7 +31,7 @@ import {
   Brain,
   Briefcase
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
@@ -40,7 +40,10 @@ const Dashboard = () => {
   const [chatHistory, setChatHistory] = useState([
     { type: "ai", message: "Hello! I'm your AI Career Coach. How can I help you today?" }
   ]);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
+  const [showAssessmentPrompt, setShowAssessmentPrompt] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   // Mock user data
@@ -65,6 +68,18 @@ const Dashboard = () => {
       { title: "Business Analyst", company: "ConsultingCo", location: "New York", match: 78, salary: "$70,000" }
     ]
   };
+
+  // Check if user came from assessment test or resume upload
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const from = urlParams.get('from');
+    
+    if (from === 'assessment' && !userData.resumeUploaded) {
+      setShowResumePrompt(true);
+    } else if (from === 'resume' && !userData.personalityType) {
+      setShowAssessmentPrompt(true);
+    }
+  }, [location, userData.resumeUploaded, userData.personalityType]);
 
   const handleSendMessage = () => {
     if (!chatMessage.trim()) return;
@@ -133,7 +148,6 @@ const Dashboard = () => {
 
   const sidebarItems = [
     { id: "overview", label: "Dashboard Overview", icon: Target },
-    { id: "personality", label: "Personality Results", icon: Brain },
     { id: "resume", label: "Resume Analysis", icon: FileText },
     { id: "career-score", label: "Career Fitness", icon: TrendingUp },
     { id: "jobs", label: "Job Recommendations", icon: Briefcase },
@@ -217,6 +231,55 @@ const Dashboard = () => {
         </header>
 
         <div className="p-6">
+          {/* Conditional Prompts */}
+          {showResumePrompt && (
+            <Card className="border-0 shadow-lg bg-blue-50 border-blue-200 mb-6">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <Upload className="h-8 w-8 text-blue-600" />
+                    <div>
+                      <h3 className="font-semibold text-blue-800">Complete Your Profile</h3>
+                      <p className="text-blue-600">Upload your resume for better career counselling and personalized recommendations</p>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button onClick={handleUpdateResume} className="bg-blue-600 hover:bg-blue-700">
+                      Upload Resume
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowResumePrompt(false)}>
+                      Later
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {showAssessmentPrompt && (
+            <Card className="border-0 shadow-lg bg-purple-50 border-purple-200 mb-6">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <Brain className="h-8 w-8 text-purple-600" />
+                    <div>
+                      <h3 className="font-semibold text-purple-800">Take Assessment Test</h3>
+                      <p className="text-purple-600">Complete your personality assessment for better career counselling and matching</p>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Button onClick={handleRetakeTest} className="bg-purple-600 hover:bg-purple-700">
+                      Take Assessment
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowAssessmentPrompt(false)}>
+                      Later
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Dynamic Content Based on Active Section */}
           {activeSection === "overview" && (
             <div className="space-y-6">
@@ -258,6 +321,25 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               </div>
+
+              {/* Quick Actions */}
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle>Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Button onClick={handleRetakeTest} className="bg-gradient-to-r from-purple-500 to-blue-500 h-12">
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Retake Assessment Test
+                    </Button>
+                    <Button onClick={handleUpdateResume} variant="outline" className="h-12">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload/Update Resume
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Top Career Matches */}
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
