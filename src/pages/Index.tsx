@@ -362,25 +362,25 @@ const Index = () => {
 
       {/* Call to Action Section */}
       <section className="container mx-auto px-4 py-16">
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-12 text-center text-white">
-          <h2 className="text-4xl font-bold mb-6">Ready to Discover Your Dream Career?</h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-8 md:p-12 text-center text-white">
+          <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6">Ready to Discover Your Dream Career?</h2>
+          <p className="text-lg md:text-xl mb-6 md:mb-8 opacity-90 max-w-2xl mx-auto">
             Join thousands of students who have already found their perfect career path. Start your journey today with our free assessment.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
             <Link to="/personality-test">
-              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-6 text-lg font-semibold">
+              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-6 py-4 md:px-8 md:py-6 text-base md:text-lg font-semibold w-full sm:w-auto">
                 Start Free Assessment
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
               </Button>
             </Link>
             <Link to="/signup">
-              <Button size="lg" variant="outline" className="border-2 border-white hover:bg-white px-8 py-6 text-lg font-semibold text-purple-600">
+              <Button size="lg" variant="outline" className="border-2 border-white hover:bg-white px-6 py-4 md:px-8 md:py-6 text-base md:text-lg font-semibold text-purple-600 w-full sm:w-auto">
                 Create Account
               </Button>
             </Link>
           </div>
-          <div className="mt-8 text-sm opacity-75">
+          <div className="mt-6 md:mt-8 text-xs md:text-sm opacity-75">
             ✓ No credit card required  ✓ 5-minute setup  ✓ Instant results
           </div>
         </div>
