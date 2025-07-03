@@ -1,12 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Users, BookOpen, Star, CheckCircle, Target, Brain, TrendingUp, Award, Globe, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Building2, Zap, Shield, Play, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
+  return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex justify-between items-center">
@@ -160,33 +157,7 @@ const Index = () => {
 
           {/* Center Column - Featured Testimonial */}
           <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl p-8 text-white shadow-2xl hover:shadow-3xl transition-all duration-300 h-full flex flex-col justify-center relative overflow-hidden">
-              {/* Background Quote Icon */}
-              <Quote className="absolute top-6 right-6 h-24 w-24 text-white/10" />
-              
-              <div className="relative z-10">
-                <div className="flex items-center mb-6">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400 mr-1" />
-                  ))}
-                </div>
-                
-                <blockquote className="text-xl leading-relaxed mb-8 font-medium">
-                  "CareerCompass didn't just help me find a job—it helped me discover my purpose. The AI analysis revealed strengths I never knew I had."
-                </blockquote>
-                
-                <div className="flex items-center">
-                  <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold mr-4">
-                    E
-                  </div>
-                  <div>
-                    <p className="font-semibold text-lg">Emily Rodriguez</p>
-                    <p className="text-purple-200">Psychology → UX Designer</p>
-                    <p className="text-purple-300 text-sm mt-1">Google, San Francisco</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
 
           {/* Right Column - Key Metrics */}
@@ -224,31 +195,7 @@ const Index = () => {
         </div>
 
         {/* Bottom Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
-            <div className="text-3xl font-bold text-purple-600 mb-2">94%</div>
-            <div className="text-sm text-gray-600 font-medium">Job Satisfaction</div>
-            <div className="text-xs text-gray-500 mt-1">Feel fulfilled in new roles</div>
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
-            <div className="text-3xl font-bold text-blue-600 mb-2">5.2</div>
-            <div className="text-sm text-gray-600 font-medium">Months Average</div>
-            <div className="text-xs text-gray-500 mt-1">Assessment to job offer</div>
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
-            <div className="text-3xl font-bold text-indigo-600 mb-2">99%</div>
-            <div className="text-sm text-gray-600 font-medium">Recommend Us</div>
-            <div className="text-xs text-gray-500 mt-1">Would use again</div>
-          </div>
-          
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg border border-gray-100">
-            <div className="text-3xl font-bold text-green-600 mb-2">3.8M</div>
-            <div className="text-sm text-gray-600 font-medium">Assessments</div>
-            <div className="text-xs text-gray-500 mt-1">Completed globally</div>
-          </div>
-        </div>
+        
 
         {/* CTA Button */}
         <div className="text-center mt-16 relative z-10">
@@ -515,11 +462,7 @@ const Index = () => {
               <div className="mt-6">
                 <h5 className="text-sm font-semibold mb-2 text-white">Newsletter</h5>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <input 
-                    type="email" 
-                    placeholder="Your email" 
-                    className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" 
-                  />
+                  <input type="email" placeholder="Your email" className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" />
                   <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-sm whitespace-nowrap">
                     Subscribe
                   </Button>
@@ -543,8 +486,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
