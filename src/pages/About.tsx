@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Users, Heart, Target, Globe, Award, Lightbulb, Shield, TrendingUp } from "lucide-react";
@@ -203,6 +202,66 @@ const About = () => {
           </div>
         </section>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
+            {/* Brand Section */}
+            <div className="md:col-span-1">
+              <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+                CareerCompass
+              </div>
+              <p className="text-gray-400 mb-6">
+                Empowering students worldwide to discover their ideal career paths through AI-powered insights.
+              </p>
+            </div>
+
+            {/* Product Links */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-white">Product</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link to="/personality-test" className="hover:text-purple-400 transition-colors">Personality Test</Link></li>
+                <li><Link to="/resume-upload" className="hover:text-purple-400 transition-colors">Resume Analysis</Link></li>
+                <li><Link to="/dashboard" className="hover:text-purple-400 transition-colors">Dashboard</Link></li>
+              </ul>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-white">Company</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link to="/about" className="hover:text-purple-400 transition-colors">About Us</Link></li>
+                <li><Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link></li>
+                <li><Link to="/terms" className="hover:text-purple-400 transition-colors">Terms</Link></li>
+              </ul>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-white">Contact</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li>support@careercompass.com</li>
+                <li>+1 (555) 012-3456</li>
+                <li>San Francisco, CA</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <div className="text-gray-400 text-sm mb-4 md:mb-0">
+                © 2025 CareerCompass. All rights reserved.
+              </div>
+              <div className="flex space-x-6 text-sm text-gray-400">
+                <Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="hover:text-purple-400 transition-colors">Terms of Service</Link>
+                <Link to="/cookie-policy" className="hover:text-purple-400 transition-colors">Cookie Policy</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

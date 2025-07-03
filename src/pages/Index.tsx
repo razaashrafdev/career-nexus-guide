@@ -96,100 +96,109 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Success Stories Section - Enhanced */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-br from-purple-100 via-blue-100 to-indigo-100 rounded-3xl mx-4 mb-16">
-        <h2 className="text-4xl font-bold text-center mb-6 text-gray-800">Success Stories That Inspire</h2>
-        <p className="text-center text-gray-600 mb-16 max-w-3xl mx-auto text-lg">
-          Join thousands of students who transformed their careers with CareerCompass. Our AI-powered platform has helped people from all backgrounds discover their true potential and land their dream jobs.
-        </p>
-        
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-16">
-          {/* Left side - Success metrics */}
+      {/* Success Stories Section - Redesigned */}
+      <section className="container mx-auto px-4 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-800 mb-6">Success Stories That Inspire</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Discover how our AI-powered platform has transformed careers and helped students achieve their professional goals
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+          {/* Left side - Key metrics */}
           <div className="space-y-8">
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
                   <CheckCircle className="h-6 w-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-800">Career Transformation Rate</h3>
-                  <p className="text-green-600 font-semibold text-lg">89% Success Rate</p>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">89% Success Rate</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Students who complete our assessment and follow recommendations successfully transition to aligned careers within 8 months
+                  </p>
                 </div>
               </div>
-              <p className="text-gray-600 leading-relaxed">
-                Students who complete our full assessment and follow our personalized recommendations successfully transition to careers that align with their personality and skills within 8 months.
-              </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-blue-100">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
                   <TrendingUp className="h-6 w-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-800">Average Salary Increase</h3>
-                  <p className="text-blue-600 font-semibold text-lg">47% Higher Income</p>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">47% Salary Increase</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Average income improvement reported by graduates who followed their personalized career paths
+                  </p>
                 </div>
               </div>
-              <p className="text-gray-600 leading-relaxed">
-                Our graduates report significant salary improvements after following their personalized career paths, with many achieving promotions within their first year.
-              </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex items-start space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                   <Award className="h-6 w-6 text-white" />
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-800">Industry Recognition</h3>
-                  <p className="text-purple-600 font-semibold text-lg">Global Partnerships</p>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">Global Recognition</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Trusted by Fortune 500 companies and featured in universities across 50+ countries worldwide
+                  </p>
                 </div>
               </div>
-              <p className="text-gray-600 leading-relaxed">
-                Trusted by Fortune 500 companies and featured in top universities across 50+ countries. Our methodology is backed by career counselors worldwide.
-              </p>
             </div>
           </div>
 
-          {/* Right side - Statistics grid */}
+          {/* Right side - Statistics */}
           <div className="grid grid-cols-2 gap-6">
-            <Card className="text-center border-0 shadow-xl bg-white hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-              <CardContent className="p-8">
-                <div className="text-4xl font-bold text-purple-600 mb-3">94%</div>
-                <div className="text-sm text-gray-600 font-medium">Job Satisfaction Rate</div>
-                <p className="text-xs text-gray-500 mt-2">Feel fulfilled in their new careers</p>
-              </CardContent>
-            </Card>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="text-3xl font-bold text-purple-600 mb-2">94%</div>
+              <div className="text-sm text-gray-600 font-medium">Job Satisfaction</div>
+              <div className="text-xs text-gray-500 mt-1">Feel fulfilled in new careers</div>
+            </div>
             
-            <Card className="text-center border-0 shadow-xl bg-white hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-              <CardContent className="p-8">
-                <div className="text-4xl font-bold text-blue-600 mb-3">5.2 Months</div>
-                <div className="text-sm text-gray-600 font-medium">Average Job Landing Time</div>
-                <p className="text-xs text-gray-500 mt-2">From assessment to job offer</p>
-              </CardContent>
-            </Card>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="text-3xl font-bold text-blue-600 mb-2">5.2</div>
+              <div className="text-sm text-gray-600 font-medium">Months Average</div>
+              <div className="text-xs text-gray-500 mt-1">Assessment to job offer</div>
+            </div>
             
-            <Card className="text-center border-0 shadow-xl bg-white hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-              <CardContent className="p-8">
-                <div className="text-4xl font-bold text-indigo-600 mb-3">750+</div>
-                <div className="text-sm text-gray-600 font-medium">Partner Companies</div>
-                <p className="text-xs text-gray-500 mt-2">Actively hiring our graduates</p>
-              </CardContent>
-            </Card>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="text-3xl font-bold text-indigo-600 mb-2">750+</div>
+              <div className="text-sm text-gray-600 font-medium">Partner Companies</div>
+              <div className="text-xs text-gray-500 mt-1">Actively hiring graduates</div>
+            </div>
             
-            <Card className="text-center border-0 shadow-xl bg-white hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-              <CardContent className="p-8">
-                <div className="text-4xl font-bold text-green-600 mb-3">99%</div>
-                <div className="text-sm text-gray-600 font-medium">Recommend to Friends</div>
-                <p className="text-xs text-gray-500 mt-2">Would use CareerCompass again</p>
-              </CardContent>
-            </Card>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">99%</div>
+              <div className="text-sm text-gray-600 font-medium">Recommend Us</div>
+              <div className="text-xs text-gray-500 mt-1">Would use again</div>
+            </div>
           </div>
         </div>
 
-        {/* Featured Success Story */}
-        
+        {/* Featured testimonial */}
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-8 text-white text-center">
+          <div className="max-w-3xl mx-auto">
+            <div className="mb-6">
+              {[...Array(5)].map((_, i) => <Star key={i} className="inline h-5 w-5 fill-yellow-400 text-yellow-400 mr-1" />)}
+            </div>
+            <blockquote className="text-xl leading-relaxed mb-6">
+              "CareerCompass completely changed my perspective on career planning. The AI analysis was incredibly accurate, and within 6 months, I landed my dream job as a UX Designer. The personalized learning path made all the difference."
+            </blockquote>
+            <div className="flex items-center justify-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-lg font-bold">
+                E
+              </div>
+              <div>
+                <p className="font-semibold">Emily Rodriguez</p>
+                <p className="text-purple-200">Psychology Graduate → UX Designer</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Powerful Features */}

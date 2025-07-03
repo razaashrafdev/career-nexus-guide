@@ -89,9 +89,9 @@ const Login = () => {
                   <input type="checkbox" id="remember" className="rounded border-gray-300" />
                   <label htmlFor="remember" className="text-gray-600">Remember me</label>
                 </div>
-                <a href="#" className="text-purple-600 hover:text-purple-700">
+                <Link to="/reset-password" className="text-purple-600 hover:text-purple-700">
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
               <Button
