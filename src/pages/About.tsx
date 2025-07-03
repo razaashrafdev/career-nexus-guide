@@ -1,220 +1,264 @@
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Users, Heart, Target, Globe, Award, Lightbulb, Shield, TrendingUp } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, Users, Target, Award, Heart, Zap, Globe, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const About = () => {
+  const teamMembers = [
+    {
+      name: "Sarah Johnson",
+      role: "CEO & Founder",
+      image: "SJ",
+      description: "Former Google recruiter with 10+ years in talent acquisition and career development."
+    },
+    {
+      name: "Dr. Michael Chen",
+      role: "Head of AI Research",
+      image: "MC",
+      description: "PhD in Computer Science, specialized in machine learning and psychometric analysis."
+    },
+    {
+      name: "Emily Rodriguez",
+      role: "Head of Career Services",
+      image: "ER",
+      description: "Certified career counselor with expertise in student career transitions."
+    },
+    {
+      name: "David Kim",
+      role: "Lead Product Designer",
+      image: "DK",
+      description: "Award-winning UX designer focused on creating intuitive career guidance experiences."
+    }
+  ];
+
+  const values = [
+    {
+      icon: Target,
+      title: "Precision",
+      description: "We use advanced AI and validated psychometric assessments to provide accurate career guidance."
+    },
+    {
+      icon: Heart,
+      title: "Empathy",
+      description: "We understand the challenges students face and provide compassionate, personalized support."
+    },
+    {
+      icon: Zap,
+      title: "Innovation",
+      description: "We continuously evolve our platform with cutting-edge technology to serve students better."
+    },
+    {
+      icon: Globe,
+      title: "Accessibility",
+      description: "We believe career guidance should be accessible to students worldwide, regardless of background."
+    }
+  ];
+
+  const milestones = [
+    { year: "2020", event: "CareerCompass founded with a vision to democratize career guidance" },
+    { year: "2021", event: "Launched AI-powered personality assessment with 10,000+ early users" },
+    { year: "2022", event: "Partnered with 100+ universities and achieved 95% accuracy rate" },
+    { year: "2023", event: "Expanded globally, serving students in 50+ countries" },
+    { year: "2024", event: "Reached 50,000+ students helped and 750+ corporate partners" }
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex justify-between items-center">
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              CareerCompass
-            </Link>
-            <Link to="/">
-              <Button variant="ghost">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-          </nav>
-        </div>
+      <header className="container mx-auto px-4 py-6">
+        <nav className="flex justify-between items-center">
+          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            CareerCompass
+          </Link>
+          <Link to="/">
+            <Button variant="ghost">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
+        </nav>
       </header>
 
-      <div className="container mx-auto px-4 py-12">
-        {/* Hero Section */}
-        <section className="text-center mb-16">
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-16 text-center">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
             About CareerCompass
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            We're on a mission to democratize career guidance and help every student discover their true potential through the power of AI and personalized insights.
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            We're on a mission to empower every student worldwide with AI-powered career guidance, 
+            transforming uncertainty into clarity and dreams into achievable career paths.
           </p>
-        </section>
+        </div>
+      </section>
 
-        {/* Mission Section */}
-        <section className="mb-16">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold mb-6 text-gray-800">Our Mission</h2>
-              <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                At CareerCompass, we believe that everyone deserves access to world-class career guidance. Too many talented individuals struggle to find their path simply because they lack access to personalized counseling and insights about their strengths.
+      {/* Mission & Vision */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-purple-50 to-blue-50">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Target className="h-8 w-8 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">Our Mission</h2>
+              <p className="text-gray-600 leading-relaxed">
+                To democratize career guidance by providing every student with personalized, 
+                AI-powered insights that help them discover their ideal career path, regardless 
+                of their background or location.
               </p>
-              <p className="text-gray-600 text-lg leading-relaxed">
-                Our AI-powered platform bridges this gap by providing sophisticated personality analysis, skill assessment, and career matching that was previously only available to a privileged few. We're democratizing career discovery for students worldwide.
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-blue-50 to-indigo-50">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Award className="h-8 w-8 text-white" />
+              </div>
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">Our Vision</h2>
+              <p className="text-gray-600 leading-relaxed">
+                A world where every student has access to the tools, insights, and guidance 
+                they need to build fulfilling careers that align with their unique strengths, 
+                interests, and aspirations.
               </p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="text-center border-0 shadow-lg bg-white">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="text-2xl font-bold text-purple-600 mb-2">50,000+</div>
-                  <div className="text-sm text-gray-600">Students Helped</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 shadow-lg bg-white">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Globe className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="text-2xl font-bold text-blue-600 mb-2">50+</div>
-                  <div className="text-sm text-gray-600">Countries Served</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 shadow-lg bg-white">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Award className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="text-2xl font-bold text-indigo-600 mb-2">95%</div>
-                  <div className="text-sm text-gray-600">Accuracy Rate</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center border-0 shadow-lg bg-white">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <TrendingUp className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="text-2xl font-bold text-green-600 mb-2">89%</div>
-                  <div className="text-sm text-gray-600">Success Rate</div>
-                </CardContent>
-              </Card>
-            </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Our Story */}
+      <section className="container mx-auto px-4 py-16 bg-white/50 backdrop-blur-sm rounded-3xl mx-4 mb-16">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-8 text-gray-800">Our Story</h2>
+          <p className="text-lg text-gray-600 mb-12 leading-relaxed">
+            CareerCompass was born from a simple observation: too many talented students were 
+            struggling to find their ideal career paths. Traditional career counseling was 
+            either inaccessible, generic, or outdated. We believed technology could change this.
+          </p>
+          
+          <div className="space-y-8">
+            {milestones.map((milestone, index) => (
+              <div key={index} className="flex items-center justify-center space-x-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  {milestone.year}
+                </div>
+                <div className="flex-1 text-left max-w-md">
+                  <p className="text-gray-700">{milestone.event}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Values Section */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Our Core Values</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-lg bg-white hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-4">
-                  <Heart className="h-6 w-6 text-white" />
+      {/* Our Values */}
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">Our Values</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {values.map((value, index) => (
+            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <value.icon className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle>Empathy First</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">We understand the anxiety and confusion that comes with career decisions. Every feature we build is designed with genuine care for our users' emotional journey.</p>
+                <h3 className="text-xl font-semibold mb-3 text-gray-800">{value.title}</h3>
+                <p className="text-gray-600">{value.description}</p>
               </CardContent>
             </Card>
+          ))}
+        </div>
+      </section>
 
-            <Card className="border-0 shadow-lg bg-white hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center mb-4">
-                  <Lightbulb className="h-6 w-6 text-white" />
+      {/* Team Section */}
+      <section className="container mx-auto px-4 py-16">
+        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">Meet Our Team</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {teamMembers.map((member, index) => (
+            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
+              <CardContent className="p-6 text-center">
+                <div className="w-20 h-20 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+                  {member.image}
                 </div>
-                <CardTitle>Innovation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">We leverage cutting-edge AI and machine learning to provide insights that weren't possible before, constantly pushing the boundaries of career guidance.</p>
+                <h3 className="text-xl font-semibold mb-1 text-gray-800">{member.name}</h3>
+                <p className="text-purple-600 font-medium mb-3">{member.role}</p>
+                <p className="text-sm text-gray-600">{member.description}</p>
               </CardContent>
             </Card>
+          ))}
+        </div>
+      </section>
 
-            <Card className="border-0 shadow-lg bg-white hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle>Privacy & Trust</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Your personal data and career aspirations are sacred to us. We employ bank-level security and never share your information with third parties.</p>
-              </CardContent>
-            </Card>
+      {/* Stats Section */}
+      <section className="container mx-auto px-4 py-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl mx-4 mb-16 text-white text-center">
+        <h2 className="text-3xl font-bold mb-8">Our Impact</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <div className="text-4xl font-bold mb-2">50,000+</div>
+            <div className="text-purple-100">Students Helped</div>
           </div>
-        </section>
-
-        {/* Story Section */}
-        <section className="mb-16 bg-white/50 backdrop-blur-sm rounded-3xl p-12">
-          <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Our Story</h2>
-          <div className="max-w-4xl mx-auto">
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              CareerCompass was born from a simple observation: too many brilliant students were making career decisions based on limited information or societal expectations rather than their true strengths and passions.
-            </p>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Our founders, having experienced the confusion of career choice firsthand, assembled a team of psychologists, career counselors, data scientists, and educators to create a solution that could scale personalized career guidance to millions of students worldwide.
-            </p>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Today, we're proud to have helped over 50,000 students discover careers they love, with a 95% accuracy rate in our personality assessments and an 89% success rate in career transitions.
-            </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              But we're just getting started. Our vision is a world where every student has access to personalized, AI-powered career guidance that helps them unlock their full potential and build fulfilling professional lives.
-            </p>
+          <div>
+            <div className="text-4xl font-bold mb-2">95%</div>
+            <div className="text-purple-100">Accuracy Rate</div>
           </div>
-        </section>
-
-        {/* Team Preview */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Leadership Team</h2>
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <Card className="text-center border-0 shadow-lg bg-white">
-              <CardContent className="p-8">
-                <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
-                  AS
-                </div>
-                <h3 className="text-xl font-bold mb-2">Dr. Alex Smith</h3>
-                <p className="text-purple-600 font-medium mb-3">CEO & Co-Founder</p>
-                <p className="text-gray-600 text-sm">Former Stanford career counselor with 15+ years helping students discover their paths.</p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-0 shadow-lg bg-white">
-              <CardContent className="p-8">
-                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
-                  MJ
-                </div>
-                <h3 className="text-xl font-bold mb-2">Maria Johnson</h3>
-                <p className="text-blue-600 font-medium mb-3">CTO & Co-Founder</p>
-                <p className="text-gray-600 text-sm">AI researcher from MIT specializing in personality analysis and predictive modeling.</p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center border-0 shadow-lg bg-white">
-              <CardContent className="p-8">
-                <div className="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">
-                  DL
-                </div>
-                <h3 className="text-xl font-bold mb-2">Dr. David Lee</h3>
-                <p className="text-indigo-600 font-medium mb-3">Chief Psychology Officer</p>
-                <p className="text-gray-600 text-sm">Licensed psychologist and expert in career development and psychometric testing.</p>
-              </CardContent>
-            </Card>
+          <div>
+            <div className="text-4xl font-bold mb-2">750+</div>
+            <div className="text-purple-100">Partner Companies</div>
           </div>
-        </section>
+          <div>
+            <div className="text-4xl font-bold mb-2">50+</div>
+            <div className="text-purple-100">Countries Served</div>
+          </div>
+        </div>
+      </section>
 
-        {/* Call to Action */}
-        <section className="text-center">
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-3xl p-12 text-white">
-            <h2 className="text-3xl font-bold mb-6">Ready to Start Your Journey?</h2>
-            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-              Join the thousands of students who have already discovered their perfect career path with CareerCompass.
-            </p>
+      {/* CTA Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold mb-6 text-gray-800">Ready to Start Your Journey?</h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Join thousands of students who have discovered their perfect career path with CareerCompass.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/personality-test">
-              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold">
+              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-6 text-lg">
                 Take Free Assessment
               </Button>
             </Link>
+            <Link to="/signup">
+              <Button size="lg" variant="outline" className="border-2 border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-6 text-lg">
+                Sign Up Today
+              </Button>
+            </Link>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Brand Section */}
-            <div className="md:col-span-1">
+            <div className="lg:col-span-1">
               <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
                 CareerCompass
               </div>
               <p className="text-gray-400 mb-6">
-                Empowering students worldwide to discover their ideal career paths through AI-powered insights.
+                Empowering students worldwide to discover their ideal career paths through AI-powered insights and personalized guidance.
               </p>
+              <div className="flex space-x-4">
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-pink-400 transition-colors">
+                  <Instagram className="h-5 w-5" />
+                </a>
+              </div>
             </div>
 
             {/* Product Links */}
@@ -223,7 +267,9 @@ const About = () => {
               <ul className="space-y-3 text-gray-400">
                 <li><Link to="/personality-test" className="hover:text-purple-400 transition-colors">Personality Test</Link></li>
                 <li><Link to="/resume-upload" className="hover:text-purple-400 transition-colors">Resume Analysis</Link></li>
-                <li><Link to="/dashboard" className="hover:text-purple-400 transition-colors">Dashboard</Link></li>
+                <li><Link to="/dashboard" className="hover:text-purple-400 transition-colors">Career Dashboard</Link></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">AI Counselor</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Job Matching</a></li>
               </ul>
             </div>
 
@@ -232,28 +278,57 @@ const About = () => {
               <h4 className="text-lg font-semibold mb-4 text-white">Company</h4>
               <ul className="space-y-3 text-gray-400">
                 <li><Link to="/about" className="hover:text-purple-400 transition-colors">About Us</Link></li>
-                <li><Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link></li>
-                <li><Link to="/terms" className="hover:text-purple-400 transition-colors">Terms</Link></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Our Team</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Press</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Blog</a></li>
               </ul>
             </div>
 
-            {/* Contact */}
+            {/* Contact Info */}
             <div>
               <h4 className="text-lg font-semibold mb-4 text-white">Contact</h4>
               <ul className="space-y-3 text-gray-400">
-                <li>support@careercompass.com</li>
-                <li>+1 (555) 012-3456</li>
-                <li>San Francisco, CA</li>
+                <li className="flex items-center">
+                  <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <a href="mailto:support@careercompass.com" className="hover:text-purple-400 transition-colors break-all">
+                    support@careercompass.com
+                  </a>
+                </li>
+                <li className="flex items-center">
+                  <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <a href="tel:+1-555-0123" className="hover:text-purple-400 transition-colors">
+                    +1 (555) 012-3456
+                  </a>
+                </li>
+                <li className="flex items-center">
+                  <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>San Francisco, CA</span>
+                </li>
               </ul>
+              <div className="mt-6">
+                <h5 className="text-sm font-semibold mb-2 text-white">Newsletter</h5>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input 
+                    type="email" 
+                    placeholder="Your email" 
+                    className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" 
+                  />
+                  <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-sm whitespace-nowrap">
+                    Subscribe
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
+          {/* Bottom Footer */}
           <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-gray-400 text-sm mb-4 md:mb-0">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-gray-400 text-sm text-center md:text-left">
                 © 2025 CareerCompass. All rights reserved.
               </div>
-              <div className="flex space-x-6 text-sm text-gray-400">
+              <div className="flex flex-wrap justify-center md:justify-end gap-4 sm:gap-6 text-sm text-gray-400">
                 <Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link>
                 <Link to="/terms" className="hover:text-purple-400 transition-colors">Terms of Service</Link>
                 <Link to="/cookie-policy" className="hover:text-purple-400 transition-colors">Cookie Policy</Link>

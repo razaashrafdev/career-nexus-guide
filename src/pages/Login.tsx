@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,14 +14,32 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate login process
+    // Admin credentials check
+    if (email === "admin@careercompass.com" && password === "admin123") {
+      setTimeout(() => {
+        setIsLoading(false);
+        toast({
+          title: "Admin Login Successful",
+          description: "Welcome to Admin Dashboard",
+        });
+        navigate("/admin");
+      }, 1500);
+      return;
+    }
+
+    // Regular user login simulation
     setTimeout(() => {
       setIsLoading(false);
+      toast({
+        title: "Login Successful",
+        description: "Welcome back to your dashboard",
+      });
       navigate("/dashboard");
     }, 1500);
   };
@@ -48,6 +67,13 @@ const Login = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Admin Credentials Info */}
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800 font-medium mb-1">Demo Admin Access:</p>
+              <p className="text-xs text-blue-600">Email: admin@careercompass.com</p>
+              <p className="text-xs text-blue-600">Password: admin123</p>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>

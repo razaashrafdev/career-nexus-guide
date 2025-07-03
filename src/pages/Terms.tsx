@@ -1,79 +1,184 @@
-
-import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Terms = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex justify-between items-center">
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              CareerCompass
-            </Link>
-            <Link to="/">
-              <div className="flex items-center text-purple-600 hover:text-purple-700">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Home
-              </div>
-            </Link>
-          </nav>
-        </div>
+      <header className="container mx-auto px-4 py-6">
+        <nav className="flex justify-between items-center">
+          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            CareerCompass
+          </Link>
+          <Link to="/">
+            <Button variant="ghost">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
+        </nav>
       </header>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl p-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-8">Terms of Service</h1>
-          
-          <div className="space-y-6 text-gray-600">
-            <section>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Acceptance of Terms</h2>
-              <p>By using CareerCompass, you agree to these terms of service. If you do not agree, please do not use our platform.</p>
-            </section>
+      {/* Content */}
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          Terms of Service
+        </h1>
+        
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg space-y-6">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">1. Acceptance of Terms</h2>
+          <p className="text-gray-600">
+            By accessing or using CareerCompass, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, you may not use our services.
+          </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Use of Service</h2>
-              <ul className="list-disc list-inside space-y-2">
-                <li>You must be at least 16 years old to use our service</li>
-                <li>Provide accurate information in assessments and profiles</li>
-                <li>Use the platform only for legitimate career development purposes</li>
-                <li>Do not share your account credentials with others</li>
-              </ul>
-            </section>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">2. Description of Service</h2>
+          <p className="text-gray-600">
+            CareerCompass provides AI-powered career guidance, personality assessments, resume analysis, and related services to help students and professionals discover their ideal career paths.
+          </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Intellectual Property</h2>
-              <p>All content, including assessments, algorithms, and recommendations, is owned by CareerCompass. You may not reproduce or distribute our content without permission.</p>
-            </section>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">3. User Accounts</h2>
+          <p className="text-gray-600">
+            To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.
+          </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Limitation of Liability</h2>
-              <p>CareerCompass provides career guidance but cannot guarantee employment outcomes. Use our recommendations as guidance, not absolute career decisions.</p>
-            </section>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">4. User Content</h2>
+          <p className="text-gray-600">
+            You may be able to submit content to CareerCompass, such as resume information and assessment responses. You retain ownership of your content, but you grant us a license to use, modify, and display your content in connection with providing our services.
+          </p>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4">Contact Information</h2>
-              <p>For questions about these terms, contact us at legal@careercompass.com.</p>
-            </section>
-          </div>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">5. Acceptable Use</h2>
+          <p className="text-gray-600">
+            You agree not to use CareerCompass for any unlawful or prohibited purpose. You may not attempt to gain unauthorized access to our systems or interfere with the operation of our services.
+          </p>
+
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">6. Intellectual Property</h2>
+          <p className="text-gray-600">
+            CareerCompass and its content are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, modify, or distribute our content without our permission.
+          </p>
+
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">7. Disclaimer of Warranties</h2>
+          <p className="text-gray-600">
+            CareerCompass is provided "as is" without any warranties, express or implied. We do not guarantee the accuracy, completeness, or reliability of our services.
+          </p>
+
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">8. Limitation of Liability</h2>
+          <p className="text-gray-600">
+            In no event shall CareerCompass be liable for any damages arising out of your use of our services.
+          </p>
+
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">9. Changes to Terms</h2>
+          <p className="text-gray-600">
+            We may modify these Terms at any time. Your continued use of CareerCompass after any changes constitutes your acceptance of the new Terms.
+          </p>
+
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">10. Governing Law</h2>
+          <p className="text-gray-600">
+            These Terms shall be governed by the laws of the State of California.
+          </p>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-16 mt-16">
         <div className="container mx-auto px-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
-              CareerCompass
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+            {/* Brand Section */}
+            <div className="lg:col-span-1">
+              <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+                CareerCompass
+              </div>
+              <p className="text-gray-400 mb-6">
+                Empowering students worldwide to discover their ideal career paths through AI-powered insights and personalized guidance.
+              </p>
+              <div className="flex space-x-4">
+                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-pink-400 transition-colors">
+                  <Instagram className="h-5 w-5" />
+                </a>
+              </div>
             </div>
-            <div className="flex justify-center space-x-6 text-sm text-gray-400">
-              <Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-purple-400 transition-colors">Terms of Service</Link>
-              <Link to="/cookie-policy" className="hover:text-purple-400 transition-colors">Cookie Policy</Link>
+
+            {/* Product Links */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-white">Product</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link to="/personality-test" className="hover:text-purple-400 transition-colors">Personality Test</Link></li>
+                <li><Link to="/resume-upload" className="hover:text-purple-400 transition-colors">Resume Analysis</Link></li>
+                <li><Link to="/dashboard" className="hover:text-purple-400 transition-colors">Career Dashboard</Link></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">AI Counselor</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Job Matching</a></li>
+              </ul>
             </div>
-            <div className="mt-4 text-sm text-gray-400">
-              © 2025 CareerCompass. All rights reserved.
+
+            {/* Company Links */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-white">Company</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li><Link to="/about" className="hover:text-purple-400 transition-colors">About Us</Link></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Our Team</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Press</a></li>
+                <li><a href="#" className="hover:text-purple-400 transition-colors">Blog</a></li>
+              </ul>
+            </div>
+
+            {/* Contact Info */}
+            <div>
+              <h4 className="text-lg font-semibold mb-4 text-white">Contact</h4>
+              <ul className="space-y-3 text-gray-400">
+                <li className="flex items-center">
+                  <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <a href="mailto:support@careercompass.com" className="hover:text-purple-400 transition-colors break-all">
+                    support@careercompass.com
+                  </a>
+                </li>
+                <li className="flex items-center">
+                  <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <a href="tel:+1-555-0123" className="hover:text-purple-400 transition-colors">
+                    +1 (555) 012-3456
+                  </a>
+                </li>
+                <li className="flex items-center">
+                  <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span>San Francisco, CA</span>
+                </li>
+              </ul>
+              <div className="mt-6">
+                <h5 className="text-sm font-semibold mb-2 text-white">Newsletter</h5>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input 
+                    type="email" 
+                    placeholder="Your email" 
+                    className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" 
+                  />
+                  <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-sm whitespace-nowrap">
+                    Subscribe
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Footer */}
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-gray-400 text-sm text-center md:text-left">
+                © 2025 CareerCompass. All rights reserved.
+              </div>
+              <div className="flex flex-wrap justify-center md:justify-end gap-4 sm:gap-6 text-sm text-gray-400">
+                <Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link>
+                <Link to="/terms" className="hover:text-purple-400 transition-colors">Terms of Service</Link>
+                <Link to="/cookie-policy" className="hover:text-purple-400 transition-colors">Cookie Policy</Link>
+              </div>
             </div>
           </div>
         </div>
