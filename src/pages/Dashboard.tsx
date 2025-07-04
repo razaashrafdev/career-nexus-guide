@@ -1,58 +1,61 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  User, 
-  BookOpen, 
-  FileText, 
-  Target, 
-  TrendingUp, 
-  Award,
-  ArrowRight,
-  CheckCircle,
-  AlertCircle,
-  Upload,
-  RefreshCw,
-  Brain,
-  BarChart3,
-  Settings,
-  LogOut,
-  Home
-} from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
-
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
-  
+
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
     name: "John Doe",
     email: "john@example.com",
-    assessmentCompleted: false, // Change this to test different states
-    resumeUploaded: true, // Change this to test different states
+    assessmentCompleted: false,
+    // Change this to test different states
+    resumeUploaded: true,
+    // Change this to test different states
     personalityType: "",
     careerScore: 0,
     recommendedCareers: [],
     skills: []
   });
-
-  const sidebarItems = [
-    { id: "overview", label: "Overview", icon: Home },
-    { id: "personality", label: "Personality Assessment", icon: Brain },
-    { id: "resume", label: "Resume Analysis", icon: FileText },
-    { id: "careers", label: "Career Recommendations", icon: Target },
-    { id: "skills", label: "Skills Development", icon: BookOpen },
-    { id: "progress", label: "Progress Tracking", icon: TrendingUp },
-    { id: "settings", label: "Settings", icon: Settings }
-  ];
-
+  const sidebarItems = [{
+    id: "overview",
+    label: "Overview",
+    icon: Home
+  }, {
+    id: "personality",
+    label: "Personality Assessment",
+    icon: Brain
+  }, {
+    id: "resume",
+    label: "Resume Analysis",
+    icon: FileText
+  }, {
+    id: "careers",
+    label: "Career Recommendations",
+    icon: Target
+  }, {
+    id: "skills",
+    label: "Skills Development",
+    icon: BookOpen
+  }, {
+    id: "progress",
+    label: "Progress Tracking",
+    icon: TrendingUp
+  }, {
+    id: "settings",
+    label: "Settings",
+    icon: Settings
+  }];
   const getGuidanceMessage = () => {
-    const { assessmentCompleted, resumeUploaded } = userData;
-    
+    const {
+      assessmentCompleted,
+      resumeUploaded
+    } = userData;
     if (assessmentCompleted && resumeUploaded) {
       return {
         type: "success",
@@ -83,11 +86,8 @@ const Dashboard = () => {
       };
     }
   };
-
   const guidance = getGuidanceMessage();
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
+  return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
       <ResponsiveSidebar>
         <div className="p-6 border-b border-gray-200">
           <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
@@ -97,21 +97,12 @@ const Dashboard = () => {
 
         <nav className="p-4 flex-1 overflow-y-auto">
           <ul className="space-y-2">
-            {sidebarItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => setActiveSection(item.id)}
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                    activeSection === item.id
-                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
+            {sidebarItems.map(item => <li key={item.id}>
+                <button onClick={() => setActiveSection(item.id)} className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${activeSection === item.id ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>
                   <item.icon className="h-5 w-5" />
-                  <span>{item.label}</span>
+                  <span className="text-left">{item.label}</span>
                 </button>
-              </li>
-            ))}
+              </li>)}
           </ul>
         </nav>
 
@@ -143,8 +134,7 @@ const Dashboard = () => {
 
         {/* Content - Reduced top padding */}
         <div className="flex-1 p-4 md:ml-0 ml-16">
-          {activeSection === "overview" && (
-            <div className="space-y-6">
+          {activeSection === "overview" && <div className="space-y-6">
               {/* Guidance Message */}
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardContent className="p-6">
@@ -154,38 +144,30 @@ const Dashboard = () => {
                       <h3 className="text-lg font-semibold mb-2">{guidance.title}</h3>
                       <p className="text-gray-600 mb-4">{guidance.message}</p>
                       <div className="flex flex-wrap gap-3">
-                        {!userData.assessmentCompleted && (
-                          <Link to="/personality-test">
+                        {!userData.assessmentCompleted && <Link to="/personality-test">
                             <Button className="bg-gradient-to-r from-purple-600 to-blue-600">
                               <Brain className="h-4 w-4 mr-2" />
                               Take Assessment Test
                             </Button>
-                          </Link>
-                        )}
-                        {userData.assessmentCompleted && (
-                          <Link to="/personality-test">
+                          </Link>}
+                        {userData.assessmentCompleted && <Link to="/personality-test">
                             <Button variant="outline">
                               <RefreshCw className="h-4 w-4 mr-2" />
                               Retake Assessment Test
                             </Button>
-                          </Link>
-                        )}
-                        {!userData.resumeUploaded && (
-                          <Link to="/resume-upload">
+                          </Link>}
+                        {!userData.resumeUploaded && <Link to="/resume-upload">
                             <Button variant="outline">
                               <Upload className="h-4 w-4 mr-2" />
                               Upload Resume
                             </Button>
-                          </Link>
-                        )}
-                        {userData.resumeUploaded && (
-                          <Link to="/resume-upload">
+                          </Link>}
+                        {userData.resumeUploaded && <Link to="/resume-upload">
                             <Button variant="outline">
                               <FileText className="h-4 w-4 mr-2" />
                               Update Resume
                             </Button>
-                          </Link>
-                        )}
+                          </Link>}
                       </div>
                     </div>
                   </div>
@@ -200,8 +182,7 @@ const Dashboard = () => {
                       <div>
                         <p className="text-purple-100 text-sm">Completion Rate</p>
                         <p className="text-3xl font-bold">
-                          {userData.assessmentCompleted && userData.resumeUploaded ? "100%" : 
-                           userData.assessmentCompleted || userData.resumeUploaded ? "50%" : "0%"}
+                          {userData.assessmentCompleted && userData.resumeUploaded ? "100%" : userData.assessmentCompleted || userData.resumeUploaded ? "50%" : "0%"}
                         </p>
                       </div>
                       <TrendingUp className="h-8 w-8 text-purple-100" />
@@ -276,27 +257,22 @@ const Dashboard = () => {
                   </div>
                 </CardContent>
               </Card>
-            </div>
-          )}
+            </div>}
 
           {/* Other sections remain the same but add content */}
-          {activeSection === "personality" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+          {activeSection === "personality" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Personality Assessment</CardTitle>
               </CardHeader>
               <CardContent>
-                {userData.assessmentCompleted ? (
-                  <div className="space-y-4">
+                {userData.assessmentCompleted ? <div className="space-y-4">
                     <p>Your personality type: <strong>{userData.personalityType}</strong></p>
                     <p>Assessment completed successfully!</p>
                     <Button variant="outline">
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Retake Assessment
                     </Button>
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
+                  </div> : <div className="text-center py-8">
                     <Brain className="h-16 w-16 text-purple-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">Take Your Personality Assessment</h3>
                     <p className="text-gray-600 mb-4">Discover your personality type and get personalized career recommendations.</p>
@@ -305,28 +281,22 @@ const Dashboard = () => {
                         Start Assessment
                       </Button>
                     </Link>
-                  </div>
-                )}
+                  </div>}
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
-          {activeSection === "resume" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+          {activeSection === "resume" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Resume Analysis</CardTitle>
               </CardHeader>
               <CardContent>
-                {userData.resumeUploaded ? (
-                  <div className="space-y-4">
+                {userData.resumeUploaded ? <div className="space-y-4">
                     <p>Resume uploaded and analyzed successfully!</p>
                     <Button variant="outline">
                       <Upload className="h-4 w-4 mr-2" />
                       Update Resume
                     </Button>
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
+                  </div> : <div className="text-center py-8">
                     <FileText className="h-16 w-16 text-blue-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">Upload Your Resume</h3>
                     <p className="text-gray-600 mb-4">Upload your resume to get AI-powered analysis and career recommendations.</p>
@@ -335,15 +305,12 @@ const Dashboard = () => {
                         Upload Resume
                       </Button>
                     </Link>
-                  </div>
-                )}
+                  </div>}
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
           {/* Add other sections with similar pattern */}
-          {activeSection === "careers" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+          {activeSection === "careers" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Career Recommendations</CardTitle>
               </CardHeader>
@@ -353,11 +320,9 @@ const Dashboard = () => {
                   <p className="text-gray-600">Complete your assessment and upload your resume to see career recommendations.</p>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
-          {activeSection === "skills" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+          {activeSection === "skills" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Skills Development</CardTitle>
               </CardHeader>
@@ -367,11 +332,9 @@ const Dashboard = () => {
                   <p className="text-gray-600">Skill recommendations will appear here after completing your assessment.</p>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
-          {activeSection === "progress" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+          {activeSection === "progress" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Progress Tracking</CardTitle>
               </CardHeader>
@@ -381,11 +344,9 @@ const Dashboard = () => {
                   <p className="text-gray-600">Your progress tracking will be displayed here.</p>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
 
-          {activeSection === "settings" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+          {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Settings</CardTitle>
               </CardHeader>
@@ -401,12 +362,9 @@ const Dashboard = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          )}
+            </Card>}
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Dashboard;
