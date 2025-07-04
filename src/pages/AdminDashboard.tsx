@@ -123,7 +123,7 @@ const AdminDashboard = () => {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 mt-auto">
           <div className="space-y-2">
             <Button variant="outline" size="sm" className="w-full justify-start">
               <Lock className="h-4 w-4 mr-2" />
@@ -138,9 +138,9 @@ const AdminDashboard = () => {
       </ResponsiveSidebar>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto md:ml-0 ml-0">
-        {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-6 md:ml-0 ml-16">
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Header - Reduced padding */}
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 md:ml-0 ml-16">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -160,7 +160,8 @@ const AdminDashboard = () => {
           </div>
         </header>
 
-        <div className="p-6 md:ml-0 ml-16">
+        {/* Content - Reduced top padding */}
+        <div className="flex-1 p-4 md:ml-0 ml-16">
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white">

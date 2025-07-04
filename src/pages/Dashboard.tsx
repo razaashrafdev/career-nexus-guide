@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -114,7 +115,7 @@ const Dashboard = () => {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 mt-auto">
           <Link to="/">
             <Button variant="outline" size="sm" className="w-full justify-start mb-2">
               <Home className="h-4 w-4 mr-2" />
@@ -129,9 +130,9 @@ const Dashboard = () => {
       </ResponsiveSidebar>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto md:ml-0 ml-0">
-        {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-6 md:ml-0 ml-16">
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Header - Reduced padding */}
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 md:ml-0 ml-16">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Student Dashboard</h1>
@@ -140,7 +141,8 @@ const Dashboard = () => {
           </div>
         </header>
 
-        <div className="p-6 md:ml-0 ml-16">
+        {/* Content - Reduced top padding */}
+        <div className="flex-1 p-4 md:ml-0 ml-16">
           {activeSection === "overview" && (
             <div className="space-y-6">
               {/* Guidance Message */}
