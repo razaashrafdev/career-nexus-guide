@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
 import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
@@ -48,6 +49,10 @@ const Dashboard = () => {
     id: "progress",
     label: "Progress Tracking",
     icon: TrendingUp
+  }, {
+    id: "ai-chat",
+    label: "AI Chat Counselor",
+    icon: Brain
   }, {
     id: "settings",
     label: "Settings",
@@ -360,6 +365,62 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>}
+
+          {activeSection === "ai-chat" && (
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Brain className="h-5 w-5 text-purple-500" />
+                    <span>AI Career Counselor</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 rounded-lg">
+                      <h3 className="font-semibold text-lg mb-2">Ask Your Career Questions</h3>
+                      <p className="text-gray-600 mb-4">
+                        Get personalized career advice powered by AI. Ask about career paths, skills development, 
+                        job market trends, or any career-related questions you have.
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="border rounded-lg p-4 bg-white min-h-64 max-h-96 overflow-y-auto">
+                        <div className="text-center text-gray-500 py-8">
+                          <Brain className="h-12 w-12 mx-auto mb-3 text-purple-400" />
+                          <p>Start a conversation with your AI Career Counselor</p>
+                          <p className="text-sm">Ask questions about careers, skills, or job opportunities</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex space-x-2">
+                        <Input
+                          placeholder="Type your career question here..."
+                          className="flex-1"
+                        />
+                        <Button className="bg-gradient-to-r from-purple-600 to-blue-600">
+                          Send
+                        </Button>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-2">
+                        <Button variant="outline" size="sm">
+                          "What career suits my personality?"
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          "How can I improve my skills?"
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          "What's the job market like?"
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>

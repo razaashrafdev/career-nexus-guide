@@ -4,26 +4,55 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key } from "lucide-react";
 import { Link } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
-
-  // Mock user data - in real app this would come from backend
-  const [userData, setUserData] = useState({
-    name: "Admin User",
-    email: "admin@example.com",
-    assessmentCompleted: true,
-    // Change this to test different states
-    resumeUploaded: true,
-    // Change this to test different states
-    personalityType: "INTJ",
-    careerScore: 85,
-    recommendedCareers: ["Software Engineer", "Data Scientist"],
-    skills: ["JavaScript", "Python", "Data Analysis"]
+  const [searchTerm, setSearchTerm] = useState("");
+  const [apiSettings, setApiSettings] = useState({
+    indeedApiKey: "",
+    chatgptApiKey: "",
+    deepseekApiKey: "",
+    activeAiModel: "chatgpt"
   });
+
+  // Mock data for different sections
+  const mockUsers = [
+    { id: 1, name: "John Doe", email: "john@example.com", status: "Active", joined: "2024-01-15", assessmentCompleted: true, resumeUploaded: true },
+    { id: 2, name: "Jane Smith", email: "jane@example.com", status: "Active", joined: "2024-01-20", assessmentCompleted: true, resumeUploaded: false },
+    { id: 3, name: "Mike Johnson", email: "mike@example.com", status: "Inactive", joined: "2024-02-01", assessmentCompleted: false, resumeUploaded: true },
+    { id: 4, name: "Sarah Wilson", email: "sarah@example.com", status: "Active", joined: "2024-02-10", assessmentCompleted: true, resumeUploaded: true },
+  ];
+
+  const mockAssessments = [
+    { id: 1, userName: "John Doe", personalityType: "INTJ", completedDate: "2024-01-16", score: 85 },
+    { id: 2, userName: "Jane Smith", personalityType: "ENFP", completedDate: "2024-01-22", score: 92 },
+    { id: 3, userName: "Sarah Wilson", personalityType: "ISFJ", completedDate: "2024-02-12", score: 78 },
+  ];
+
+  const mockResumes = [
+    { id: 1, userName: "John Doe", fileName: "john_resume.pdf", status: "Analyzed", uploadDate: "2024-01-16", skills: ["JavaScript", "React", "Node.js"] },
+    { id: 2, userName: "Mike Johnson", fileName: "mike_resume.pdf", status: "Pending", uploadDate: "2024-02-02", skills: [] },
+    { id: 3, userName: "Sarah Wilson", fileName: "sarah_resume.pdf", status: "Analyzed", uploadDate: "2024-02-12", skills: ["Python", "Data Analysis", "Machine Learning"] },
+  ];
+
+  const mockCareers = [
+    { id: 1, name: "Software Engineer", description: "Develop and maintain software applications", requiredTraits: ["INTJ", "INTP"], skills: ["Programming", "Problem Solving"] },
+    { id: 2, name: "Data Scientist", description: "Analyze data to extract business insights", requiredTraits: ["INTJ", "ISTJ"], skills: ["Statistics", "Python", "Machine Learning"] },
+    { id: 3, name: "UX Designer", description: "Design user interfaces and experiences", requiredTraits: ["ENFP", "INFP"], skills: ["Design", "User Research", "Prototyping"] },
+  ];
+
+  const mockSkills = [
+    { id: 1, name: "JavaScript", category: "Technical", linkedCareers: ["Software Engineer", "Web Developer"] },
+    { id: 2, name: "Communication", category: "Soft Skills", linkedCareers: ["Project Manager", "Sales"] },
+    { id: 3, name: "Data Analysis", category: "Technical", linkedCareers: ["Data Scientist", "Business Analyst"] },
+    { id: 4, name: "Leadership", category: "Soft Skills", linkedCareers: ["Manager", "Team Lead"] },
+  ];
 
   const sidebarItems = [
     { id: "overview", label: "Overview", icon: Home },
@@ -35,16 +64,10 @@ const AdminDashboard = () => {
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
-  const getGuidanceMessage = () => {
-    return {
-      type: "success",
-      title: "Admin Dashboard Overview",
-      message: "Welcome to the admin dashboard. Manage users, assessments, and platform settings.",
-      icon: <CheckCircle className="h-6 w-6 text-green-500" />,
-    };
-  };
-
-  const guidance = getGuidanceMessage();
+  const filteredUsers = mockUsers.filter(user => 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
@@ -105,29 +128,16 @@ const AdminDashboard = () => {
         <div className="flex-1 p-6">
           {activeSection === "overview" && (
             <div className="space-y-6">
-              {/* Guidance Message */}
-              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardContent className="p-6">
-                  <div className="flex items-start space-x-4">
-                    {guidance.icon}
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-2">{guidance.title}</h3>
-                      <p className="text-gray-600 mb-4">{guidance.message}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-purple-100 text-sm">User Engagement</p>
-                        <p className="text-3xl font-bold">75%</p>
+                        <p className="text-purple-100 text-sm">Total Users</p>
+                        <p className="text-3xl font-bold">1,247</p>
                       </div>
-                      <TrendingUp className="h-8 w-8 text-purple-100" />
+                      <User className="h-8 w-8 text-purple-100" />
                     </div>
                   </CardContent>
                 </Card>
@@ -136,22 +146,10 @@ const AdminDashboard = () => {
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-gray-600 text-sm">Assessment Completion</p>
-                        <p className="text-3xl font-bold text-green-600">80%</p>
+                        <p className="text-gray-600 text-sm">Assessments Completed</p>
+                        <p className="text-3xl font-bold text-green-600">892</p>
                       </div>
-                      <Award className="h-8 w-8 text-green-500" />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-lg bg-white">
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-gray-600 text-sm">New Users</p>
-                        <p className="text-3xl font-bold text-blue-600">450</p>
-                      </div>
-                      <User className="h-8 w-8 text-blue-500" />
+                      <Brain className="h-8 w-8 text-green-500" />
                     </div>
                   </CardContent>
                 </Card>
@@ -161,219 +159,494 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-600 text-sm">Resumes Uploaded</p>
-                        <p className="text-3xl font-bold text-indigo-600">600</p>
+                        <p className="text-3xl font-bold text-blue-600">634</p>
                       </div>
-                      <Upload className="h-8 w-8 text-indigo-500" />
+                      <Upload className="h-8 w-8 text-blue-500" />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-lg bg-white">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-gray-600 text-sm">Career Matches</p>
+                        <p className="text-3xl font-bold text-indigo-600">1,456</p>
+                      </div>
+                      <Target className="h-8 w-8 text-indigo-500" />
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* User Progress Overview */}
+              {/* Recent Activity & Trends */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <User className="h-5 w-5" />
-                      <span>User Profile</span>
-                    </CardTitle>
+                    <CardTitle>Most Recommended Careers</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Name:</span>
-                      <span className="font-medium">{userData.name}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Email:</span>
-                      <span className="font-medium">{userData.email}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Personality Type:</span>
-                      <Badge variant="secondary">{userData.personalityType}</Badge>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span>Software Engineer</span>
+                        <Badge>234 matches</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>Data Scientist</span>
+                        <Badge>189 matches</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>UX Designer</span>
+                        <Badge>156 matches</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>Business Analyst</span>
+                        <Badge>142 matches</Badge>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
 
                 <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                   <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Target className="h-5 w-5" />
-                      <span>Career Score</span>
-                    </CardTitle>
+                    <CardTitle>Top Skills Trends</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div>
-                      <div className="flex justify-between mb-2">
-                        <span className="text-gray-600">Overall Score</span>
-                        <span className="font-medium">{userData.careerScore}%</span>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span>JavaScript</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={85} className="w-20 h-2" />
+                          <span className="text-sm">85%</span>
+                        </div>
                       </div>
-                      <Progress value={userData.careerScore} className="h-2" />
-                    </div>
-                    <div className="space-y-2">
-                      <span className="text-sm text-gray-600">Recommended Careers:</span>
-                      <div className="flex flex-wrap gap-2">
-                        {userData.recommendedCareers.map((career, index) => (
-                          <Badge key={index} variant="outline">{career}</Badge>
-                        ))}
+                      <div className="flex justify-between items-center">
+                        <span>Python</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={72} className="w-20 h-2" />
+                          <span className="text-sm">72%</span>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Status Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      {userData.assessmentCompleted ? (
-                        <CheckCircle className="h-8 w-8 text-green-500" />
-                      ) : (
-                        <AlertCircle className="h-8 w-8 text-yellow-500" />
-                      )}
-                      <div>
-                        <h3 className="font-semibold">Personality Assessment</h3>
-                        <p className="text-gray-600">
-                          {userData.assessmentCompleted 
-                            ? "Completed successfully" 
-                            : "Not yet completed"}
-                        </p>
-                        {!userData.assessmentCompleted && (
-                          <Button className="mt-2" size="sm">
-                            Take Assessment
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      {userData.resumeUploaded ? (
-                        <CheckCircle className="h-8 w-8 text-green-500" />
-                      ) : (
-                        <AlertCircle className="h-8 w-8 text-yellow-500" />
-                      )}
-                      <div>
-                        <h3 className="font-semibold">Resume Upload</h3>
-                        <p className="text-gray-600">
-                          {userData.resumeUploaded 
-                            ? "Resume uploaded and analyzed" 
-                            : "No resume uploaded yet"}
-                        </p>
-                        {!userData.resumeUploaded && (
-                          <Button className="mt-2" size="sm" variant="outline">
-                            Upload Resume
-                            <Upload className="ml-2 h-4 w-4" />
-                          </Button>
-                        )}
+                      <div className="flex justify-between items-center">
+                        <span>Communication</span>
+                        <div className="flex items-center space-x-2">
+                          <Progress value={68} className="w-20 h-2" />
+                          <span className="text-sm">68%</span>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
+            </div>
+          )}
 
-              {/* Skills Overview */}
+          {activeSection === "users" && (
+            <div className="space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <BookOpen className="h-5 w-5" />
-                    <span>Skills & Competencies</span>
-                  </CardTitle>
+                  <div className="flex justify-between items-center">
+                    <CardTitle>Manage Users</CardTitle>
+                    <div className="flex items-center space-x-4">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                        <Input
+                          placeholder="Search users..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10 w-64"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {userData.skills.map((skill, index) => (
-                      <Badge key={index} className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-                        {skill}
-                      </Badge>
-                    ))}
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-3">Name</th>
+                          <th className="text-left p-3">Email</th>
+                          <th className="text-left p-3">Status</th>
+                          <th className="text-left p-3">Joined</th>
+                          <th className="text-left p-3">Assessment</th>
+                          <th className="text-left p-3">Resume</th>
+                          <th className="text-left p-3">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredUsers.map((user) => (
+                          <tr key={user.id} className="border-b hover:bg-gray-50">
+                            <td className="p-3 font-medium">{user.name}</td>
+                            <td className="p-3 text-gray-600">{user.email}</td>
+                            <td className="p-3">
+                              <Badge variant={user.status === "Active" ? "default" : "secondary"}>
+                                {user.status}
+                              </Badge>
+                            </td>
+                            <td className="p-3 text-gray-600">{user.joined}</td>
+                            <td className="p-3">
+                              {user.assessmentCompleted ? (
+                                <CheckCircle className="h-5 w-5 text-green-500" />
+                              ) : (
+                                <AlertCircle className="h-5 w-5 text-yellow-500" />
+                              )}
+                            </td>
+                            <td className="p-3">
+                              {user.resumeUploaded ? (
+                                <CheckCircle className="h-5 w-5 text-green-500" />
+                              ) : (
+                                <AlertCircle className="h-5 w-5 text-yellow-500" />
+                              )}
+                            </td>
+                            <td className="p-3">
+                              <div className="flex space-x-2">
+                                <Button size="sm" variant="outline">
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" className="text-red-600">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-                  <Button className="mt-4" variant="outline" size="sm">
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Refresh Skills Analysis
-                  </Button>
                 </CardContent>
               </Card>
             </div>
           )}
 
-          {activeSection === "users" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Manage Users</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>User management content goes here.</p>
-              </CardContent>
-            </Card>
-          )}
-
           {activeSection === "assessments" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Assessments</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Assessment management content goes here.</p>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle>Assessment Results</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-3">User</th>
+                          <th className="text-left p-3">Personality Type</th>
+                          <th className="text-left p-3">Score</th>
+                          <th className="text-left p-3">Completed Date</th>
+                          <th className="text-left p-3">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mockAssessments.map((assessment) => (
+                          <tr key={assessment.id} className="border-b hover:bg-gray-50">
+                            <td className="p-3 font-medium">{assessment.userName}</td>
+                            <td className="p-3">
+                              <Badge variant="outline">{assessment.personalityType}</Badge>
+                            </td>
+                            <td className="p-3">
+                              <div className="flex items-center space-x-2">
+                                <Progress value={assessment.score} className="w-16 h-2" />
+                                <span className="text-sm">{assessment.score}%</span>
+                              </div>
+                            </td>
+                            <td className="p-3 text-gray-600">{assessment.completedDate}</td>
+                            <td className="p-3">
+                              <Button size="sm" variant="outline">
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {activeSection === "resumes" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Resumes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Resume management content goes here.</p>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle>Resume Management</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-3">User</th>
+                          <th className="text-left p-3">File Name</th>
+                          <th className="text-left p-3">Status</th>
+                          <th className="text-left p-3">Upload Date</th>
+                          <th className="text-left p-3">Extracted Skills</th>
+                          <th className="text-left p-3">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mockResumes.map((resume) => (
+                          <tr key={resume.id} className="border-b hover:bg-gray-50">
+                            <td className="p-3 font-medium">{resume.userName}</td>
+                            <td className="p-3 text-gray-600">{resume.fileName}</td>
+                            <td className="p-3">
+                              <Badge variant={resume.status === "Analyzed" ? "default" : "secondary"}>
+                                {resume.status}
+                              </Badge>
+                            </td>
+                            <td className="p-3 text-gray-600">{resume.uploadDate}</td>
+                            <td className="p-3">
+                              <div className="flex flex-wrap gap-1">
+                                {resume.skills.slice(0, 3).map((skill, index) => (
+                                  <Badge key={index} variant="outline" className="text-xs">
+                                    {skill}
+                                  </Badge>
+                                ))}
+                                {resume.skills.length > 3 && (
+                                  <Badge variant="outline" className="text-xs">
+                                    +{resume.skills.length - 3}
+                                  </Badge>
+                                )}
+                              </div>
+                            </td>
+                            <td className="p-3">
+                              <div className="flex space-x-2">
+                                <Button size="sm" variant="outline">
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="outline">
+                                  <RefreshCw className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {activeSection === "careers" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Careers</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Career management content goes here.</p>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle>Career Management</CardTitle>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Career
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
+                    {mockCareers.map((career) => (
+                      <Card key={career.id} className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-lg">{career.name}</h3>
+                            <p className="text-gray-600 mb-3">{career.description}</p>
+                            <div className="space-y-2">
+                              <div>
+                                <span className="text-sm font-medium">Required Traits: </span>
+                                {career.requiredTraits.map((trait, index) => (
+                                  <Badge key={index} variant="outline" className="mr-1">
+                                    {trait}
+                                  </Badge>
+                                ))}
+                              </div>
+                              <div>
+                                <span className="text-sm font-medium">Skills: </span>
+                                {career.skills.map((skill, index) => (
+                                  <Badge key={index} variant="secondary" className="mr-1">
+                                    {skill}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button size="sm" variant="outline">
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button size="sm" variant="outline" className="text-red-600">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {activeSection === "skills" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Skills</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p>Skill management content goes here.</p>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle>Skills Management</CardTitle>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Skill
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-3">Skill Name</th>
+                          <th className="text-left p-3">Category</th>
+                          <th className="text-left p-3">Linked Careers</th>
+                          <th className="text-left p-3">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {mockSkills.map((skill) => (
+                          <tr key={skill.id} className="border-b hover:bg-gray-50">
+                            <td className="p-3 font-medium">{skill.name}</td>
+                            <td className="p-3">
+                              <Badge variant={skill.category === "Technical" ? "default" : "secondary"}>
+                                {skill.category}
+                              </Badge>
+                            </td>
+                            <td className="p-3">
+                              <div className="flex flex-wrap gap-1">
+                                {skill.linkedCareers.map((career, index) => (
+                                  <Badge key={index} variant="outline" className="text-xs">
+                                    {career}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="p-3">
+                              <div className="flex space-x-2">
+                                <Button size="sm" variant="outline">
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button size="sm" variant="outline" className="text-red-600">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
 
           {activeSection === "settings" && (
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle>Settings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <span>Email Notifications</span>
-                    <Button variant="outline" size="sm">Configure</Button>
+            <div className="space-y-6">
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Key className="h-5 w-5" />
+                    <span>API Keys Management</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Indeed API Key</label>
+                      <Input
+                        type="password"
+                        placeholder="Enter Indeed API key for job matching"
+                        value={apiSettings.indeedApiKey}
+                        onChange={(e) => setApiSettings({...apiSettings, indeedApiKey: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">ChatGPT API Key</label>
+                      <Input
+                        type="password"
+                        placeholder="Enter OpenAI API key for ChatGPT"
+                        value={apiSettings.chatgptApiKey}
+                        onChange={(e) => setApiSettings({...apiSettings, chatgptApiKey: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">DeepSeek API Key</label>
+                      <Input
+                        type="password"
+                        placeholder="Enter DeepSeek API key"
+                        value={apiSettings.deepseekApiKey}
+                        onChange={(e) => setApiSettings({...apiSettings, deepseekApiKey: e.target.value})}
+                      />
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <span>Privacy Settings</span>
-                    <Button variant="outline" size="sm">Manage</Button>
+                  
+                  <div className="border-t pt-4">
+                    <label className="text-sm font-medium mb-2 block">Active AI Model for Chat Counselor</label>
+                    <Select value={apiSettings.activeAiModel} onValueChange={(value) => setApiSettings({...apiSettings, activeAiModel: value})}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="chatgpt">ChatGPT</SelectItem>
+                        <SelectItem value="deepseek">DeepSeek</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+
+                  <Button className="w-full">
+                    Save API Settings
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle>Platform Settings</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <span className="font-medium">Email Notifications</span>
+                        <p className="text-sm text-gray-600">Send email updates to users</p>
+                      </div>
+                      <Switch />
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <span className="font-medium">Assessment Questions</span>
+                        <p className="text-sm text-gray-600">Number of questions in personality test</p>
+                      </div>
+                      <Select defaultValue="50">
+                        <SelectTrigger className="w-20">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="25">25</SelectItem>
+                          <SelectItem value="50">50</SelectItem>
+                          <SelectItem value="100">100</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <span className="font-medium">Resume Auto-Analysis</span>
+                        <p className="text-sm text-gray-600">Automatically analyze uploaded resumes</p>
+                      </div>
+                      <Switch defaultChecked />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           )}
         </div>
       </div>
