@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -89,9 +90,9 @@ const AdminDashboard = () => {
       </ResponsiveSidebar>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen md:ml-0 ml-16">
-        {/* Header - Reduced padding */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-3">
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-6">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -100,8 +101,8 @@ const AdminDashboard = () => {
           </div>
         </header>
 
-        {/* Content - Minimal padding */}
-        <div className="flex-1 p-3">
+        {/* Content */}
+        <div className="flex-1 p-6">
           {activeSection === "overview" && (
             <div className="space-y-6">
               {/* Guidance Message */}
@@ -167,6 +168,136 @@ const AdminDashboard = () => {
                   </CardContent>
                 </Card>
               </div>
+
+              {/* User Progress Overview */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <User className="h-5 w-5" />
+                      <span>User Profile</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Name:</span>
+                      <span className="font-medium">{userData.name}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Email:</span>
+                      <span className="font-medium">{userData.email}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Personality Type:</span>
+                      <Badge variant="secondary">{userData.personalityType}</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Target className="h-5 w-5" />
+                      <span>Career Score</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-gray-600">Overall Score</span>
+                        <span className="font-medium">{userData.careerScore}%</span>
+                      </div>
+                      <Progress value={userData.careerScore} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-sm text-gray-600">Recommended Careers:</span>
+                      <div className="flex flex-wrap gap-2">
+                        {userData.recommendedCareers.map((career, index) => (
+                          <Badge key={index} variant="outline">{career}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Status Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-4">
+                      {userData.assessmentCompleted ? (
+                        <CheckCircle className="h-8 w-8 text-green-500" />
+                      ) : (
+                        <AlertCircle className="h-8 w-8 text-yellow-500" />
+                      )}
+                      <div>
+                        <h3 className="font-semibold">Personality Assessment</h3>
+                        <p className="text-gray-600">
+                          {userData.assessmentCompleted 
+                            ? "Completed successfully" 
+                            : "Not yet completed"}
+                        </p>
+                        {!userData.assessmentCompleted && (
+                          <Button className="mt-2" size="sm">
+                            Take Assessment
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-4">
+                      {userData.resumeUploaded ? (
+                        <CheckCircle className="h-8 w-8 text-green-500" />
+                      ) : (
+                        <AlertCircle className="h-8 w-8 text-yellow-500" />
+                      )}
+                      <div>
+                        <h3 className="font-semibold">Resume Upload</h3>
+                        <p className="text-gray-600">
+                          {userData.resumeUploaded 
+                            ? "Resume uploaded and analyzed" 
+                            : "No resume uploaded yet"}
+                        </p>
+                        {!userData.resumeUploaded && (
+                          <Button className="mt-2" size="sm" variant="outline">
+                            Upload Resume
+                            <Upload className="ml-2 h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Skills Overview */}
+              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <BookOpen className="h-5 w-5" />
+                    <span>Skills & Competencies</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {userData.skills.map((skill, index) => (
+                      <Badge key={index} className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
+                  <Button className="mt-4" variant="outline" size="sm">
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                    Refresh Skills Analysis
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           )}
 

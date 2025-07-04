@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -94,10 +93,7 @@ const Index = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link to="/about" className="text-gray-700 hover:text-purple-600 transition-colors">
-              About
-            </Link>
+          <div className="hidden md:flex items-center space-x-4">
             <Link to="/login">
               <Button variant="outline">Sign In</Button>
             </Link>
