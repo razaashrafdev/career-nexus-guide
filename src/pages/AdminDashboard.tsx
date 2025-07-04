@@ -1,10 +1,9 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { 
   Users, 
   BarChart3, 
@@ -35,12 +34,29 @@ import {
   MapPin
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("users");
 
-  // Mock data
+  // Mock analytics data
+  const userGrowthData = [
+    { month: 'Jan', users: 1200, active: 800 },
+    { month: 'Feb', users: 1850, active: 1200 },
+    { month: 'Mar', users: 2400, active: 1600 },
+    { month: 'Apr', users: 3200, active: 2100 },
+    { month: 'May', users: 4100, active: 2800 },
+    { month: 'Jun', users: 5200, active: 3500 },
+  ];
+
+  const assessmentData = [
+    { week: 'Week 1', completed: 250 },
+    { week: 'Week 2', completed: 320 },
+    { week: 'Week 3', completed: 280 },
+    { week: 'Week 4', completed: 420 },
+  ];
+
   const stats = {
     totalUsers: 52847,
     activeUsers: 14392,
@@ -80,21 +96,14 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-white/90 backdrop-blur-sm shadow-lg border-r border-gray-200">
+      <ResponsiveSidebar>
         <div className="p-6 border-b border-gray-200">
           <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
             CareerCompass Admin
           </Link>
-          <div className="flex items-center mt-4 space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-red-400 to-purple-400 rounded-full flex items-center justify-center">
-              <Shield className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-medium text-gray-700">Admin User</span>
-          </div>
         </div>
 
-        <nav className="p-4">
+        <nav className="p-4 flex-1 overflow-y-auto">
           <ul className="space-y-2">
             {sidebarItems.map((item) => (
               <li key={item.id}>
@@ -114,7 +123,7 @@ const AdminDashboard = () => {
           </ul>
         </nav>
 
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="p-4 border-t border-gray-200">
           <div className="space-y-2">
             <Button variant="outline" size="sm" className="w-full justify-start">
               <Lock className="h-4 w-4 mr-2" />
@@ -126,12 +135,12 @@ const AdminDashboard = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </ResponsiveSidebar>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto md:ml-0 ml-0">
         {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-6">
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-6 md:ml-0 ml-16">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -151,7 +160,7 @@ const AdminDashboard = () => {
           </div>
         </header>
 
-        <div className="p-6">
+        <div className="p-6 md:ml-0 ml-16">
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white">
@@ -280,6 +289,113 @@ const AdminDashboard = () => {
             </Card>
           )}
 
+          {activeTab === "analytics" && (
+            <div className="space-y-6">
+              <div className="grid lg:grid-cols-2 gap-6">
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle>User Growth Over Time</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={userGrowthData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Line 
+                          type="monotone" 
+                          dataKey="users" 
+                          stroke="#8884d8" 
+                          strokeWidth={2}
+                          name="Total Users"
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="active" 
+                          stroke="#82ca9d" 
+                          strokeWidth={2}
+                          name="Active Users"
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle>Weekly Assessment Completions</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={assessmentData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="week" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="completed" fill="#8884d8" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid lg:grid-cols-2 gap-6">
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle>Personality Types Distribution</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span>INTJ</span>
+                        <Badge variant="default" className="bg-blue-500">25%</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>ENFP</span>
+                        <Badge variant="default" className="bg-green-500">20%</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>ISTP</span>
+                        <Badge variant="default" className="bg-purple-500">18%</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>ENFJ</span>
+                        <Badge variant="default" className="bg-orange-500">15%</Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle>Skills in Demand</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span>JavaScript</span>
+                        <Badge variant="default" className="bg-yellow-500">35%</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>Python</span>
+                        <Badge variant="default" className="bg-blue-500">30%</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>React</span>
+                        <Badge variant="default" className="bg-cyan-500">25%</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span>SQL</span>
+                        <Badge variant="default" className="bg-green-500">20%</Badge>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
           {activeTab === "resumes" && (
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
@@ -398,110 +514,6 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
-          )}
-
-          {activeTab === "analytics" && (
-            <div className="grid lg:grid-cols-2 gap-6">
-              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle>Personality Types Distribution</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>INTJ</span>
-                      <Badge variant="default" className="bg-blue-500">25%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>ENFP</span>
-                      <Badge variant="default" className="bg-green-500">20%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>ISTP</span>
-                      <Badge variant="default" className="bg-purple-500">18%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>ENFJ</span>
-                      <Badge variant="default" className="bg-orange-500">15%</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle>Skills in Demand</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>JavaScript</span>
-                      <Badge variant="default" className="bg-yellow-500">35%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Python</span>
-                      <Badge variant="default" className="bg-blue-500">30%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>React</span>
-                      <Badge variant="default" className="bg-cyan-500">25%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>SQL</span>
-                      <Badge variant="default" className="bg-green-500">20%</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle>Students Joining Per Week</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>Week 1</span>
-                      <Badge variant="default">1,250 students</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Week 2</span>
-                      <Badge variant="default">1,485 students</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Week 3</span>
-                      <Badge variant="default">1,320 students</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Week 4</span>
-                      <Badge variant="default">1,680 students</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle>Score Analytics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span>Average Score</span>
-                      <Badge variant="default" className="bg-blue-500">78.5%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Highest Score</span>
-                      <Badge variant="default" className="bg-green-500">98%</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span>Lowest Score</span>
-                      <Badge variant="secondary">42%</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
           )}
 
           {activeTab === "system" && (
