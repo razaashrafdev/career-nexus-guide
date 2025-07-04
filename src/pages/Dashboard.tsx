@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
+
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
 
@@ -22,6 +23,7 @@ const Dashboard = () => {
     recommendedCareers: [],
     skills: []
   });
+
   const sidebarItems = [{
     id: "overview",
     label: "Overview",
@@ -51,6 +53,7 @@ const Dashboard = () => {
     label: "Settings",
     icon: Settings
   }];
+
   const getGuidanceMessage = () => {
     const {
       assessmentCompleted,
@@ -86,8 +89,11 @@ const Dashboard = () => {
       };
     }
   };
+
   const guidance = getGuidanceMessage();
-  return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
       <ResponsiveSidebar>
         <div className="p-6 border-b border-gray-200">
           <Link to="/" className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
@@ -97,16 +103,25 @@ const Dashboard = () => {
 
         <nav className="p-4 flex-1 overflow-y-auto">
           <ul className="space-y-2">
-            {sidebarItems.map(item => <li key={item.id}>
-                <button onClick={() => setActiveSection(item.id)} className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${activeSection === item.id ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>
+            {sidebarItems.map(item => (
+              <li key={item.id}>
+                <button
+                  onClick={() => setActiveSection(item.id)}
+                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                    activeSection === item.id
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
                   <item.icon className="h-5 w-5" />
                   <span className="text-left">{item.label}</span>
                 </button>
-              </li>)}
+              </li>
+            ))}
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-gray-200 mt-auto">
+        <div className="p-4 border-t border-gray-200">
           <Link to="/">
             <Button variant="outline" size="sm" className="w-full justify-start mb-2">
               <Home className="h-4 w-4 mr-2" />
@@ -121,9 +136,9 @@ const Dashboard = () => {
       </ResponsiveSidebar>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen md:ml-0 ml-16">
         {/* Header - Reduced padding */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-4 md:ml-0 ml-16">
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-3">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800">Student Dashboard</h1>
@@ -132,8 +147,8 @@ const Dashboard = () => {
           </div>
         </header>
 
-        {/* Content - Reduced top padding */}
-        <div className="flex-1 p-4 md:ml-0 ml-16">
+        {/* Content - Minimal padding */}
+        <div className="flex-1 p-3">
           {activeSection === "overview" && <div className="space-y-6">
               {/* Guidance Message */}
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
@@ -365,6 +380,8 @@ const Dashboard = () => {
             </Card>}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Dashboard;
