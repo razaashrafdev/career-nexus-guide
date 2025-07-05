@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -119,7 +120,7 @@ const Dashboard = () => {
                   }`}
                 >
                   <item.icon className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />
-                  <span className="text-left truncate md:block hidden">{item.label}</span>
+                  <span className="text-left truncate">{item.label}</span>
                 </button>
               </li>
             ))}
@@ -130,39 +131,39 @@ const Dashboard = () => {
           <Link to="/">
             <Button variant="outline" size="sm" className="w-full justify-start mb-2 text-xs md:text-sm">
               <Home className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span className="hidden md:inline">Back to Home</span>
-              <span className="md:hidden">Home</span>
+              <span>Back to Home</span>
             </Button>
           </Link>
           <Button variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
             <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-            <span className="hidden md:inline">Logout</span>
-            <span className="md:hidden">Exit</span>
+            <span>Logout</span>
           </Button>
         </div>
       </ResponsiveSidebar>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen md:ml-0">
         {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-3 md:p-6">
+        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-3 md:p-6 ml-16 md:ml-0">
           <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold text-gray-800">Student Dashboard</h1>
-              <p className="text-sm md:text-base text-gray-600">Welcome back, {userData.name}</p>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-lg md:text-2xl font-bold text-gray-800 truncate">Student Dashboard</h1>
+              <p className="text-sm md:text-base text-gray-600 truncate">Welcome back, {userData.name}</p>
             </div>
           </div>
         </header>
 
         {/* Content */}
-        <div className="flex-1 p-3 md:p-6">
-          {activeSection === "overview" && <div className="space-y-4 md:space-y-6">
+        <div className="flex-1 p-3 md:p-6 ml-16 md:ml-0 overflow-x-hidden">
+          {activeSection === "overview" && <div className="space-y-4 md:space-y-6 max-w-full">
               {/* Guidance Message */}
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardContent className="p-4 md:p-6">
                   <div className="flex items-start space-x-3 md:space-x-4">
-                    {guidance.icon}
-                    <div className="flex-1">
+                    <div className="flex-shrink-0">
+                      {guidance.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
                       <h3 className="text-base md:text-lg font-semibold mb-2">{guidance.title}</h3>
                       <p className="text-sm md:text-base text-gray-600 mb-4">{guidance.message}</p>
                       <div className="flex flex-col sm:flex-row flex-wrap gap-2 md:gap-3">
@@ -201,13 +202,13 @@ const Dashboard = () => {
                 <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white">
                   <CardContent className="p-4 md:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <p className="text-purple-100 text-xs md:text-sm">Completion Rate</p>
-                        <p className="text-xl md:text-3xl font-bold">
+                        <p className="text-xl md:text-3xl font-bold truncate">
                           {userData.assessmentCompleted && userData.resumeUploaded ? "100%" : userData.assessmentCompleted || userData.resumeUploaded ? "50%" : "0%"}
                         </p>
                       </div>
-                      <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-100" />
+                      <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-100 flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -215,11 +216,11 @@ const Dashboard = () => {
                 <Card className="border-0 shadow-lg bg-white">
                   <CardContent className="p-4 md:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <p className="text-gray-600 text-xs md:text-sm">Career Score</p>
-                        <p className="text-xl md:text-3xl font-bold text-green-600">{userData.careerScore}%</p>
+                        <p className="text-xl md:text-3xl font-bold text-green-600 truncate">{userData.careerScore}%</p>
                       </div>
-                      <Award className="h-6 w-6 md:h-8 md:w-8 text-green-500" />
+                      <Award className="h-6 w-6 md:h-8 md:w-8 text-green-500 flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -227,13 +228,13 @@ const Dashboard = () => {
                 <Card className="border-0 shadow-lg bg-white">
                   <CardContent className="p-4 md:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <p className="text-gray-600 text-xs md:text-sm">Personality Type</p>
-                        <p className="text-xl md:text-3xl font-bold text-blue-600">
+                        <p className="text-xl md:text-3xl font-bold text-blue-600 truncate">
                           {userData.personalityType || "N/A"}
                         </p>
                       </div>
-                      <User className="h-6 w-6 md:h-8 md:w-8 text-blue-500" />
+                      <User className="h-6 w-6 md:h-8 md:w-8 text-blue-500 flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -241,11 +242,11 @@ const Dashboard = () => {
                 <Card className="border-0 shadow-lg bg-white">
                   <CardContent className="p-4 md:p-6">
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <p className="text-gray-600 text-xs md:text-sm">Recommendations</p>
-                        <p className="text-xl md:text-3xl font-bold text-indigo-600">{userData.recommendedCareers.length}</p>
+                        <p className="text-xl md:text-3xl font-bold text-indigo-600 truncate">{userData.recommendedCareers.length}</p>
                       </div>
-                      <Target className="h-6 w-6 md:h-8 md:w-8 text-indigo-500" />
+                      <Target className="h-6 w-6 md:h-8 md:w-8 text-indigo-500 flex-shrink-0" />
                     </div>
                   </CardContent>
                 </Card>
@@ -368,7 +369,7 @@ const Dashboard = () => {
             </Card>}
 
           {activeSection === "ai-chat" && (
-            <div className="space-y-4 md:space-y-6">
+            <div className="space-y-4 md:space-y-6 max-w-full">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
@@ -398,9 +399,9 @@ const Dashboard = () => {
                       <div className="flex space-x-2">
                         <Input
                           placeholder="Type your career question here..."
-                          className="flex-1 text-sm md:text-base"
+                          className="flex-1 text-sm md:text-base min-w-0"
                         />
-                        <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm md:text-base px-3 md:px-4">
+                        <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm md:text-base px-3 md:px-4 flex-shrink-0">
                           Send
                         </Button>
                       </div>

@@ -1,343 +1,327 @@
-import { useState, useEffect } from "react";
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowRight, 
-  CheckCircle, 
-  Star, 
-  Users, 
-  TrendingUp, 
-  Award, 
-  BookOpen,
-  Mail,
-  Phone,
-  MapPin,
-  Facebook,
-  Twitter,
-  Linkedin,
-  Instagram
-} from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import MobileNavbar from "@/components/MobileNavbar";
+import { Brain, Users, Award, TrendingUp, CheckCircle, Star, ArrowRight, BookOpen, Target, BarChart3, MessageCircle, Shield, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
-  const location = useLocation();
-
-  // Scroll to top when route changes
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
-
-  const features = [
-    {
-      icon: <CheckCircle className="h-6 w-6" />,
-      title: "Personality Assessment",
-      description: "Discover your unique personality type and career preferences"
-    },
-    {
-      icon: <TrendingUp className="h-6 w-6" />,
-      title: "Career Matching",
-      description: "Get matched with careers that align with your personality and skills"
-    },
-    {
-      icon: <Award className="h-6 w-6" />,
-      title: "Skills Analysis",
-      description: "Identify your strengths and areas for development"
-    },
-    {
-      icon: <BookOpen className="h-6 w-6" />,
-      title: "Learning Pathways",
-      description: "Receive personalized learning recommendations for your career goals"
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "Computer Science Student",
-      image: "/placeholder.svg",
-      quote: "CareerCompass helped me discover my passion for UX design. The personality test was incredibly insightful!",
-      rating: 5
-    },
-    {
-      name: "Michael Rodriguez",
-      role: "Business Major",
-      image: "/placeholder.svg", 
-      quote: "The career recommendations were spot-on. I'm now pursuing a career in data analytics and loving it!",
-      rating: 5
-    },
-    {
-      name: "Emily Watson",
-      role: "Psychology Student",
-      image: "/placeholder.svg",
-      quote: "The AI career coach feature is amazing. It's like having a personal mentor available 24/7.",
-      rating: 5
-    }
-  ];
-
-  const stats = [
-    { number: "50,000+", label: "Students Helped" },
-    { number: "95%", label: "Satisfaction Rate" },
-    { number: "200+", label: "Career Paths" },
-    { number: "24/7", label: "AI Support" }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <nav className="flex justify-between items-center">
-          <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            CareerCompass
-          </div>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to="/login">
-              <Button variant="outline">Sign In</Button>
+      <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              CareerCompass
             </Link>
-            <Link to="/signup">
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+            <nav className="flex space-x-4">
+              <Link to="/login" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all">
+                Sign In
+              </Link>
+              <Link to="/signup" className="border border-purple-600 text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-all">
                 Sign Up
-              </Button>
-            </Link>
+              </Link>
+            </nav>
           </div>
-
-          {/* Mobile Navigation */}
-          <MobileNavbar />
-        </nav>
+        </div>
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            Discover Your Perfect Career Path
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Let AI-powered insights guide you to a career that matches your personality, skills, and aspirations. Start your journey to professional success today.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link to="/personality-test">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-3 w-full sm:w-auto">
-                Start Free Assessment
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link to="/about">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-3 w-full sm:w-auto">
-                Learn More
-              </Button>
-            </Link>
+      <section className="py-20 text-center">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <Badge className="mb-6 bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-purple-200">
+              AI-Powered Career Guidance
+            </Badge>
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-6">
+              Find Your Perfect Career Path
+            </h1>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
+              Discover careers that match your personality, skills, and aspirations with our AI-powered assessment platform designed specifically for students.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/personality-test">
+                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-lg transition-all px-8 py-3 text-lg">
+                  <Brain className="mr-2 h-5 w-5" />
+                  Take Assessment Test
+                </Button>
+              </Link>
+              <Link to="/about">
+                <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 text-lg">
+                  Learn More
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">{stat.number}</div>
-              <div className="text-gray-600">{stat.label}</div>
+      <section className="py-16 bg-white/50">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8 text-center">
+            <div className="space-y-2">
+              <div className="text-3xl font-bold text-purple-600">10,000+</div>
+              <div className="text-gray-600">Students Guided</div>
             </div>
-          ))}
+            <div className="space-y-2">
+              <div className="text-3xl font-bold text-blue-600">95%</div>
+              <div className="text-gray-600">Accuracy Rate</div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-3xl font-bold text-indigo-600">500+</div>
+              <div className="text-gray-600">Career Paths</div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-3xl font-bold text-green-600">24/7</div>
+              <div className="text-gray-600">AI Support</div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
-            Everything You Need to Find Your Dream Career
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Our comprehensive platform combines personality science, AI technology, and career expertise to guide your professional journey.
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-white/80 backdrop-blur-sm">
-              <CardHeader className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white mx-auto mb-4">
-                  {feature.icon}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+              Why Choose CareerCompass?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Our comprehensive platform combines cutting-edge AI with proven career guidance methodologies
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Brain className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center text-gray-600">
-                  {feature.description}
-                </CardDescription>
+                <h3 className="text-xl font-semibold mb-3">AI-Powered Assessment</h3>
+                <p className="text-gray-600">
+                  Advanced personality profiling using scientifically validated assessments to understand your unique traits and preferences.
+                </p>
               </CardContent>
             </Card>
-          ))}
+
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Personalized Matching</h3>
+                <p className="text-gray-600">
+                  Get matched with careers that align with your personality, skills, and interests using our sophisticated algorithm.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg hover:shadow-xl transition-all bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold mb-3">Skills Development</h3>
+                <p className="text-gray-600">
+                  Receive personalized recommendations for courses, certifications, and skill development pathways.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
-      {/* Success Stories Section */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-r from-purple-100 via-blue-100 to-indigo-100 rounded-3xl mx-4 my-16">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            Success Stories That Inspire
-          </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Join thousands of students who have transformed their careers with our AI-powered guidance and personalized insights.
-          </p>
-        </div>
+      {/* How It Works Section */}
+      <section className="py-20 bg-white/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600">Simple steps to discover your ideal career path</p>
+          </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="border-0 shadow-xl bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-              <CardContent className="p-8">
-                <div className="flex items-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
-                    {testimonial.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-gray-800">{testimonial.name}</h4>
-                    <p className="text-purple-600 font-medium">{testimonial.role}</p>
-                  </div>
-                </div>
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                1
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Take Assessment</h3>
+              <p className="text-gray-600">Complete our comprehensive personality and skills assessment</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                2
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Upload Resume</h3>
+              <p className="text-gray-600">Share your resume for AI-powered skills analysis</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-12 h-12 bg-indigo-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                3
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Get Matches</h3>
+              <p className="text-gray-600">Receive personalized career recommendations</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+                4
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Plan Your Path</h3>
+              <p className="text-gray-600">Get guidance on skills development and next steps</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+              What Students Say
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-gray-700 italic leading-relaxed">"{testimonial.quote}"</p>
+                <p className="text-gray-600 mb-4">
+                  "CareerCompass helped me discover my passion for UX design. The assessment was incredibly accurate and the recommendations were spot-on!"
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                    S
+                  </div>
+                  <div>
+                    <div className="font-semibold">Sarah Johnson</div>
+                    <div className="text-sm text-gray-500">Computer Science Student</div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
 
-        <div className="text-center">
-          <Badge variant="secondary" className="px-6 py-3 text-lg font-semibold bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-            <Users className="w-5 h-5 mr-2" />
-            Join 50,000+ Happy Students
-          </Badge>
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "I was confused about my career path, but this platform gave me clarity. Now I'm pursuing data science with confidence!"
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                    M
+                  </div>
+                  <div>
+                    <div className="font-semibold">Michael Chen</div>
+                    <div className="text-sm text-gray-500">Business Student</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "The AI counselor feature is amazing! It's like having a career advisor available 24/7. Highly recommended!"
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                    E
+                  </div>
+                  <div>
+                    <div className="font-semibold">Emily Rodriguez</div>
+                    <div className="text-sm text-gray-500">Psychology Student</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="container mx-auto px-4 py-16 text-center">
-        <div className="max-w-3xl mx-auto bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 md:p-12 text-white">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready to Transform Your Career?
-          </h2>
+      <section className="py-20 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-4">Ready to Discover Your Future?</h2>
           <p className="text-xl mb-8 opacity-90">
-            Take the first step towards your dream career. Our AI-powered assessment takes just 10 minutes.
+            Join thousands of students who have found their ideal career paths with CareerCompass
           </p>
-          <Link to="/personality-test">
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 text-lg px-8 py-4">
-              Start Free Assessment
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/signup">
+              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 text-lg">
+                Get Started Free
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+            <Link to="/personality-test">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg">
+                Try Demo Assessment
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {/* Brand Section */}
-            <div className="lg:col-span-1">
-              <div className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4 block">
                 CareerCompass
-              </div>
-              <p className="text-gray-400 mb-6">
-                Empowering students worldwide to discover their ideal career paths through AI-powered insights and personalized guidance.
+              </Link>
+              <p className="text-gray-400">
+                Guiding students to their ideal careers through AI-powered insights and personalized recommendations.
               </p>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                  <Twitter className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
-                  <Linkedin className="h-5 w-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-pink-400 transition-colors">
-                  <Instagram className="h-5 w-5" />
-                </a>
-              </div>
             </div>
-
-            {/* Product Links */}
             <div>
-              <h4 className="text-lg font-semibold mb-4 text-white">Product</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link to="/personality-test" className="hover:text-purple-400 transition-colors">Personality Test</Link></li>
-                <li><Link to="/resume-upload" className="hover:text-purple-400 transition-colors">Resume Analysis</Link></li>
-                <li><Link to="/dashboard" className="hover:text-purple-400 transition-colors">Career Dashboard</Link></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">AI Counselor</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Job Matching</a></li>
+              <h4 className="font-semibold text-lg mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
+                <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+                <li><Link to="/login" className="hover:text-white transition-colors">Sign In</Link></li>
               </ul>
             </div>
-
-            {/* Company Links */}
             <div>
-              <h4 className="text-lg font-semibold mb-4 text-white">Company</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link to="/about" className="hover:text-purple-400 transition-colors">About Us</Link></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Our Team</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Press</a></li>
-                <li><a href="#" className="hover:text-purple-400 transition-colors">Blog</a></li>
+              <h4 className="font-semibold text-lg mb-4">Services</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li>Personality Assessment</li>
+                <li>Resume Analysis</li>
+                <li>Career Matching</li>
+                <li>Skills Development</li>
               </ul>
             </div>
-
-            {/* Contact Info */}
             <div>
-              <h4 className="text-lg font-semibold mb-4 text-white">Contact</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li className="flex items-center">
-                  <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <a href="mailto:support@careercompass.com" className="hover:text-purple-400 transition-colors break-all">
-                    support@careercompass.com
-                  </a>
-                </li>
-                <li className="flex items-center">
-                  <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <a href="tel:+1-555-0123" className="hover:text-purple-400 transition-colors">
-                    +1 (555) 012-3456
-                  </a>
-                </li>
-                <li className="flex items-center">
-                  <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-                  <span>San Francisco, CA</span>
-                </li>
+              <h4 className="font-semibold text-lg mb-4">Contact Info</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li>support@careercompass.com</li>
+                <li>+1 (555) 012-3456</li>
+                <li>San Francisco, CA</li>
               </ul>
-              <div className="mt-6">
-                <h5 className="text-sm font-semibold mb-2 text-white">Newsletter</h5>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input 
-                    type="email" 
-                    placeholder="Your email" 
-                    className="bg-gray-800 text-white px-3 py-2 rounded-md flex-1 border border-gray-700 focus:outline-none focus:border-purple-500 text-sm" 
-                  />
-                  <Button className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-md text-sm whitespace-nowrap">
-                    Subscribe
-                  </Button>
-                </div>
-              </div>
             </div>
           </div>
-
-          {/* Bottom Footer */}
-          <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="text-gray-400 text-sm text-center md:text-left">
-                © 2025 CareerCompass. All rights reserved.
-              </div>
-              <div className="flex flex-wrap justify-center md:justify-end gap-4 sm:gap-6 text-sm text-gray-400">
-                <Link to="/privacy" className="hover:text-purple-400 transition-colors">Privacy Policy</Link>
-                <Link to="/terms" className="hover:text-purple-400 transition-colors">Terms of Service</Link>
-                <Link to="/cookie-policy" className="hover:text-purple-400 transition-colors">Cookie Policy</Link>
-              </div>
-            </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 CareerCompass. All rights reserved.</p>
           </div>
         </div>
       </footer>

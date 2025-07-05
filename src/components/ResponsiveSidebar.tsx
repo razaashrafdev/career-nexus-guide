@@ -43,6 +43,20 @@ const ResponsiveSidebar = ({ children, className }: ResponsiveSidebarProps) => {
           className
         )}
       >
+        {/* Close button for mobile - visible when sidebar is open */}
+        {isOpen && (
+          <div className="md:hidden absolute top-4 right-4 z-60">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsOpen(false)}
+              className="p-1"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+        
         <div className="flex-1 overflow-y-auto">
           {children}
         </div>
