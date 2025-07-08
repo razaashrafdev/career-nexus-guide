@@ -21,12 +21,12 @@ const AdminDashboard = () => {
   });
 
   // Mock data for different sections
-  const mockUsers = [
+  const [mockUsers, setMockUsers] = useState([
     { id: 1, name: "John Doe", email: "john@example.com", status: "Active", joined: "2024-01-15", assessmentCompleted: true, resumeUploaded: true },
     { id: 2, name: "Jane Smith", email: "jane@example.com", status: "Active", joined: "2024-01-20", assessmentCompleted: true, resumeUploaded: false },
     { id: 3, name: "Mike Johnson", email: "mike@example.com", status: "Inactive", joined: "2024-02-01", assessmentCompleted: false, resumeUploaded: true },
     { id: 4, name: "Sarah Wilson", email: "sarah@example.com", status: "Active", joined: "2024-02-10", assessmentCompleted: true, resumeUploaded: true },
-  ];
+  ]);
 
   const mockAssessments = [
     { id: 1, userName: "John Doe", personalityType: "INTJ", completedDate: "2024-01-16", score: 85 },
@@ -67,6 +67,21 @@ const AdminDashboard = () => {
     user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleUserStatusToggle = (userId: number, newStatus: boolean) => {
+    setMockUsers(prevUsers => 
+      prevUsers.map(user => 
+        user.id === userId 
+          ? { ...user, status: newStatus ? "Active" : "Inactive" }
+          : user
+      )
+    );
+  };
+
+  const handleViewUser = (userId: number) => {
+    const user = mockUsers.find(u => u.id === userId);
+    alert(`Viewing user: ${user?.name}\nEmail: ${user?.email}\nStatus: ${user?.status}\nJoined: ${user?.joined}`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
@@ -249,6 +264,10 @@ const AdminDashboard = () => {
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <CardTitle className="text-base md:text-lg">Manage Users</CardTitle>
                     <div className="flex items-center space-x-4 w-full sm:w-auto">
+                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs md:text-sm">
+                        <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                        Add User
+                      </Button>
                       <div className="relative flex-1 sm:flex-none">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input
@@ -284,10 +303,7 @@ const AdminDashboard = () => {
                                <div className="flex items-center space-x-2">
                                  <Switch 
                                    checked={user.status === "Active"}
-                                   onCheckedChange={(checked) => {
-                                     // Handle status toggle logic here
-                                     console.log(`Toggle user ${user.id} to ${checked ? 'Active' : 'Inactive'}`);
-                                   }}
+                                   onCheckedChange={(checked) => handleUserStatusToggle(user.id, checked)}
                                    className="data-[state=checked]:bg-green-600"
                                  />
                                  <span className="text-xs text-gray-600">
@@ -311,10 +327,15 @@ const AdminDashboard = () => {
                               )}
                             </td>
                             <td className="p-2 md:p-3">
-                              <div className="flex space-x-1 md:space-x-2">
-                                <Button size="sm" variant="outline" className="p-1 md:p-2">
-                                  <Eye className="h-3 w-3 md:h-4 md:w-4" />
-                                </Button>
+                               <div className="flex space-x-1 md:space-x-2">
+                                 <Button 
+                                   size="sm" 
+                                   variant="outline" 
+                                   className="p-1 md:p-2"
+                                   onClick={() => handleViewUser(user.id)}
+                                 >
+                                   <Eye className="h-3 w-3 md:h-4 md:w-4" />
+                                 </Button>
                                 <Button size="sm" variant="outline" className="text-red-600 p-1 md:p-2">
                                   <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
                                 </Button>

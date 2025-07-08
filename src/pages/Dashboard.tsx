@@ -451,40 +451,6 @@ const Dashboard = () => {
                       </Button>
                     </div>
                   </div>
-                  
-                  {/* Notification Settings */}
-                  <div className="space-y-4">
-                    <h3 className="text-sm md:text-base font-semibold">Notification Preferences</h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm md:text-base">Email Notifications</span>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Configure</Button>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm md:text-base">Assessment Reminders</span>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Manage</Button>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm md:text-base">Career Updates</span>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Settings</Button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Privacy Settings */}
-                  <div className="space-y-4">
-                    <h3 className="text-sm md:text-base font-semibold">Privacy & Data</h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm md:text-base">Data Privacy Settings</span>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Manage</Button>
-                      </div>
-                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <span className="text-sm md:text-base">Download My Data</span>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Export</Button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>}
