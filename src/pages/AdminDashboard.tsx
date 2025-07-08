@@ -280,11 +280,21 @@ const AdminDashboard = () => {
                           <tr key={user.id} className="border-b hover:bg-gray-50">
                             <td className="p-2 md:p-3 font-medium text-xs md:text-sm">{user.name}</td>
                             <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.email}</td>
-                            <td className="p-2 md:p-3">
-                              <Badge variant={user.status === "Active" ? "default" : "secondary"} className="text-xs">
-                                {user.status}
-                              </Badge>
-                            </td>
+                             <td className="p-2 md:p-3">
+                               <div className="flex items-center space-x-2">
+                                 <Switch 
+                                   checked={user.status === "Active"}
+                                   onCheckedChange={(checked) => {
+                                     // Handle status toggle logic here
+                                     console.log(`Toggle user ${user.id} to ${checked ? 'Active' : 'Inactive'}`);
+                                   }}
+                                   className="data-[state=checked]:bg-green-600"
+                                 />
+                                 <span className="text-xs text-gray-600">
+                                   {user.status === "Active" ? "Active" : "Inactive"}
+                                 </span>
+                               </div>
+                             </td>
                             <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.joined}</td>
                             <td className="p-2 md:p-3">
                               {user.assessmentCompleted ? (

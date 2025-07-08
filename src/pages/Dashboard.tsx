@@ -47,10 +47,6 @@ const Dashboard = () => {
     label: "Skills Development",
     icon: BookOpen
   }, {
-    id: "progress",
-    label: "Progress Tracking",
-    icon: TrendingUp
-  }, {
     id: "ai-chat",
     label: "AI Chat Counselor",
     icon: Brain
@@ -356,17 +352,6 @@ const Dashboard = () => {
               </CardContent>
             </Card>}
 
-          {activeSection === "progress" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-base md:text-lg">Progress Tracking</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 md:p-6">
-                <div className="text-center py-6 md:py-8">
-                  <BarChart3 className="h-12 w-12 md:h-16 md:w-16 text-indigo-500 mx-auto mb-4" />
-                  <p className="text-sm md:text-base text-gray-600">Your progress tracking will be displayed here.</p>
-                </div>
-              </CardContent>
-            </Card>}
 
           {activeSection === "ai-chat" && (
             <div className="space-y-4 md:space-y-6 max-w-full">
@@ -426,17 +411,79 @@ const Dashboard = () => {
 
           {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="text-base md:text-lg">Settings</CardTitle>
+                <CardTitle className="text-base md:text-lg">Account Settings</CardTitle>
               </CardHeader>
               <CardContent className="p-4 md:p-6">
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm md:text-base">Email Notifications</span>
-                    <Button variant="outline" size="sm" className="text-xs md:text-sm">Configure</Button>
+                <div className="space-y-6">
+                  {/* Profile Information */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm md:text-base font-semibold">Profile Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs md:text-sm font-medium text-gray-700">Full Name</label>
+                        <Input value={userData.name} className="mt-1 text-sm" />
+                      </div>
+                      <div>
+                        <label className="text-xs md:text-sm font-medium text-gray-700">Email</label>
+                        <Input value={userData.email} className="mt-1 text-sm" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm md:text-base">Privacy Settings</span>
-                    <Button variant="outline" size="sm" className="text-xs md:text-sm">Manage</Button>
+                  
+                  {/* Password Change */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm md:text-base font-semibold">Change Password</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-xs md:text-sm font-medium text-gray-700">Current Password</label>
+                        <Input type="password" placeholder="Enter current password" className="mt-1 text-sm" />
+                      </div>
+                      <div>
+                        <label className="text-xs md:text-sm font-medium text-gray-700">New Password</label>
+                        <Input type="password" placeholder="Enter new password" className="mt-1 text-sm" />
+                      </div>
+                      <div>
+                        <label className="text-xs md:text-sm font-medium text-gray-700">Confirm New Password</label>
+                        <Input type="password" placeholder="Confirm new password" className="mt-1 text-sm" />
+                      </div>
+                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm">
+                        Update Password
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {/* Notification Settings */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm md:text-base font-semibold">Notification Preferences</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm md:text-base">Email Notifications</span>
+                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Configure</Button>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm md:text-base">Assessment Reminders</span>
+                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Manage</Button>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm md:text-base">Career Updates</span>
+                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Settings</Button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Privacy Settings */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm md:text-base font-semibold">Privacy & Data</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm md:text-base">Data Privacy Settings</span>
+                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Manage</Button>
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span className="text-sm md:text-base">Download My Data</span>
+                        <Button variant="outline" size="sm" className="text-xs md:text-sm">Export</Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
