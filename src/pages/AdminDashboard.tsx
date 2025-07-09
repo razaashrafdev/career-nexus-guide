@@ -9,6 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key } from "lucide-react";
 import { Link } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
+import { ViewUserModal } from "@/components/modals/ViewUserModal";
+import { ViewAssessmentModal } from "@/components/modals/ViewAssessmentModal";
+import { EditCareerModal } from "@/components/modals/EditCareerModal";
+import { EditSkillModal } from "@/components/modals/EditSkillModal";
+import { AddUserModal } from "@/components/modals/AddUserModal";
+import { AddSkillModal } from "@/components/modals/AddSkillModal";
+import { AddCareerModal } from "@/components/modals/AddCareerModal";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
@@ -20,6 +28,17 @@ const AdminDashboard = () => {
     activeAiModel: "chatgpt"
   });
 
+  // Modal states
+  const [viewUserModal, setViewUserModal] = useState({ isOpen: false, user: null as any });
+  const [viewAssessmentModal, setViewAssessmentModal] = useState({ isOpen: false, assessment: null as any });
+  const [editCareerModal, setEditCareerModal] = useState({ isOpen: false, career: null as any });
+  const [editSkillModal, setEditSkillModal] = useState({ isOpen: false, skill: null as any });
+  const [addUserModal, setAddUserModal] = useState(false);
+  const [addSkillModal, setAddSkillModal] = useState(false);
+  const [addCareerModal, setAddCareerModal] = useState(false);
+  
+  const { toast } = useToast();
+
   // Mock data for different sections
   const [mockUsers, setMockUsers] = useState([
     { id: 1, name: "John Doe", email: "john@example.com", status: "Active", joined: "2024-01-15", assessmentCompleted: true, resumeUploaded: true },
@@ -28,11 +47,11 @@ const AdminDashboard = () => {
     { id: 4, name: "Sarah Wilson", email: "sarah@example.com", status: "Active", joined: "2024-02-10", assessmentCompleted: true, resumeUploaded: true },
   ]);
 
-  const mockAssessments = [
+  const [mockAssessments, setMockAssessments] = useState([
     { id: 1, userName: "John Doe", personalityType: "INTJ", completedDate: "2024-01-16", score: 85 },
     { id: 2, userName: "Jane Smith", personalityType: "ENFP", completedDate: "2024-01-22", score: 92 },
     { id: 3, userName: "Sarah Wilson", personalityType: "ISFJ", completedDate: "2024-02-12", score: 78 },
-  ];
+  ]);
 
   const mockResumes = [
     { id: 1, userName: "John Doe", fileName: "john_resume.pdf", status: "Analyzed", uploadDate: "2024-01-16", skills: ["JavaScript", "React", "Node.js"] },
@@ -40,18 +59,18 @@ const AdminDashboard = () => {
     { id: 3, userName: "Sarah Wilson", fileName: "sarah_resume.pdf", status: "Analyzed", uploadDate: "2024-02-12", skills: ["Python", "Data Analysis", "Machine Learning"] },
   ];
 
-  const mockCareers = [
+  const [mockCareers, setMockCareers] = useState([
     { id: 1, name: "Software Engineer", description: "Develop and maintain software applications", requiredTraits: ["INTJ", "INTP"], skills: ["Programming", "Problem Solving"] },
     { id: 2, name: "Data Scientist", description: "Analyze data to extract business insights", requiredTraits: ["INTJ", "ISTJ"], skills: ["Statistics", "Python", "Machine Learning"] },
     { id: 3, name: "UX Designer", description: "Design user interfaces and experiences", requiredTraits: ["ENFP", "INFP"], skills: ["Design", "User Research", "Prototyping"] },
-  ];
+  ]);
 
-  const mockSkills = [
+  const [mockSkills, setMockSkills] = useState([
     { id: 1, name: "JavaScript", category: "Technical", linkedCareers: ["Software Engineer", "Web Developer"] },
     { id: 2, name: "Communication", category: "Soft Skills", linkedCareers: ["Project Manager", "Sales"] },
     { id: 3, name: "Data Analysis", category: "Technical", linkedCareers: ["Data Scientist", "Business Analyst"] },
     { id: 4, name: "Leadership", category: "Soft Skills", linkedCareers: ["Manager", "Team Lead"] },
-  ];
+  ]);
 
   const sidebarItems = [
     { id: "overview", label: "Overview", icon: Home },
@@ -80,7 +99,82 @@ const AdminDashboard = () => {
 
   const handleViewUser = (userId: number) => {
     const user = mockUsers.find(u => u.id === userId);
-    alert(`Viewing user: ${user?.name}\nEmail: ${user?.email}\nStatus: ${user?.status}\nJoined: ${user?.joined}`);
+    setViewUserModal({ isOpen: true, user });
+  };
+
+  const handleViewAssessment = (assessmentId: number) => {
+    const assessment = mockAssessments.find(a => a.id === assessmentId);
+    setViewAssessmentModal({ isOpen: true, assessment });
+  };
+
+  const handleEditCareer = (careerId: number) => {
+    const career = mockCareers.find(c => c.id === careerId);
+    setEditCareerModal({ isOpen: true, career });
+  };
+
+  const handleEditSkill = (skillId: number) => {
+    const skill = mockSkills.find(s => s.id === skillId);
+    setEditSkillModal({ isOpen: true, skill });
+  };
+
+  const handleAddUser = (userData: any) => {
+    const newUser = {
+      id: mockUsers.length + 1,
+      ...userData,
+      joined: new Date().toISOString().split('T')[0],
+      assessmentCompleted: false,
+      resumeUploaded: false
+    };
+    setMockUsers(prev => [...prev, newUser]);
+    toast({
+      title: "User Added",
+      description: `${userData.name} has been successfully added to the system.`,
+    });
+  };
+
+  const handleAddSkill = (skillData: any) => {
+    const newSkill = {
+      id: mockSkills.length + 1,
+      ...skillData,
+      linkedCareers: []
+    };
+    setMockSkills(prev => [...prev, newSkill]);
+    toast({
+      title: "Skill Added",
+      description: `${skillData.name} has been successfully added to the skills database.`,
+    });
+  };
+
+  const handleAddCareer = (careerData: any) => {
+    const newCareer = {
+      id: mockCareers.length + 1,
+      ...careerData
+    };
+    setMockCareers(prev => [...prev, newCareer]);
+    toast({
+      title: "Career Added",
+      description: `${careerData.name} has been successfully added to the careers database.`,
+    });
+  };
+
+  const handleSaveCareer = (updatedCareer: any) => {
+    setMockCareers(prev => prev.map(career => 
+      career.id === updatedCareer.id ? updatedCareer : career
+    ));
+    toast({
+      title: "Career Updated",
+      description: `${updatedCareer.name} has been successfully updated.`,
+    });
+  };
+
+  const handleSaveSkill = (updatedSkill: any) => {
+    setMockSkills(prev => prev.map(skill => 
+      skill.id === updatedSkill.id ? updatedSkill : skill
+    ));
+    toast({
+      title: "Skill Updated",
+      description: `${updatedSkill.name} has been successfully updated.`,
+    });
   };
 
   return (
@@ -261,10 +355,13 @@ const AdminDashboard = () => {
             <div className="space-y-4 md:space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
-                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <CardTitle className="text-base md:text-lg">Manage Users</CardTitle>
                     <div className="flex items-center space-x-4 w-full sm:w-auto">
-                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs md:text-sm">
+                      <Button 
+                        onClick={() => setAddUserModal(true)}
+                        className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs md:text-sm"
+                      >
                         <Plus className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
                         Add User
                       </Button>
@@ -384,7 +481,11 @@ const AdminDashboard = () => {
                             </td>
                             <td className="p-3 text-gray-600">{assessment.completedDate}</td>
                             <td className="p-3">
-                              <Button size="sm" variant="outline">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleViewAssessment(assessment.id)}
+                              >
                                 <Eye className="h-4 w-4 mr-2" />
                                 View Details
                               </Button>
@@ -469,7 +570,7 @@ const AdminDashboard = () => {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Career Management</CardTitle>
-                    <Button>
+                    <Button onClick={() => setAddCareerModal(true)}>
                       <Plus className="h-4 w-4 mr-2" />
                       Add Career
                     </Button>
@@ -503,7 +604,11 @@ const AdminDashboard = () => {
                             </div>
                           </div>
                           <div className="flex space-x-2">
-                            <Button size="sm" variant="outline">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleEditCareer(career.id)}
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
                             <Button size="sm" variant="outline" className="text-red-600">
@@ -525,7 +630,7 @@ const AdminDashboard = () => {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Skills Management</CardTitle>
-                    <Button>
+                    <Button onClick={() => setAddSkillModal(true)}>
                       <Plus className="h-4 w-4 mr-2" />
                       Add Skill
                     </Button>
@@ -562,7 +667,11 @@ const AdminDashboard = () => {
                             </td>
                             <td className="p-3">
                               <div className="flex space-x-2">
-                                <Button size="sm" variant="outline">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleEditSkill(skill.id)}
+                                >
                                   <Edit className="h-4 w-4" />
                                 </Button>
                                 <Button size="sm" variant="outline" className="text-red-600">
@@ -685,6 +794,52 @@ const AdminDashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Modals */}
+      <ViewUserModal
+        isOpen={viewUserModal.isOpen}
+        onClose={() => setViewUserModal({ isOpen: false, user: null })}
+        user={viewUserModal.user}
+        onStatusToggle={handleUserStatusToggle}
+      />
+
+      <ViewAssessmentModal
+        isOpen={viewAssessmentModal.isOpen}
+        onClose={() => setViewAssessmentModal({ isOpen: false, assessment: null })}
+        assessment={viewAssessmentModal.assessment}
+      />
+
+      <EditCareerModal
+        isOpen={editCareerModal.isOpen}
+        onClose={() => setEditCareerModal({ isOpen: false, career: null })}
+        career={editCareerModal.career}
+        onSave={handleSaveCareer}
+      />
+
+      <EditSkillModal
+        isOpen={editSkillModal.isOpen}
+        onClose={() => setEditSkillModal({ isOpen: false, skill: null })}
+        skill={editSkillModal.skill}
+        onSave={handleSaveSkill}
+      />
+
+      <AddUserModal
+        isOpen={addUserModal}
+        onClose={() => setAddUserModal(false)}
+        onAdd={handleAddUser}
+      />
+
+      <AddSkillModal
+        isOpen={addSkillModal}
+        onClose={() => setAddSkillModal(false)}
+        onAdd={handleAddSkill}
+      />
+
+      <AddCareerModal
+        isOpen={addCareerModal}
+        onClose={() => setAddCareerModal(false)}
+        onAdd={handleAddCareer}
+      />
     </div>
   );
 };
