@@ -17,6 +17,7 @@ import { AddUserModal } from "@/components/modals/AddUserModal";
 import { AddSkillModal } from "@/components/modals/AddSkillModal";
 import { AddCareerModal } from "@/components/modals/AddCareerModal";
 import { useToast } from "@/hooks/use-toast";
+
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
@@ -449,7 +450,6 @@ const AdminDashboard = () => {
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <CardTitle className="text-base md:text-lg">Manage Users</CardTitle>
                     <div className="flex items-center space-x-4 w-full sm:w-auto">
-                      
                       <div className="relative flex-1 sm:flex-none">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input placeholder="Search users..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 w-full sm:w-64 text-sm" />
@@ -555,7 +555,13 @@ const AdminDashboard = () => {
           {activeSection === "resumes" && <div className="space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle>Resume Management</CardTitle>
+                  <div className="flex justify-between items-center">
+                    <CardTitle>Resume Management</CardTitle>
+                    <Button onClick={() => setAddUserModal(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add User
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -802,4 +808,5 @@ const AdminDashboard = () => {
       <AddCareerModal isOpen={addCareerModal} onClose={() => setAddCareerModal(false)} onAdd={handleAddCareer} />
     </div>;
 };
+
 export default AdminDashboard;
