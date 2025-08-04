@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Users, Award, TrendingUp, CheckCircle, Star, ArrowRight, BookOpen, Target, BarChart3, MessageCircle, Shield, Zap } from "lucide-react";
+import { Brain, Users, Award, TrendingUp, CheckCircle, Star, ArrowRight, BookOpen, Target, BarChart3, MessageCircle, Shield, Zap, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -47,9 +47,10 @@ const Index = () => {
                   Take Assessment Test
                 </Button>
               </Link>
-              <Link to="/about">
+              <Link to="/resume-upload">
                 <Button size="lg" variant="outline" className="border-purple-600 text-purple-600 hover:bg-purple-50 px-8 py-3 text-lg">
-                  Learn More
+                  <Upload className="mr-2 h-5 w-5" />
+                  Upload Resume
                 </Button>
               </Link>
             </div>
