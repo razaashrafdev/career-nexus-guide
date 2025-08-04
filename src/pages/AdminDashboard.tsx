@@ -767,43 +767,8 @@ const AdminDashboard = () => {
               </Card>
 
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardHeader>
-                  <CardTitle className="text-base md:text-lg">Platform Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 md:p-6">
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <span className="font-medium text-sm md:text-base">Email Notifications</span>
-                        <p className="text-xs md:text-sm text-gray-600">Send email updates to users</p>
-                      </div>
-                      <Switch />
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <span className="font-medium text-sm md:text-base">Assessment Questions</span>
-                        <p className="text-xs md:text-sm text-gray-600">Number of questions in personality test</p>
-                      </div>
-                      <Select defaultValue="50">
-                        <SelectTrigger className="w-16 md:w-20 text-sm">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="25">25</SelectItem>
-                          <SelectItem value="50">50</SelectItem>
-                          <SelectItem value="100">100</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <span className="font-medium text-sm md:text-base">Resume Auto-Analysis</span>
-                        <p className="text-xs md:text-sm text-gray-600">Automatically analyze uploaded resumes</p>
-                      </div>
-                      <Switch defaultChecked />
-                    </div>
-                  </div>
-                </CardContent>
+                
+                
               </Card>
             </div>}
         </div>
