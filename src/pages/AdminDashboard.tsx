@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -557,9 +558,9 @@ const AdminDashboard = () => {
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Resume Management</CardTitle>
-                    <Button onClick={() => setAddUserModal(true)}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add User
+                    <Button variant="outline">
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Refresh
                     </Button>
                   </div>
                 </CardHeader>
