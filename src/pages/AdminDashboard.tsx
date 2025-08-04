@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,6 @@ import { AddUserModal } from "@/components/modals/AddUserModal";
 import { AddSkillModal } from "@/components/modals/AddSkillModal";
 import { AddCareerModal } from "@/components/modals/AddCareerModal";
 import { useToast } from "@/hooks/use-toast";
-
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
@@ -602,9 +600,7 @@ const AdminDashboard = () => {
                                 <Button size="sm" variant="outline">
                                   <Download className="h-4 w-4" />
                                 </Button>
-                                <Button size="sm" variant="outline">
-                                  <RefreshCw className="h-4 w-4" />
-                                </Button>
+                                
                               </div>
                             </td>
                           </tr>)}
@@ -809,5 +805,4 @@ const AdminDashboard = () => {
       <AddCareerModal isOpen={addCareerModal} onClose={() => setAddCareerModal(false)} onAdd={handleAddCareer} />
     </div>;
 };
-
 export default AdminDashboard;
