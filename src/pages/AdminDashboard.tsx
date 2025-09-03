@@ -27,6 +27,13 @@ const AdminDashboard = () => {
     activeAiModel: "chatgpt"
   });
 
+  // Password change state
+  const [passwordSettings, setPasswordSettings] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
+
   // Modal states
   const [viewUserModal, setViewUserModal] = useState({
     isOpen: false,
@@ -279,6 +286,47 @@ const AdminDashboard = () => {
     toast({
       title: "Skill Updated",
       description: `${updatedSkill.name} has been successfully updated.`
+    });
+  };
+
+  const handlePasswordChange = () => {
+    if (!passwordSettings.currentPassword || !passwordSettings.newPassword || !passwordSettings.confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Please fill in all password fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (passwordSettings.newPassword !== passwordSettings.confirmPassword) {
+      toast({
+        title: "Error", 
+        description: "New password and confirm password do not match.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (passwordSettings.newPassword.length < 8) {
+      toast({
+        title: "Error",
+        description: "New password must be at least 8 characters long.",
+        variant: "destructive" 
+      });
+      return;
+    }
+
+    // Here you would normally make an API call to change the password
+    setPasswordSettings({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: ""
+    });
+
+    toast({
+      title: "Password Changed",
+      description: "Your password has been successfully updated."
     });
   };
   return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
@@ -770,8 +818,59 @@ const AdminDashboard = () => {
               </Card>
 
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                
-                
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
+                    <Key className="h-4 w-4 md:h-5 md:w-5" />
+                    <span>Change Password</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
+                  <div className="grid gap-4">
+                    <div>
+                      <label className="text-xs md:text-sm font-medium mb-2 block">Current Password</label>
+                      <Input 
+                        type="password" 
+                        placeholder="Enter your current password" 
+                        value={passwordSettings.currentPassword} 
+                        onChange={e => setPasswordSettings({
+                          ...passwordSettings,
+                          currentPassword: e.target.value
+                        })} 
+                        className="text-sm" 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs md:text-sm font-medium mb-2 block">New Password</label>
+                      <Input 
+                        type="password" 
+                        placeholder="Enter your new password" 
+                        value={passwordSettings.newPassword} 
+                        onChange={e => setPasswordSettings({
+                          ...passwordSettings,
+                          newPassword: e.target.value
+                        })} 
+                        className="text-sm" 
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs md:text-sm font-medium mb-2 block">Confirm New Password</label>
+                      <Input 
+                        type="password" 
+                        placeholder="Confirm your new password" 
+                        value={passwordSettings.confirmPassword} 
+                        onChange={e => setPasswordSettings({
+                          ...passwordSettings,
+                          confirmPassword: e.target.value
+                        })} 
+                        className="text-sm" 
+                      />
+                    </div>
+                  </div>
+
+                  <Button onClick={handlePasswordChange} className="w-full text-sm md:text-base">
+                    Change Password
+                  </Button>
+                </CardContent>
               </Card>
             </div>}
         </div>
