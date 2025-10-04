@@ -6,25 +6,31 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
-    name: "John Doe",
-    email: "john@example.com",
+    name: user?.fullName || "User",
+    email: user?.email || "",
     assessmentCompleted: false,
-    // Change this to test different states
     resumeUploaded: true,
-    // Change this to test different states
     personalityType: "",
     careerScore: 0,
     recommendedCareers: [],
     skills: []
   });
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   const sidebarItems = [{
     id: "overview",
@@ -130,7 +136,7 @@ const Dashboard = () => {
               <span>Back to Home</span>
             </Button>
           </Link>
-          <Button variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
+          <Button onClick={handleLogout} variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
             <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
             <span>Logout</span>
           </Button>

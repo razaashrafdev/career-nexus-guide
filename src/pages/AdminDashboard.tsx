@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
+import { useAuth } from "@/contexts/AuthContext";
 import { ViewUserModal } from "@/components/modals/ViewUserModal";
 import { ViewAssessmentModal } from "@/components/modals/ViewAssessmentModal";
 import { EditCareerModal } from "@/components/modals/EditCareerModal";
@@ -20,6 +21,9 @@ import { useToast } from "@/hooks/use-toast";
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
   const [apiSettings, setApiSettings] = useState({
     indeedApiKey: "",
     chatgptApiKey: "",
@@ -33,6 +37,11 @@ const AdminDashboard = () => {
     newPassword: "",
     confirmPassword: ""
   });
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   // Modal states
   const [viewUserModal, setViewUserModal] = useState({
@@ -356,7 +365,7 @@ const AdminDashboard = () => {
               <span className="md:hidden">Home</span>
             </Button>
           </Link>
-          <Button variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
+          <Button onClick={handleLogout} variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
             <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
             <span className="hidden md:inline">Logout</span>
             <span className="md:hidden">Exit</span>
@@ -371,7 +380,7 @@ const AdminDashboard = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-xl md:text-2xl font-bold text-gray-800">Admin Dashboard</h1>
-              <p className="text-sm md:text-base text-gray-600">Manage your platform</p>
+              <p className="text-sm md:text-base text-gray-600">Welcome, {user?.fullName || "Admin"}</p>
             </div>
           </div>
         </header>
