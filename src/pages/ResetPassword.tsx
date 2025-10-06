@@ -1,4 +1,4 @@
-
+import { authService } from "@/services/authService";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,15 +13,20 @@ const ResetPassword = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  e.preventDefault();
+  setIsLoading(true);
 
-    // Simulate reset password process
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubmitted(true);
-    }, 2000);
-  };
+  const result = await authService.forgotPassword(email);
+
+  if (result.error) {
+    alert(result.error.message); // ❌ e.g. "User not found or unable to reset password"
+    setIsLoading(false);
+    return;
+  }
+
+  setIsLoading(false);
+  setIsSubmitted(true); // ✅ Show success message card
+};
 
   if (isSubmitted) {
     return (

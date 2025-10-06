@@ -14,6 +14,19 @@ export interface LoginResponse {
   message: string;
   isSuccess: boolean;
 }
+export interface RegisterRequest {
+  username: string;
+  email: string;
+  fullname: string;
+  passswordHash: string;
+}
+
+export interface RegisterResponse {
+  statusCode: number;
+  data: number; // UserId return hota hai (jaise 11)
+  message: string;
+  isSuccess: boolean;
+}
 
 export interface User {
   id: string;

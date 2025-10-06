@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { authService } from "@/services/authService";
 const SignUp = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({  
     firstName: "",
     lastName: "",
     email: "",
@@ -17,6 +18,7 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const[message,setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -35,12 +37,29 @@ const SignUp = () => {
       return;
     }
     setIsLoading(true);
+    setMessage(null);
+     const result = await authService.register({
+      username:formData.email.split("@")[0],
+      email: formData.email,
+      fullname: `${formData.firstName} ${formData.lastName}`,
+      passswordHash: formData.password
+});
 
+if (result.error) {
+  setMessage(result.error.message); 
+  setIsLoading(false); // Email already exist ya koi aur error
+} else {
+  setMessage("Account Created Successfully");
+  setIsLoading(false);
+  setTimeout(() => {
+    navigate("/dashboard");
+  }, 1500);
+}
     // Simulate registration process
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate("/dashboard");
-    }, 2000);
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   navigate("/dashboard");
+    // }, 2000);
   };
   const passwordStrength = (password: string) => {
     const hasLength = password.length >= 8;
@@ -150,6 +169,16 @@ const SignUp = () => {
               <Button type="submit" className="w-full h-11 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700" disabled={isLoading || !agreedToTerms}>
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
+              {/* ✅ Add this right below button */}
+{message && (
+  <p
+    className={`text-center text-sm mt-3 ${
+      message.includes("Successfully") ? "text-green-600" : "text-red-600"
+    }`}
+  >
+    {message}
+  </p>
+)}
             </form>
 
             

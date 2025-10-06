@@ -1,4 +1,4 @@
-import { LoginRequest, LoginResponse, User, ApiError, JWTPayload } from "@/types/auth";
+import { LoginRequest, LoginResponse,RegisterRequest,RegisterResponse, User, ApiError, JWTPayload } from "@/types/auth";
 
 const API_BASE_URL = "https://localhost:7270";
 const TOKEN_KEY = "career_nexus_token";
@@ -47,6 +47,74 @@ export const authService = {
       };
     }
   },
+
+ async register(newUser: RegisterRequest): Promise<{ success?: RegisterResponse; error?: ApiError }> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/Account/Register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    });
+
+    const data: RegisterResponse | ApiError = await response.json();
+
+    // ✅ ab direct isSuccess check hoga backend se
+    if (!("isSuccess" in data) || !data.isSuccess) {
+      return {
+        error: {
+          statusCode: response.status,
+          message: "message" in data ? data.message : "Registration failed",
+          isSuccess: false,
+        },
+      };
+    }
+
+    // ✅ successful case
+    return { success: data as RegisterResponse };
+
+  } catch (error) {
+    return {
+      error: {
+        message: "Unable to connect to server. Please check your connection.",
+        isSuccess: false,
+      },
+    };
+  }
+},
+async forgotPassword(email: string): Promise<{ success?: string; error?: ApiError }> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/Account/ForgotPassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        error: {
+          statusCode: response.status,
+          message: data.message || "Failed to reset password",
+          isSuccess: false,
+        },
+      };
+    }
+
+    return { success: data.message || "Password reset successfully. Check your email." };
+  } catch (error) {
+    return {
+      error: {
+        message: "Unable to connect to server. Please check your connection.",
+        isSuccess: false,
+      },
+    };
+  }
+},
 
   saveToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
