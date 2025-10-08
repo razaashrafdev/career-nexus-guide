@@ -1,4 +1,4 @@
-
+import { authService } from "@/services/authService";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,19 @@ import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 
+
+
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+ const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
     name: user?.fullName || "User",
@@ -30,6 +38,30 @@ const Dashboard = () => {
   const handleLogout = () => {
     logout();
     navigate("/login");
+  };
+   const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (newPassword !== confirmPassword) {
+      setMessage("New password and confirm password do not match!");
+      return;
+    }
+
+    setIsLoading(true);
+    setMessage("");
+
+    const result = await authService.changePassword(oldPassword, newPassword);
+
+    setIsLoading(false);
+
+    if (result.error) {
+      setMessage(result.error.message);
+    } else {
+      setMessage("Password changed successfully!");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    }
   };
 
   const sidebarItems = [{
@@ -437,26 +469,68 @@ const Dashboard = () => {
                   </div>
                   
                   {/* Password Change */}
-                  <div className="space-y-4">
-                    <h3 className="text-sm md:text-base font-semibold">Change Password</h3>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="text-xs md:text-sm font-medium text-gray-700">Current Password</label>
-                        <Input type="password" placeholder="Enter current password" className="mt-1 text-sm" />
-                      </div>
-                      <div>
-                        <label className="text-xs md:text-sm font-medium text-gray-700">New Password</label>
-                        <Input type="password" placeholder="Enter new password" className="mt-1 text-sm" />
-                      </div>
-                      <div>
-                        <label className="text-xs md:text-sm font-medium text-gray-700">Confirm New Password</label>
-                        <Input type="password" placeholder="Confirm new password" className="mt-1 text-sm" />
-                      </div>
-                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm">
-                        Update Password
-                      </Button>
-                    </div>
-                  </div>
+                 {/* Password Change */}
+<div className="space-y-4">
+  <h3 className="text-sm md:text-base font-semibold">Change Password</h3>
+  <form onSubmit={handleChangePassword} className="space-y-3">
+    <div>
+      <label className="text-xs md:text-sm font-medium text-gray-700">Current Password</label>
+      {/* 🔹 Controlled input */}
+      <Input
+        type="password"
+        placeholder="Enter current password"
+        className="mt-1 text-sm"
+        value={oldPassword}
+        onChange={(e) => setOldPassword(e.target.value)}
+      />
+    </div>
+    <div>
+      <label className="text-xs md:text-sm font-medium text-gray-700">New Password</label>
+      {/* 🔹 Controlled input */}
+      <Input
+        type="password"
+        placeholder="Enter new password"
+        className="mt-1 text-sm"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
+    </div>
+    <div>
+      <label className="text-xs md:text-sm font-medium text-gray-700">Confirm New Password</label>
+      {/* 🔹 Controlled input */}
+      <Input
+        type="password"
+        placeholder="Confirm new password"
+        className="mt-1 text-sm"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+    </div>
+
+    {/* 🔹 Message display */}
+    {message && (
+      <p
+        className={`text-sm ${
+          message.includes("successfully")
+            ? "text-green-600"
+            : "text-red-600"
+        }`}
+      >
+        {message}
+      </p>
+    )}
+
+    {/* 🔹 Submit button */}
+    <Button
+      type="submit"
+      disabled={isLoading}
+      className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm w-full"
+    >
+      {isLoading ? "Updating..." : "Update Password"}
+    </Button>
+  </form>
+</div>
+
                 </div>
               </CardContent>
             </Card>}
