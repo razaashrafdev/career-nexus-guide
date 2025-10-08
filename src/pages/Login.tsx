@@ -1,4 +1,4 @@
-
+import { authService } from "@/services/authService";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,31 +22,44 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      const result = await login({ email, password });
+   try {
+  const result = await authService.login({ email, password });
 
-      if (result.success) {
-        toast({
-          title: "Login Successful",
-          description: "Welcome back to your dashboard",
-        });
-        navigate("/dashboard");
-      } else {
-        toast({
-          title: "Login Failed",
-          description: result.error?.message || "Invalid credentials",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+  if (result.success) {
+    const userData = result.success.data;
+
+    // ✅ Save token and role info in localStorage
+    localStorage.setItem("token", userData.token);
+    localStorage.setItem("roleName", userData.roleName);
+
+    toast({
+      title: "Login Successful",
+      description: `Welcome back, ${userData.fullName}`,
+    });
+
+    // ✅ Role-based navigation
+    if (userData.roleName === "Admin") {
+      navigate("/admin-dashboard");
+    } else {
+      navigate("/dashboard");
     }
+  } else {
+    toast({
+      title: "Login Failed",
+      description: result.error?.message || "Invalid credentials",
+      variant: "destructive",
+    });
+  }
+} catch (error) {
+  toast({
+    title: "Error",
+    description: "An unexpected error occurred",
+    variant: "destructive",
+  });
+} finally {
+  setIsLoading(false);
+}
+
   };
 
   return (

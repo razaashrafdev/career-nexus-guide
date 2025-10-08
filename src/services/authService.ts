@@ -4,49 +4,77 @@ const API_BASE_URL = "https://localhost:7270";
 const TOKEN_KEY = "career_nexus_token";
 
 export const authService = {
-  async login(credentials: LoginRequest): Promise<{ user?: User; error?: ApiError }> {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/Account/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
+async login(credentials: LoginRequest): Promise<{
+  success?: {
+    statusCode: number;
+    data: {
+      fullName: string;
+      email: string;
+      roleId: number;
+      roleName: string;
+      roleType: number;
+      token: string;
+      isTwoFactorEnabled: boolean;
+    };
+    message: string;
+    isSuccess: boolean;
+  };
+  error?: ApiError;
+}> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/Account/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
 
-      const data: LoginResponse | ApiError = await response.json();
+    const data = await response.json();
 
-      if (!response.ok || !("isSuccess" in data) || !data.isSuccess) {
-        return {
-          error: {
-            statusCode: response.status,
-            message: "message" in data ? data.message : "Login failed",
-            isSuccess: false,
-          },
-        };
-      }
-
-      const loginData = data as LoginResponse;
-      const decoded = this.decodeToken(loginData.data.token);
-
-      const user: User = {
-        id: decoded?.primarysid || "",
-        fullName: loginData.data.fullName,
-        email: loginData.data.email,
-        token: loginData.data.token,
-      };
-
-      this.saveToken(loginData.data.token);
-      return { user };
-    } catch (error) {
+    // ✅ Validation
+    if (!response.ok || !data.isSuccess) {
       return {
         error: {
-          message: "Unable to connect to server. Please check your connection.",
+          statusCode: response.status,
+          message: data.message || "Login failed",
           isSuccess: false,
         },
       };
     }
-  },
+
+    // ✅ Token decode (optional)
+    const decoded = this.decodeToken(data.data.token);
+
+    // ✅ Token save
+    this.saveToken(data.data.token);
+
+    // ✅ Return standardized success
+    return {
+      success: {
+        statusCode: data.statusCode,
+        data: {
+          fullName: data.data.fullName,
+          email: data.data.email,
+          roleId: data.data.roleId,
+          roleName: data.data.roleName,
+          roleType: data.data.roleType,
+          token: data.data.token,
+          isTwoFactorEnabled: data.data.isTwoFactorEnabled,
+        },
+        message: data.message,
+        isSuccess: data.isSuccess,
+      },
+    };
+  } catch (error) {
+    return {
+      error: {
+        message: "Unable to connect to server. Please check your connection.",
+        isSuccess: false,
+      },
+    };
+  }
+},
 
  async register(newUser: RegisterRequest): Promise<{ success?: RegisterResponse; error?: ApiError }> {
   try {
@@ -115,6 +143,50 @@ async forgotPassword(email: string): Promise<{ success?: string; error?: ApiErro
     };
   }
 },
+async changePassword(
+  oldPassword: string,
+  newPassword: string
+): Promise<{ success?: { statusCode: number; data: object; message: string; isSuccess: boolean }; error?: ApiError }> {
+
+  try {
+    const token = this.getToken(); // JWT token localStorage se lo
+
+    const response = await fetch(`${API_BASE_URL}/api/Account/ChangePassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // 👈 token bhejna zaroori hai
+      },
+      body: JSON.stringify({
+        oldPassword,
+        newPassword,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.isSuccess) {
+      return {
+        error: {
+          statusCode: response.status,
+          message: data.message || "Password change failed",
+          isSuccess: false,
+        },
+      };
+    }
+
+    return { success: data };
+  } catch (error) {
+    return {
+      error: {
+        message: "Unable to connect to server. Please check your connection.",
+        isSuccess: false,
+      },
+    };
+  }
+},
+
+
 
   saveToken(token: string): void {
     localStorage.setItem(TOKEN_KEY, token);
