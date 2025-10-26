@@ -42,6 +42,7 @@ const SignUp = () => {
       username:formData.email.split("@")[0],
       email: formData.email,
       fullname: `${formData.firstName} ${formData.lastName}`,
+      roleid : 0,
       passswordHash: formData.password
 });
 
