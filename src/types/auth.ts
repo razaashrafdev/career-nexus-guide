@@ -18,6 +18,7 @@ export interface RegisterRequest {
   username: string;
   email: string;
   fullname: string;
+  roleid:number;
   passswordHash: string;
 }
 
