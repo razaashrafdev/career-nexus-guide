@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { authService } from "@/services/authService";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,9 +16,11 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
+  console.log(useAuth());
+  
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
+const location = useLocation();
  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -25,8 +29,8 @@ const Dashboard = () => {
   
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
-    name: user?.fullName || "User",
-    email: user?.email || "",
+    name: user.fullName || "User",
+   email: user.email || "",
     assessmentCompleted: false,
     resumeUploaded: true,
     personalityType: "",
@@ -34,6 +38,19 @@ const Dashboard = () => {
     recommendedCareers: [],
     skills: []
   });
+useEffect(() => {
+  // check if navigated from Resume Upload page
+  if (location.state?.from === "resume") {
+    const data = location.state;
+
+    setUserData((prev) => ({
+      ...prev,
+      resumeUploaded: true,
+      recommendedCareers: data.recommendedCareers || [],
+      careerScore: data.careerCount || 0,
+    }));
+  }
+}, [location.state]);
 
   const handleLogout = () => {
     logout();
@@ -182,7 +199,8 @@ const Dashboard = () => {
           <div className="flex justify-between items-center">
             <div className="min-w-0 flex-1">
               <h1 className="text-lg md:text-2xl font-bold text-gray-800 truncate">Student Dashboard</h1>
-              <p className="text-sm md:text-base text-gray-600 truncate">Welcome back, {userData.name}</p>
+              
+              <p className="text-sm md:text-base text-gray-600 truncate">Welcome back{userData.name}</p>
             </div>
           </div>
         </header>

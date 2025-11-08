@@ -1,4 +1,3 @@
-import { authService } from "@/services/authService";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const { toast } = useToast();
   const { login } = useAuth();
@@ -22,44 +22,37 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
-   try {
-  const result = await authService.login({ email, password });
+    try {
+      const result = await login({ email, password }); // ✅ Use AuthContext login
 
-  if (result.success) {
-    const userData = result.success.data;
+      if (result.success) {
+        const roleName = localStorage.getItem("roleName");
+        const fullName = localStorage.getItem("fullName") || "User";
 
-    // ✅ Save token and role info in localStorage
-    localStorage.setItem("token", userData.token);
-    localStorage.setItem("roleName", userData.roleName);
+        toast({
+          title: "Login Successful",
+          description: `Welcome back, ${fullName}`,
+        });
 
-    toast({
-      title: "Login Successful",
-      description: `Welcome back, ${userData.fullName}`,
-    });
-
-    // ✅ Role-based navigation
-    if (userData.roleName === "Admin") {
-      navigate("/admin-dashboard");
-    } else {
-      navigate("/dashboard");
+        // ✅ Role-based navigation
+        if (roleName === "Admin") navigate("/admin-dashboard");
+        else navigate("/dashboard");
+      } else {
+        toast({
+          title: "Login Failed",
+          description: result.error?.message || "Invalid credentials",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
-  } else {
-    toast({
-      title: "Login Failed",
-      description: result.error?.message || "Invalid credentials",
-      variant: "destructive",
-    });
-  }
-} catch (error) {
-  toast({
-    title: "Error",
-    description: "An unexpected error occurred",
-    variant: "destructive",
-  });
-} finally {
-  setIsLoading(false);
-}
-
   };
 
   return (
@@ -80,17 +73,9 @@ const Login = () => {
         <Card className="border-0 shadow-xl bg-white/90 backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl">Sign In</CardTitle>
-            <CardDescription>
-              Enter your credentials to access your dashboard
-            </CardDescription>
+            <CardDescription>Enter your credentials to access your dashboard</CardDescription>
           </CardHeader>
           <CardContent>
-            {/* API Info */}
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800 font-medium mb-1">Login with your account:</p>
-              <p className="text-xs text-blue-600">Use your registered email and password</p>
-            </div>
-
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
@@ -127,33 +112,10 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <input type="checkbox" id="remember" className="rounded border-gray-300" />
-                  <label htmlFor="remember" className="text-gray-600">Remember me</label>
-                </div>
-                <Link to="/reset-password" className="text-purple-600 hover:text-purple-700">
-                  Forgot password?
-                </Link>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full h-11 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                disabled={isLoading}
-              >
+              <Button type="submit" className="w-full h-11 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700" disabled={isLoading}>
                 {isLoading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Don't have an account?{" "}
-                <Link to="/signup" className="text-purple-600 hover:text-purple-700 font-medium">
-                  Sign up for free
-                </Link>
-              </p>
-            </div>
           </CardContent>
         </Card>
       </div>

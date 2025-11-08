@@ -17,13 +17,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Restore session on app load
     const restoreSession = async () => {
       try {
         const restoredUser = await authService.restoreSession();
-        if (restoredUser) {
-          setUser(restoredUser);
-        }
+        if (restoredUser) setUser(restoredUser);
       } catch (error) {
         console.error("Failed to restore session:", error);
       } finally {
@@ -38,44 +35,43 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       const result = await authService.login(credentials);
-      
-      if (result.error) {
-        setIsLoading(false);
-        return { success: false, error: result.error };
-      }
 
-      if (result.user) {
-        setUser(result.user);
-        setIsLoading(false);
+      if (result.error) return { success: false, error: result.error };
+
+      if (result.success?.data) {
+        const userData = result.success.data;
+
+        const loggedInUser: User = {
+          fullName: userData.fullName,
+          email: userData.email,
+          RoleName:userData.RoleName,
+          token: userData.token,
+          Id: undefined, // backend se id nahi aayi
+        };
+
+        setUser(loggedInUser);
+
+        localStorage.setItem("userData", JSON.stringify(userData));
+        localStorage.setItem("token", userData.token);
+
         return { success: true };
       }
 
-      setIsLoading(false);
       return { success: false, error: { message: "Unknown error occurred", isSuccess: false } };
-    } catch (error) {
+    } catch {
+      return { success: false, error: { message: "An unexpected error occurred", isSuccess: false } };
+    } finally {
       setIsLoading(false);
-      return {
-        success: false,
-        error: { message: "An unexpected error occurred", isSuccess: false },
-      };
     }
   };
 
   const logout = () => {
-    authService.removeToken();
-    setUser(null);
-  };
+  authService.removeToken();
+  setUser(null); // 👈 force clear user state
+};
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -83,8 +79,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };

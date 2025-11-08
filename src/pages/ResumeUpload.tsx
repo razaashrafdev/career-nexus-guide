@@ -1,201 +1,119 @@
-
-import { useState, useCallback } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, CheckCircle } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Upload } from "lucide-react";
+import { resumeService } from "@/services/resumeService";
+import { useToast } from "@/components/ui/use-toast";
 
 const ResumeUpload = () => {
-  const [dragActive, setDragActive] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  }, []);
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFile(e.dataTransfer.files[0]);
-    }
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      handleFile(e.target.files[0]);
+  // DEBUG 1: File select hone par
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("File input changed:", e.target.files);
+    if (e.target.files?.length) {
+      const file = e.target.files[0];
+      console.log("Selected file:", file.name, "| Size:", file.size, "| Type:", file.type);
+      setUploadedFile(file);
+    } else {
+      console.log("No file selected (files array empty)");
+      setUploadedFile(null);
     }
   };
 
-  const handleFile = (file: File) => {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    
-    if (file.size > maxSize) {
-      toast({
-        title: "File too large",
-        description: "Please select a file smaller than 5MB.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (!allowedTypes.includes(file.type)) {
-      toast({
-        title: "Invalid file type",
-        description: "Please upload a PDF or DOCX file.",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setUploadedFile(file);
-    toast({
-      title: "File uploaded successfully!",
-      description: `${file.name} is ready for analysis.`,
-    });
-  };
-
+  // DEBUG 2: Analyze button click
   const handleAnalyze = async () => {
-    if (!uploadedFile) return;
-    
+    console.log("Analyze button clicked!"); // Add log to check if function is entered.
+    console.log("Current uploadedFile state:", uploadedFile); // Check if uploadedFile is available.
+
+    if (!uploadedFile) {
+      console.log("No file in state → showing toast");
+      toast({
+        title: "No File Selected",
+        description: "Please upload a resume file before analyzing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    console.log("File found in state:", uploadedFile.name);
+    console.log("Starting upload process...");
+
     setIsProcessing(true);
-    
-    // Simulate processing time
-    setTimeout(() => {
+
+    try {
+      console.log("Calling resumeService.uploadResume()...");
+      const result = await resumeService.uploadResume(uploadedFile);
+      console.log("API Response received:", result);
+
+      if (result.success) {
+        const data = result.success.data;
+        console.log("Success! Data:", data);
+        console.log("Navigating to dashboard with careers:", data.careerRecommendation);
+
+        navigate("/dashboard", {
+          state: {
+            from: "resume",
+            recommendedCareers: data.careerRecommendation || [],
+            careerCount: data.careerRecommendation?.length || 0,
+          },
+        });
+      } else {
+        console.log("API returned error:", result.error);
+        toast({
+          title: "Upload Failed",
+          description: result.error?.message || "Something went wrong.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Unexpected error in upload:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
+      });
+    } finally {
+      console.log("Upload process finished. Setting isProcessing = false");
       setIsProcessing(false);
-      navigate("/dashboard", { state: { resumeFile: uploadedFile } });
-    }, 2000);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <nav className="flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            CareerCompass
-          </Link>
-          <Link to="/">
-            <Button variant="ghost">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-        </nav>
-      </header>
-
-      {/* Upload Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-2xl mx-auto">
-          <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-2xl text-center">Upload Your Resume</CardTitle>
-              <p className="text-gray-600 text-center">
-                Let our AI analyze your skills and experience to find perfect career matches
-              </p>
-            </CardHeader>
-            
-            <CardContent className="space-y-6">
-              {/* Upload Area */}
-              <div
-                className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                  dragActive
-                    ? "border-purple-400 bg-purple-50"
-                    : uploadedFile
-                    ? "border-green-400 bg-green-50"
-                    : "border-gray-300 hover:border-gray-400"
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              >
-                <input
-                  type="file"
-                  accept=".pdf,.docx"
-                  onChange={handleChange}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                
-                {uploadedFile ? (
-                  <div className="space-y-4">
-                    <CheckCircle className="h-12 w-12 text-green-500 mx-auto" />
-                    <div>
-                      <p className="text-lg font-semibold text-green-700">File Uploaded Successfully!</p>
-                      <p className="text-sm text-gray-600">{uploadedFile.name}</p>
-                      <p className="text-sm text-gray-500">
-                        Size: {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <Upload className="h-12 w-12 text-gray-400 mx-auto" />
-                    <div>
-                      <p className="text-lg font-semibold text-gray-700">
-                        Drag and drop your resume here
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        or click to browse files
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* File Requirements */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-start space-x-3">
-                  <FileText className="h-5 w-5 text-blue-500 mt-0.5" />
-                  <div className="text-sm">
-                    <p className="font-semibold text-blue-800 mb-1">File Requirements:</p>
-                    <ul className="text-blue-700 space-y-1">
-                      <li>• Accepted formats: PDF, DOCX</li>
-                      <li>• Maximum file size: 5MB</li>
-                      <li>• Ensure text is readable (not scanned images)</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                {uploadedFile && (
-                  <Button
-                    onClick={() => setUploadedFile(null)}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    Upload Different File
-                  </Button>
-                )}
-                
-                <Button
-                  onClick={handleAnalyze}
-                  disabled={!uploadedFile || isProcessing}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                >
-                  {isProcessing ? "Analyzing Resume..." : "Analyze Resume"}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+      <Card className="w-full max-w-lg shadow-lg border-0 bg-white/90 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-center">
+            Upload Your Resume
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 text-center">
+          <Input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+            className="cursor-pointer"
+          />
+          <Button
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-600"
+            onClick={handleAnalyze}
+            disabled={isProcessing}
+          >
+            {isProcessing ? (
+              "Analyzing Resume..."
+            ) : (
+              <>
+                <Upload className="h-4 w-4 mr-2" /> Analyze Resume
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 };
