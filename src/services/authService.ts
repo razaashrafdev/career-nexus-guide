@@ -83,6 +83,40 @@ export const authService = {
       };
     }
   },
+  // ✅ FORGOT PASSWORD
+async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/Account/ForgotPassword`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.isSuccess) {
+      return {
+        error: {
+          statusCode: response.status,
+          message: data.message || "Failed to send password reset email",
+          isSuccess: false,
+        },
+      };
+    }
+
+    return { success: data };
+  } catch (error) {
+    return {
+      error: {
+        message: "Unable to connect to server.",
+        isSuccess: false,
+      },
+    };
+  }
+},
+
 
   // ✅ CHANGE PASSWORD (Authorization header fixed)
   async changePassword(oldPassword: string, newPassword: string) {

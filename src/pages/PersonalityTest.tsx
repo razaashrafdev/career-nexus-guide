@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,57 +5,132 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
+// 20-question AI-based personality sorter (friendly UI text)
 const questions = [
-  {
-    id: 1,
-    question: "How do you prefer to work?",
-    options: [
-      { text: "In a team with lots of collaboration", value: "team" },
-      { text: "Independently with minimal supervision", value: "independent" },
-      { text: "A mix of both team and solo work", value: "mixed" },
-      { text: "Leading and directing others", value: "leadership" }
-    ]
-  },
-  {
-    id: 2,
-    question: "What energizes you most?",
-    options: [
-      { text: "Solving complex problems", value: "problem_solving" },
-      { text: "Creating something new", value: "creativity" },
-      { text: "Helping others succeed", value: "helping" },
-      { text: "Analyzing data and patterns", value: "analysis" }
-    ]
-  },
-  {
-    id: 3,
-    question: "In a perfect work environment, you would:",
-    options: [
-      { text: "Have flexible hours and remote options", value: "flexibility" },
-      { text: "Work in a structured, organized setting", value: "structure" },
-      { text: "Be constantly learning new things", value: "learning" },
-      { text: "Have opportunities for advancement", value: "advancement" }
-    ]
-  },
-  {
-    id: 4,
-    question: "Which best describes your communication style?",
-    options: [
-      { text: "Direct and to the point", value: "direct" },
-      { text: "Thoughtful and analytical", value: "analytical" },
-      { text: "Enthusiastic and persuasive", value: "persuasive" },
-      { text: "Supportive and encouraging", value: "supportive" }
-    ]
-  },
-  {
-    id: 5,
-    question: "What type of challenges do you enjoy most?",
-    options: [
-      { text: "Technical and logical puzzles", value: "technical" },
-      { text: "Creative and artistic projects", value: "creative" },
-      { text: "Strategic and business problems", value: "strategic" },
-      { text: "Social and interpersonal challenges", value: "social" }
-    ]
-  }
+  // Dimension 1: Extraversion (E) vs Introversion (I)
+  { id: 1, question: "At social gatherings, do you feel:", options: [
+    { text: "Highly energized and outgoing", value: "E++" },
+    { text: "Somewhat comfortable and talkative", value: "E+" },
+    { text: "Prefer calm conversations with few people", value: "I+" },
+    { text: "Drained and quiet, prefer being alone", value: "I++" },
+  ]},
+  { id: 2, question: "You gain energy mostly from:", options: [
+    { text: "Meeting new people and socializing", value: "E++" },
+    { text: "Being around friends or small groups", value: "E+" },
+    { text: "Spending quiet time to recharge", value: "I+" },
+    { text: "Total solitude or alone activities", value: "I++" },
+  ]},
+  { id: 3, question: "In meetings or group discussions, you usually:", options: [
+    { text: "Lead and speak first", value: "E++" },
+    { text: "Share ideas confidently", value: "E+" },
+    { text: "Speak when asked or when necessary", value: "I+" },
+    { text: "Prefer listening quietly", value: "I++" },
+  ]},
+  { id: 4, question: "When processing your thoughts, you prefer:", options: [
+    { text: "Thinking aloud or talking through ideas", value: "E++" },
+    { text: "Discussing briefly with someone", value: "E+" },
+    { text: "Writing them down privately", value: "I+" },
+    { text: "Reflecting alone silently", value: "I++" },
+  ]},
+  { id: 5, question: "A weekend full of social events makes you feel:", options: [
+    { text: "Excited and fulfilled", value: "E++" },
+    { text: "Happy but a bit tired", value: "E+" },
+    { text: "Slightly drained, needing rest", value: "I+" },
+    { text: "Exhausted, preferring total quiet", value: "I++" },
+  ]},
+  // Dimension 2: Sensing (S) vs Intuition (N)
+  { id: 6, question: "You tend to focus more on:", options: [
+    { text: "Tangible facts and real details", value: "S++" },
+    { text: "What’s practical and proven", value: "S+" },
+    { text: "Patterns and possible meanings", value: "N+" },
+    { text: "New ideas and unseen possibilities", value: "N++" },
+  ]},
+  { id: 7, question: "When solving problems, you prefer:", options: [
+    { text: "Tested, step-by-step methods", value: "S++" },
+    { text: "Realistic adjustments based on data", value: "S+" },
+    { text: "Creative or unusual angles", value: "N+" },
+    { text: "Abstract brainstorming and innovation", value: "N++" },
+  ]},
+  { id: 8, question: "You’re more drawn to:", options: [
+    { text: "Past experiences and what worked", value: "S++" },
+    { text: "Current realities and results", value: "S+" },
+    { text: "What could happen next", value: "N+" },
+    { text: "Imagining future possibilities", value: "N++" },
+  ]},
+  { id: 9, question: "When planning a project, you prefer:", options: [
+    { text: "Clear instructions and structure", value: "S++" },
+    { text: "Practical steps and checklists", value: "S+" },
+    { text: "Rough ideas and flexible concepts", value: "N+" },
+    { text: "Visionary brainstorming sessions", value: "N++" },
+  ]},
+  { id: 10, question: "Your thinking is usually:", options: [
+    { text: "Concrete and evidence-based", value: "S++" },
+    { text: "Realistic but open to new ideas", value: "S+" },
+    { text: "Conceptual and big-picture", value: "N+" },
+    { text: "Abstract and visionary", value: "N++" },
+  ]},
+  // Dimension 3: Thinking (T) vs Feeling (F)
+  { id: 11, question: "When making decisions, you prioritize:", options: [
+    { text: "Objective logic above all", value: "T++" },
+    { text: "Fairness with some empathy", value: "T+" },
+    { text: "Harmony with reasonable logic", value: "F+" },
+    { text: "Emotions and personal values", value: "F++" },
+  ]},
+  { id: 12, question: "In problem-solving, you tend to:", options: [
+    { text: "Focus on facts and analysis", value: "T++" },
+    { text: "Balance data with people’s needs", value: "T+" },
+    { text: "Consider people first, then logic", value: "F+" },
+    { text: "Follow your heart completely", value: "F++" },
+  ]},
+  { id: 13, question: "During conflicts, you prefer to:", options: [
+    { text: "Stick strictly to principles or rules", value: "T++" },
+    { text: "Discuss rationally but politely", value: "T+" },
+    { text: "Preserve relationships even if rules bend", value: "F+" },
+    { text: "Avoid hurt feelings above all", value: "F++" },
+  ]},
+  { id: 14, question: "When giving feedback, you’re more likely to be:", options: [
+    { text: "Very direct and honest", value: "T++" },
+    { text: "Honest but tactful", value: "T+" },
+    { text: "Polite and gentle", value: "F+" },
+    { text: "Extremely cautious not to offend", value: "F++" },
+  ]},
+  { id: 15, question: "You define fairness as:", options: [
+    { text: "Equal rules for everyone", value: "T++" },
+    { text: "Logical outcomes considering context", value: "T+" },
+    { text: "Understanding each person’s needs", value: "F+" },
+    { text: "Compassion and care above logic", value: "F++" },
+  ]},
+  // Dimension 4: Judging (J) vs Perceiving (P)
+  { id: 16, question: "Deadlines make you feel:", options: [
+    { text: "Energized to finish early", value: "J++" },
+    { text: "Motivated to stay on schedule", value: "J+" },
+    { text: "Flexible, can adjust as needed", value: "P+" },
+    { text: "Stressed — prefer open time", value: "P++" },
+  ]},
+  { id: 17, question: "You prefer your work style to be:", options: [
+    { text: "Fully planned and organized", value: "J++" },
+    { text: "Mostly structured with some flexibility", value: "J+" },
+    { text: "Adaptive depending on mood", value: "P+" },
+    { text: "Spontaneous and unstructured", value: "P++" },
+  ]},
+  { id: 18, question: "Your to-do lists are usually:", options: [
+    { text: "Detailed and checked daily", value: "J++" },
+    { text: "Guiding outlines but not strict", value: "J+" },
+    { text: "Loose reminders", value: "P+" },
+    { text: "Rarely used; you go with flow", value: "P++" },
+  ]},
+  { id: 19, question: "When making choices, you tend to:", options: [
+    { text: "Decide quickly and confidently", value: "J++" },
+    { text: "Decide soon after considering facts", value: "J+" },
+    { text: "Delay until more information comes", value: "P+" },
+    { text: "Keep options open indefinitely", value: "P++" },
+  ]},
+  { id: 20, question: "You like your environment to be:", options: [
+    { text: "Orderly and predictable", value: "J++" },
+    { text: "Mostly tidy but adaptable", value: "J+" },
+    { text: "Flexible and casual", value: "P+" },
+    { text: "Ever-changing and spontaneous", value: "P++" },
+  ]},
 ];
 
 const PersonalityTest = () => {
@@ -74,25 +148,25 @@ const PersonalityTest = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      // Test completed, navigate to results
+      // Test completed, navigate to results page
       navigate("/dashboard", { state: { personalityAnswers: answers } });
     }
   };
 
   const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
+    if (currentQuestion > 0) setCurrentQuestion(currentQuestion - 1);
   };
 
   const isAnswered = answers[currentQuestion] !== undefined;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
-      {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <Link
+            to="/"
+            className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
+          >
             CareerCompass
           </Link>
           <Link to="/">
@@ -104,7 +178,6 @@ const PersonalityTest = () => {
         </nav>
       </header>
 
-      {/* Test Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
@@ -117,13 +190,12 @@ const PersonalityTest = () => {
               </div>
               <Progress value={progress} className="w-full" />
             </CardHeader>
-            
+
             <CardContent className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold mb-6 text-gray-800">
                   {questions[currentQuestion].question}
                 </h3>
-                
                 <div className="space-y-3">
                   {questions[currentQuestion].options.map((option, index) => (
                     <button
@@ -135,7 +207,7 @@ const PersonalityTest = () => {
                           : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                       }`}
                     >
-                      {option.text}
+                      {option.text} {/* Only friendly text shown */}
                     </button>
                   ))}
                 </div>
@@ -150,13 +222,15 @@ const PersonalityTest = () => {
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Previous
                 </Button>
-                
+
                 <Button
                   onClick={handleNext}
                   disabled={!isAnswered}
                   className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
                 >
-                  {currentQuestion === questions.length - 1 ? "Complete Test" : "Next"}
+                  {currentQuestion === questions.length - 1
+                    ? "Complete Test"
+                    : "Next"}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </div>

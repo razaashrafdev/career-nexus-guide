@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,26 +13,22 @@ const ResumeUpload = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // DEBUG 1: File select hone par
+  // ===============================
+  // ON FILE CHANGE
+  // ===============================
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("File input changed:", e.target.files);
     if (e.target.files?.length) {
-      const file = e.target.files[0];
-      console.log("Selected file:", file.name, "| Size:", file.size, "| Type:", file.type);
-      setUploadedFile(file);
+      setUploadedFile(e.target.files[0]);
     } else {
-      console.log("No file selected (files array empty)");
       setUploadedFile(null);
     }
   };
 
-  // DEBUG 2: Analyze button click
+  // ===============================
+  // ANALYZE / UPLOAD
+  // ===============================
   const handleAnalyze = async () => {
-    console.log("Analyze button clicked!"); // Add log to check if function is entered.
-    console.log("Current uploadedFile state:", uploadedFile); // Check if uploadedFile is available.
-
     if (!uploadedFile) {
-      console.log("No file in state → showing toast");
       toast({
         title: "No File Selected",
         description: "Please upload a resume file before analyzing.",
@@ -41,30 +37,34 @@ const ResumeUpload = () => {
       return;
     }
 
-    console.log("File found in state:", uploadedFile.name);
-    console.log("Starting upload process...");
-
     setIsProcessing(true);
 
     try {
-      console.log("Calling resumeService.uploadResume()...");
       const result = await resumeService.uploadResume(uploadedFile);
-      console.log("API Response received:", result);
 
       if (result.success) {
-        const data = result.success.data;
-        console.log("Success! Data:", data);
-        console.log("Navigating to dashboard with careers:", data.careerRecommendation);
+        // ===============================
+        // STEP 2: Just AFTER upload → now call GET /latest
+        // ===============================
+        const latest = await resumeService.getLatestResume();
 
+        if (!latest.success) {
+          toast({
+            title: "Resume Analyzed",
+            description: "But failed to load latest data.",
+          });
+        }
+
+        // ===============================
+        // Redirect to Dashboard with LATEST resume data
+        // ===============================
         navigate("/dashboard", {
           state: {
             from: "resume",
-            recommendedCareers: data.careerRecommendation || [],
-            careerCount: data.careerRecommendation?.length || 0,
+            resumeData: latest.success?.data, // <- Dashboard will receive this
           },
         });
       } else {
-        console.log("API returned error:", result.error);
         toast({
           title: "Upload Failed",
           description: result.error?.message || "Something went wrong.",
@@ -72,14 +72,12 @@ const ResumeUpload = () => {
         });
       }
     } catch (error) {
-      console.error("Unexpected error in upload:", error);
       toast({
         title: "Error",
         description: "An unexpected error occurred.",
         variant: "destructive",
       });
     } finally {
-      console.log("Upload process finished. Setting isProcessing = false");
       setIsProcessing(false);
     }
   };

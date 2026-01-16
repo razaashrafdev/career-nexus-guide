@@ -111,6 +111,15 @@ const Login = () => {
                   </button>
                 </div>
               </div>
+{/* 👉 Add Forgot Password Link Here */}
+<div className="text-right -mt-2 mb-2">
+  <Link
+    to="/reset-password"
+    className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+  >
+    Forgot Password?
+  </Link>
+</div>
 
               <Button type="submit" className="w-full h-11 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700" disabled={isLoading}>
                 {isLoading ? "Signing In..." : "Sign In"}

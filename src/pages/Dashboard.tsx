@@ -12,6 +12,40 @@ import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 
+// Dashboard.tsx ke upar imports ke baad
+interface ResumeAnalysis {
+  matchPercentage?: number;
+  experience?: string;
+  matchedSkills?: string[];
+  missingSkills?: string[];
+  suggestions?: string[];
+    jobVacancies?: { [careerName: string]: JobVacancy[] };
+     tutorials?: {
+    [skillName: string]: string[];   // <-- ADD THIS
+  };
+}
+
+interface ResumeData {
+  uploadedAt?: string;
+  fileURL?: string;
+  parsedSkills?: string; // comma-separated string
+  analysis?: ResumeAnalysis;
+}
+
+interface JobVacancy {
+  title: string;
+  company: string;
+  location: string;
+  url: string;
+  postedAt: string;
+}
+
+interface CareerUIModel {
+  careerName: string;
+  jobs: JobVacancy[];
+}
+
+
 
 
 const Dashboard = () => {
@@ -29,6 +63,7 @@ const location = useLocation();
   
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
+    
     name: user.fullName || "User",
    email: user.email || "",
     assessmentCompleted: false,
@@ -38,19 +73,121 @@ const location = useLocation();
     recommendedCareers: [],
     skills: []
   });
+ const [resumeData, setResumeData] = useState<ResumeData>({});
+const [careers, setCareers] = useState<CareerUIModel[]>([]);
+
+
+
 useEffect(() => {
-  // check if navigated from Resume Upload page
   if (location.state?.from === "resume") {
     const data = location.state;
 
     setUserData((prev) => ({
       ...prev,
       resumeUploaded: true,
-      recommendedCareers: data.recommendedCareers || [],
-      careerScore: data.careerCount || 0,
+      recommendedCareers: data.analysis?.careerRecommendation || [],
+      careerScore: data.analysis?.careerCount || 0,
     }));
   }
 }, [location.state]);
+
+
+// FETCH LATEST RESUME FROM BACKEND
+useEffect(() => {
+  const fetchLatestResume = async () => {
+    try {
+      const response = await fetch("https://localhost:7270/api/Resume/latest", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+
+      if (response.status === 404) {
+        return; // no resume found
+      }
+
+      const data = await response.json();
+
+      setResumeData({
+        fileURL: data.fileURL,
+        parsedSkills: data.parsedSkills,
+        analysis: data.analysis,
+        uploadedAt: data.uploadedAt
+      });
+
+      setUserData(prev => ({
+        ...prev,
+         resumeUploaded: true,
+        // personalityType: data.analysis?.experience || "",
+        careerScore: data.analysis?.matchPercentage || 0,
+        recommendedCareers: data.analysis?.careerRecommendation || [],
+        skills: data.analysis?.matchedSkills || []
+      }));
+
+    } catch (error) {
+      console.log("Error fetching resume:", error);
+    }
+  };
+
+  fetchLatestResume();
+}, []);
+// Convert backend jobVacancies object → array for UI
+
+// FETCH LATEST RESUME FROM BACKEND
+useEffect(() => {
+  const fetchLatestResume = async () => {
+    try {
+      const response = await fetch("https://localhost:7270/api/Resume/latest", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+
+      if (response.status === 404) {
+        return;
+      }
+
+      const data = await response.json();
+
+      setResumeData({
+        fileURL: data.fileURL,
+        parsedSkills: data.parsedSkills,
+        analysis: data.analysis,
+        uploadedAt: data.uploadedAt
+      });
+
+      setUserData(prev => ({
+        ...prev,
+        resumeUploaded: true,
+        careerScore: data.analysis?.matchPercentage || 0,
+        recommendedCareers: data.analysis?.careerRecommendation || [],
+        skills: data.analysis?.matchedSkills || []
+      }));
+
+    } catch (error) {
+      console.log("Error fetching resume:", error);
+    }
+  };
+
+  fetchLatestResume();
+}, []);
+
+// ⭐⭐ ADD THIS useEffect RIGHT HERE (3rd position)
+useEffect(() => {
+  if (!resumeData.analysis?.jobVacancies) return;
+
+  const jobVacancyObject = resumeData.analysis.jobVacancies;
+
+  const transformedCareers: CareerUIModel[] = Object.keys(jobVacancyObject).map(careerName => ({
+    careerName,
+    jobs: jobVacancyObject[careerName] ?? []
+  }));
+
+  setCareers(transformedCareers);
+
+}, [resumeData]);
+
+
 
   const handleLogout = () => {
     logout();
@@ -80,6 +217,7 @@ useEffect(() => {
       setConfirmPassword("");
     }
   };
+
 
   const sidebarItems = [{
     id: "overview",
@@ -200,7 +338,7 @@ useEffect(() => {
             <div className="min-w-0 flex-1">
               <h1 className="text-lg md:text-2xl font-bold text-gray-800 truncate">Student Dashboard</h1>
               
-              <p className="text-sm md:text-base text-gray-600 truncate">Welcome back{userData.name}</p>
+              <p className="text-sm md:text-base text-gray-600 truncate">Welcome back {userData.name}</p>
             </div>
           </div>
         </header>
@@ -270,7 +408,10 @@ useEffect(() => {
                     <div className="flex items-center justify-between">
                       <div className="min-w-0 flex-1">
                         <p className="text-gray-600 text-xs md:text-sm">Career Score</p>
-                        <p className="text-xl md:text-3xl font-bold text-green-600 truncate">{userData.careerScore}%</p>
+                       <p className="text-xl md:text-3xl font-bold text-green-600 truncate">
+  {userData.careerScore || 0}%
+</p>
+
                       </div>
                       <Award className="h-6 w-6 md:h-8 md:w-8 text-green-500 flex-shrink-0" />
                     </div>
@@ -296,7 +437,7 @@ useEffect(() => {
                     <div className="flex items-center justify-between">
                       <div className="min-w-0 flex-1">
                         <p className="text-gray-600 text-xs md:text-sm">Recommendations</p>
-                        <p className="text-xl md:text-3xl font-bold text-indigo-600 truncate">{userData.recommendedCareers.length}</p>
+                        <p className="text-xl md:text-3xl font-bold text-indigo-600 truncate">{userData.recommendedCareers?.length || 0}</p>
                       </div>
                       <Target className="h-6 w-6 md:h-8 md:w-8 text-indigo-500 flex-shrink-0" />
                     </div>
@@ -360,53 +501,206 @@ useEffect(() => {
               </CardContent>
             </Card>}
 
-          {activeSection === "resume" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-base md:text-lg">Resume Analysis</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 md:p-6">
-                {userData.resumeUploaded ? <div className="space-y-4">
-                    <p className="text-sm md:text-base">Resume uploaded and analyzed successfully!</p>
-                    <Button variant="outline" className="text-sm md:text-base">
-                      <Upload className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                      Update Resume
-                    </Button>
-                  </div> : <div className="text-center py-6 md:py-8">
-                    <FileText className="h-12 w-12 md:h-16 md:w-16 text-blue-500 mx-auto mb-4" />
-                    <h3 className="text-base md:text-lg font-semibold mb-2">Upload Your Resume</h3>
-                    <p className="text-sm md:text-base text-gray-600 mb-4">Upload your resume to get AI-powered analysis and career recommendations.</p>
-                    <Link to="/resume-upload">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-sm md:text-base">
-                        Upload Resume
-                      </Button>
-                    </Link>
-                  </div>}
-              </CardContent>
-            </Card>}
+         {activeSection === "resume" && (
+  <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+    <CardHeader>
+      <CardTitle className="text-base md:text-lg">Resume Analysis</CardTitle>
+    </CardHeader>
 
-          {activeSection === "careers" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-base md:text-lg">Career Recommendations</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 md:p-6">
-                <div className="text-center py-6 md:py-8">
-                  <Target className="h-12 w-12 md:h-16 md:w-16 text-green-500 mx-auto mb-4" />
-                  <p className="text-sm md:text-base text-gray-600">Complete your assessment and upload your resume to see career recommendations.</p>
-                </div>
-              </CardContent>
-            </Card>}
+    <CardContent className="p-4 md:p-6">
+      {userData.resumeUploaded ? (
+        <div className="space-y-6">
 
-          {activeSection === "skills" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-base md:text-lg">Skills Development</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 md:p-6">
-                <div className="text-center py-6 md:py-8">
-                  <BookOpen className="h-12 w-12 md:h-16 md:w-16 text-yellow-500 mx-auto mb-4" />
-                  <p className="text-sm md:text-base text-gray-600">Skill recommendations will appear here after completing your assessment.</p>
-                </div>
-              </CardContent>
-            </Card>}
+          {/* Resume Info */}
+          <p className="text-sm md:text-base text-green-700 font-semibold">
+            Latest Resume Found (Uploaded: {resumeData.uploadedAt ? new Date(resumeData.uploadedAt).toLocaleDateString() : "N/A"})
+          </p>
+          {resumeData.fileURL && (
+            <a
+              href={resumeData.fileURL}
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-600 underline text-sm md:text-base"
+            >
+              View Uploaded Resume
+            </a>
+          )}
+
+          {/* Parsed Skills */}
+          <Card className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 shadow rounded-lg">
+            <CardTitle className="text-sm md:text-base font-semibold mb-2">Parsed Skills</CardTitle>
+            <div className="flex flex-wrap gap-2">
+              {resumeData.parsedSkills
+                ? resumeData.parsedSkills.split(",").map((skill, index) => (
+                    <Badge key={index} variant="secondary">{skill}</Badge>
+                  ))
+                : "No skills extracted"}
+            </div>
+          </Card>
+
+          {/* Suggestions */}
+          <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 shadow rounded-lg">
+            <CardTitle className="text-sm md:text-base font-semibold mb-2">Suggestions</CardTitle>
+            <ul className="list-disc list-inside text-sm md:text-base text-gray-700 space-y-1">
+              {resumeData.analysis?.suggestions?.length
+                ? resumeData.analysis.suggestions.map((suggestion: string, index: number) => (
+                    <li key={index}>{suggestion}</li>
+                  ))
+                : "No suggestions available"}
+            </ul>
+          </Card>
+
+          {/* Update Button */}
+          <Link to="/resume-upload">
+            <Button variant="outline" className="text-sm md:text-base mt-2">
+              <Upload className="h-4 w-4 mr-2" />
+              Update Resume
+            </Button>
+          </Link>
+
+        </div>
+      ) : (
+        // No Resume Uploaded
+        <div className="text-center py-6 md:py-8">
+          <FileText className="h-12 w-12 md:h-16 md:w-16 text-blue-500 mx-auto mb-4" />
+          <h3 className="text-base md:text-lg font-semibold mb-2">Upload Your Resume</h3>
+          <p className="text-sm md:text-base text-gray-600 mb-4">
+            Upload your resume to get AI-powered analysis and personalized recommendations.
+          </p>
+          <Link to="/resume-upload">
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-sm md:text-base">
+              Upload Resume
+            </Button>
+          </Link>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+)}
+
+
+      {activeSection === "careers" && (
+  <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+    <CardHeader>
+      <CardTitle className="text-base md:text-lg">Career Recommendations</CardTitle>
+    </CardHeader>
+
+    <CardContent className="p-4 md:p-6 space-y-6">
+      {careers.length === 0 ? (
+        <div className="text-center py-6 md:py-8">
+          <Target className="h-12 w-12 md:h-16 md:w-16 text-green-500 mx-auto mb-4" />
+          <p className="text-sm md:text-base text-gray-600">
+            Upload your resume to see AI-powered career recommendations.
+          </p>
+        </div>
+      ) : (
+        careers.map((career, index) => (
+          <Card key={index} className="p-4 bg-gradient-to-r from-green-50 to-teal-50 shadow-md rounded-xl">
+            <CardTitle className="text-sm md:text-base font-semibold mb-3">
+              {career.careerName}
+            </CardTitle>
+
+            {/* Jobs List */}
+            {career.jobs.map((job, j) => (
+              <Card key={j} className="p-3 bg-white shadow-sm border rounded-lg mb-3">
+                <h3 className="text-sm font-semibold">{job.title}</h3>
+                <p className="text-xs text-gray-600">{job.company}</p>
+                <p className="text-xs text-gray-500">{job.location}</p>
+                
+                <a
+                  href={job.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 underline text-xs mt-2 inline-block"
+                >
+                  Apply Now →
+                </a>
+              </Card>
+            ))}
+          </Card>
+        ))
+      )}
+    </CardContent>
+  </Card>
+)}
+
+
+
+       {activeSection === "skills" && (
+  <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+    <CardHeader>
+      <CardTitle className="text-base md:text-lg font-bold flex items-center gap-2">
+        <span className="text-purple-600">Skills Development</span>
+      </CardTitle>
+    </CardHeader>
+
+    <CardContent className="p-4 md:p-6 space-y-8">
+
+      {/* Missing Skills */}
+      <Card className="bg-white rounded-2xl shadow-md border border-red-200 p-5 hover:shadow-lg transition-all duration-300">
+        <CardTitle className="text-base font-semibold text-red-600 mb-3">
+          🚫 Missing Skills
+        </CardTitle>
+
+        {resumeData.analysis?.missingSkills?.length ? (
+          <div className="flex flex-wrap gap-3">
+            {resumeData.analysis.missingSkills.map((skill: string, index: number) => (
+              <span
+                key={index}
+                className="px-4 py-1 bg-red-100 text-red-700 rounded-full shadow-sm text-sm font-medium hover:bg-red-200 transition"
+              >
+                {skill}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-600 text-sm">No missing skills detected 🎉</p>
+        )}
+      </Card>
+
+      {/* Tutorials Section */}
+      <Card className="bg-white rounded-2xl shadow-md border border-blue-200 p-5 hover:shadow-lg transition-all duration-300">
+        <CardTitle className="text-base font-semibold text-blue-600 mb-4">
+          🎓 Tutorials to Improve Your Skills
+        </CardTitle>
+
+        {resumeData.analysis?.tutorials ? (
+          <div className="space-y-6">
+            {Object.keys(resumeData.analysis.tutorials).map((skillName: string, i: number) => (
+              <div
+                key={i}
+                className="p-4 border rounded-xl bg-gradient-to-br from-blue-50 to-purple-50 shadow-sm hover:shadow mb-4 transition-all"
+              >
+                <p className="font-semibold text-blue-700 text-sm md:text-base mb-3 flex items-center gap-2">
+                  📘 {skillName}
+                </p>
+
+                <ul className="space-y-2">
+                  {resumeData.analysis.tutorials[skillName].map((url: string, j: number) => (
+                    <li key={j} className="flex items-center gap-2">
+                      <span className="text-gray-400">•</span>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm text-purple-700 hover:text-purple-900 underline transition-all"
+                      >
+                        {url}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-600 text-sm">No tutorials available.</p>
+        )}
+      </Card>
+    </CardContent>
+  </Card>
+)}
+
 
 
           {activeSection === "ai-chat" && (

@@ -27,10 +27,10 @@ const SignUp = () => {
       [e.target.name]: e.target.value
     });
   };
-  setTimeout(() => {
-  authService.removeToken(); // clear any login session
-  navigate("/login");
-}, 1300);
+//   setTimeout(() => {
+//   authService.removeToken(); // clear any login session
+//   navigate("/login");
+// }, 1300);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
