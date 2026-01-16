@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key } from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -18,6 +18,7 @@ import { AddUserModal } from "@/components/modals/AddUserModal";
 import { AddSkillModal } from "@/components/modals/AddSkillModal";
 import { AddCareerModal } from "@/components/modals/AddCareerModal";
 import { useToast } from "@/hooks/use-toast";
+import { adminService } from "@/services/adminService";
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,121 +68,21 @@ const AdminDashboard = () => {
     toast
   } = useToast();
 
-  // Mock data for different sections
-  const [mockUsers, setMockUsers] = useState([{
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    status: "Active",
-    joined: "2024-01-15",
-    assessmentCompleted: true,
-    resumeUploaded: true
-  }, {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    status: "Active",
-    joined: "2024-01-20",
-    assessmentCompleted: true,
-    resumeUploaded: false
-  }, {
-    id: 3,
-    name: "Mike Johnson",
-    email: "mike@example.com",
-    status: "Inactive",
-    joined: "2024-02-01",
-    assessmentCompleted: false,
-    resumeUploaded: true
-  }, {
-    id: 4,
-    name: "Sarah Wilson",
-    email: "sarah@example.com",
-    status: "Active",
-    joined: "2024-02-10",
-    assessmentCompleted: true,
-    resumeUploaded: true
-  }]);
-  const [mockAssessments, setMockAssessments] = useState([{
-    id: 1,
-    userName: "John Doe",
-    personalityType: "INTJ",
-    completedDate: "2024-01-16",
-    score: 85
-  }, {
-    id: 2,
-    userName: "Jane Smith",
-    personalityType: "ENFP",
-    completedDate: "2024-01-22",
-    score: 92
-  }, {
-    id: 3,
-    userName: "Sarah Wilson",
-    personalityType: "ISFJ",
-    completedDate: "2024-02-12",
-    score: 78
-  }]);
-  const mockResumes = [{
-    id: 1,
-    userName: "John Doe",
-    fileName: "john_resume.pdf",
-    status: "Analyzed",
-    uploadDate: "2024-01-16",
-    skills: ["JavaScript", "React", "Node.js"]
-  }, {
-    id: 2,
-    userName: "Mike Johnson",
-    fileName: "mike_resume.pdf",
-    status: "Pending",
-    uploadDate: "2024-02-02",
-    skills: []
-  }, {
-    id: 3,
-    userName: "Sarah Wilson",
-    fileName: "sarah_resume.pdf",
-    status: "Analyzed",
-    uploadDate: "2024-02-12",
-    skills: ["Python", "Data Analysis", "Machine Learning"]
-  }];
-  const [mockCareers, setMockCareers] = useState([{
-    id: 1,
-    name: "Software Engineer",
-    description: "Develop and maintain software applications",
-    requiredTraits: ["INTJ", "INTP"],
-    skills: ["Programming", "Problem Solving"]
-  }, {
-    id: 2,
-    name: "Data Scientist",
-    description: "Analyze data to extract business insights",
-    requiredTraits: ["INTJ", "ISTJ"],
-    skills: ["Statistics", "Python", "Machine Learning"]
-  }, {
-    id: 3,
-    name: "UX Designer",
-    description: "Design user interfaces and experiences",
-    requiredTraits: ["ENFP", "INFP"],
-    skills: ["Design", "User Research", "Prototyping"]
-  }]);
-  const [mockSkills, setMockSkills] = useState([{
-    id: 1,
-    name: "JavaScript",
-    category: "Technical",
-    linkedCareers: ["Software Engineer", "Web Developer"]
-  }, {
-    id: 2,
-    name: "Communication",
-    category: "Soft Skills",
-    linkedCareers: ["Project Manager", "Sales"]
-  }, {
-    id: 3,
-    name: "Data Analysis",
-    category: "Technical",
-    linkedCareers: ["Data Scientist", "Business Analyst"]
-  }, {
-    id: 4,
-    name: "Leadership",
-    category: "Soft Skills",
-    linkedCareers: ["Manager", "Team Lead"]
-  }]);
+  // Real data from API
+  const [loading, setLoading] = useState(false);
+  const [overview, setOverview] = useState({
+    TotalUsers: 0,
+    AssessmentsCompleted: 0,
+    ResumesUploaded: 0,
+    CareerMatches: 0
+  });
+  const [users, setUsers] = useState<any[]>([]);
+  const [assessments, setAssessments] = useState<any[]>([]);
+  const [resumes, setResumes] = useState<any[]>([]);
+  const [careers, setCareers] = useState<any[]>([]);
+  const [skills, setSkills] = useState<any[]>([]);
+  const [topCareers, setTopCareers] = useState<any[]>([]);
+  const [settings, setSettings] = useState<Record<string, string>>({});
   const sidebarItems = [{
     id: "overview",
     label: "Overview",
@@ -211,94 +112,399 @@ const AdminDashboard = () => {
     label: "Settings",
     icon: Settings
   }];
-  const filteredUsers = mockUsers.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()) || user.email.toLowerCase().includes(searchTerm.toLowerCase()));
-  const handleUserStatusToggle = (userId: number, newStatus: boolean) => {
-    setMockUsers(prevUsers => prevUsers.map(user => user.id === userId ? {
-      ...user,
-      status: newStatus ? "Active" : "Inactive"
-    } : user));
+  const filteredUsers = users.filter(user => (user.name || "").toLowerCase().includes(searchTerm.toLowerCase()) || (user.email || "").toLowerCase().includes(searchTerm.toLowerCase()));
+
+  // Fetch Overview Data
+  useEffect(() => {
+    if (activeSection === "overview") {
+      fetchOverview();
+      fetchTopCareers();
+    }
+  }, [activeSection]);
+
+  // Fetch Users
+  useEffect(() => {
+    if (activeSection === "users") {
+      fetchUsers();
+    }
+  }, [activeSection]);
+
+  // Fetch Assessments
+  useEffect(() => {
+    if (activeSection === "assessments") {
+      fetchAssessments();
+    }
+  }, [activeSection]);
+
+  // Fetch Resumes
+  useEffect(() => {
+    if (activeSection === "resumes") {
+      fetchResumes();
+    }
+  }, [activeSection]);
+
+  // Fetch Careers
+  useEffect(() => {
+    if (activeSection === "careers") {
+      fetchCareers();
+    }
+  }, [activeSection]);
+
+  // Fetch Skills
+  useEffect(() => {
+    if (activeSection === "skills") {
+      fetchSkills();
+    }
+  }, [activeSection]);
+
+  // Fetch Settings
+  useEffect(() => {
+    if (activeSection === "settings") {
+      fetchSettings();
+    }
+  }, [activeSection]);
+
+  const fetchOverview = async () => {
+    setLoading(true);
+    const result = await adminService.getOverview();
+    setLoading(false);
+    if (result.success) {
+      setOverview(result.success);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
   };
-  const handleViewUser = (userId: number) => {
-    const user = mockUsers.find(u => u.id === userId);
-    setViewUserModal({
-      isOpen: true,
-      user
-    });
+
+  const fetchTopCareers = async () => {
+    const result = await adminService.getTopCareers();
+    if (result.success) {
+      setTopCareers(result.success);
+    }
   };
-  const handleViewAssessment = (assessmentId: number) => {
-    const assessment = mockAssessments.find(a => a.id === assessmentId);
-    setViewAssessmentModal({
-      isOpen: true,
-      assessment
-    });
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    const result = await adminService.getUsers();
+    setLoading(false);
+    if (result.success) {
+      setUsers(result.success);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
   };
+
+  const fetchAssessments = async () => {
+    setLoading(true);
+    const result = await adminService.getAssessments();
+    setLoading(false);
+    if (result.success) {
+      setAssessments(result.success);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchResumes = async () => {
+    setLoading(true);
+    const result = await adminService.getResumes();
+    setLoading(false);
+    if (result.success) {
+      setResumes(result.success);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchCareers = async () => {
+    setLoading(true);
+    const result = await adminService.getCareers();
+    setLoading(false);
+    if (result.success) {
+      setCareers(result.success);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchSkills = async () => {
+    setLoading(true);
+    const result = await adminService.getSkills();
+    setLoading(false);
+    if (result.success) {
+      setSkills(result.success);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchSettings = async () => {
+    setLoading(true);
+    const result = await adminService.getSettings();
+    setLoading(false);
+    if (result.success) {
+      setSettings(result.success);
+      setApiSettings({
+        indeedApiKey: result.success["IndeedApiKey"] || "",
+        chatgptApiKey: result.success["ChatGPTApiKey"] || "",
+        deepseekApiKey: result.success["DeepSeekApiKey"] || "",
+        activeAiModel: result.success["ActiveAiModel"] || "chatgpt"
+      });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+  const handleUserStatusToggle = async (userId: number, newStatus: boolean) => {
+    const result = await adminService.updateUserStatus(userId, newStatus);
+    if (result.success) {
+      setUsers(prevUsers => prevUsers.map(user => user.id === userId ? {
+        ...user,
+        status: newStatus ? "Active" : "Inactive"
+      } : user));
+      toast({
+        title: "Success",
+        description: "User status updated successfully."
+      });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleViewUser = async (userId: number) => {
+    const result = await adminService.getUser(userId);
+    if (result.success) {
+      setViewUserModal({
+        isOpen: true,
+        user: result.success
+      });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleViewAssessment = async (assessmentId: number) => {
+    const result = await adminService.getAssessment(assessmentId);
+    if (result.success) {
+      setViewAssessmentModal({
+        isOpen: true,
+        assessment: result.success
+      });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleEditCareer = (careerId: number) => {
-    const career = mockCareers.find(c => c.id === careerId);
+    const career = careers.find(c => c.id === careerId);
     setEditCareerModal({
       isOpen: true,
       career
     });
   };
+
   const handleEditSkill = (skillId: number) => {
-    const skill = mockSkills.find(s => s.id === skillId);
+    const skill = skills.find(s => s.id === skillId);
     setEditSkillModal({
       isOpen: true,
       skill
     });
   };
+
   const handleAddUser = (userData: any) => {
-    const newUser = {
-      id: mockUsers.length + 1,
-      ...userData,
-      joined: new Date().toISOString().split('T')[0],
-      assessmentCompleted: false,
-      resumeUploaded: false
-    };
-    setMockUsers(prev => [...prev, newUser]);
+    // Note: Add user functionality would need to be implemented in backend
     toast({
-      title: "User Added",
-      description: `${userData.name} has been successfully added to the system.`
-    });
-  };
-  const handleAddSkill = (skillData: any) => {
-    const newSkill = {
-      id: mockSkills.length + 1,
-      ...skillData,
-      linkedCareers: []
-    };
-    setMockSkills(prev => [...prev, newSkill]);
-    toast({
-      title: "Skill Added",
-      description: `${skillData.name} has been successfully added to the skills database.`
-    });
-  };
-  const handleAddCareer = (careerData: any) => {
-    const newCareer = {
-      id: mockCareers.length + 1,
-      ...careerData
-    };
-    setMockCareers(prev => [...prev, newCareer]);
-    toast({
-      title: "Career Added",
-      description: `${careerData.name} has been successfully added to the careers database.`
-    });
-  };
-  const handleSaveCareer = (updatedCareer: any) => {
-    setMockCareers(prev => prev.map(career => career.id === updatedCareer.id ? updatedCareer : career));
-    toast({
-      title: "Career Updated",
-      description: `${updatedCareer.name} has been successfully updated.`
-    });
-  };
-  const handleSaveSkill = (updatedSkill: any) => {
-    setMockSkills(prev => prev.map(skill => skill.id === updatedSkill.id ? updatedSkill : skill));
-    toast({
-      title: "Skill Updated",
-      description: `${updatedSkill.name} has been successfully updated.`
+      title: "Info",
+      description: "User creation functionality needs to be implemented."
     });
   };
 
-  const handlePasswordChange = () => {
+  const handleAddSkill = async (skillData: any) => {
+    const result = await adminService.createSkill({
+      name: skillData.name,
+      category: skillData.category,
+      description: skillData.description || ""
+    });
+    if (result.success) {
+      await fetchSkills();
+      toast({
+        title: "Skill Added",
+        description: `${skillData.name} has been successfully added to the skills database.`
+      });
+      setAddSkillModal(false);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleAddCareer = async (careerData: any) => {
+    const result = await adminService.createCareer({
+      name: careerData.name,
+      description: careerData.description || "",
+      requiredSkills: careerData.skills || [],
+      personalityMatchs: careerData.requiredTraits || []
+    });
+    if (result.success) {
+      await fetchCareers();
+      toast({
+        title: "Career Added",
+        description: `${careerData.name} has been successfully added to the careers database.`
+      });
+      setAddCareerModal(false);
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSaveCareer = async (updatedCareer: any) => {
+    const result = await adminService.updateCareer(updatedCareer.id, {
+      name: updatedCareer.name,
+      description: updatedCareer.description || "",
+      requiredSkills: updatedCareer.skills || [],
+      personalityMatchs: updatedCareer.requiredTraits || []
+    });
+    if (result.success) {
+      await fetchCareers();
+      toast({
+        title: "Career Updated",
+        description: `${updatedCareer.name} has been successfully updated.`
+      });
+      setEditCareerModal({ isOpen: false, career: null });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSaveSkill = async (updatedSkill: any) => {
+    const result = await adminService.updateSkill(updatedSkill.id, {
+      name: updatedSkill.name,
+      category: updatedSkill.category,
+      description: updatedSkill.description || ""
+    });
+    if (result.success) {
+      await fetchSkills();
+      toast({
+        title: "Skill Updated",
+        description: `${updatedSkill.name} has been successfully updated.`
+      });
+      setEditSkillModal({ isOpen: false, skill: null });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteUser = async (userId: number) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      const result = await adminService.deleteUser(userId);
+      if (result.success) {
+        await fetchUsers();
+        toast({
+          title: "User Deleted",
+          description: "User has been successfully deleted."
+        });
+      } else if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error.message,
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const handleDeleteCareer = async (careerId: number) => {
+    if (window.confirm("Are you sure you want to delete this career?")) {
+      const result = await adminService.deleteCareer(careerId);
+      if (result.success) {
+        await fetchCareers();
+        toast({
+          title: "Career Deleted",
+          description: "Career has been successfully deleted."
+        });
+      } else if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error.message,
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const handleDeleteSkill = async (skillId: number) => {
+    if (window.confirm("Are you sure you want to delete this skill?")) {
+      const result = await adminService.deleteSkill(skillId);
+      if (result.success) {
+        await fetchSkills();
+        toast({
+          title: "Skill Deleted",
+          description: "Skill has been successfully deleted."
+        });
+      } else if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error.message,
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const handlePasswordChange = async () => {
     if (!passwordSettings.currentPassword || !passwordSettings.newPassword || !passwordSettings.confirmPassword) {
       toast({
         title: "Error",
@@ -326,17 +532,55 @@ const AdminDashboard = () => {
       return;
     }
 
-    // Here you would normally make an API call to change the password
-    setPasswordSettings({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: ""
-    });
+    // Use authService for password change
+    const { authService } = await import("@/services/authService");
+    const result = await authService.changePassword(
+      passwordSettings.currentPassword,
+      passwordSettings.newPassword
+    );
 
-    toast({
-      title: "Password Changed",
-      description: "Your password has been successfully updated."
-    });
+    if (result.success) {
+      setPasswordSettings({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      });
+      toast({
+        title: "Password Changed",
+        description: "Your password has been successfully updated."
+      });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSaveApiSettings = async () => {
+    const updatedSettings: Record<string, string> = {
+      ...settings,
+      IndeedApiKey: apiSettings.indeedApiKey,
+      ChatGPTApiKey: apiSettings.chatgptApiKey,
+      DeepSeekApiKey: apiSettings.deepseekApiKey,
+      ActiveAiModel: apiSettings.activeAiModel
+    };
+
+    const result = await adminService.updateSettings(updatedSettings);
+    if (result.success) {
+      toast({
+        title: "Settings Saved",
+        description: "API settings have been successfully updated."
+      });
+      await fetchSettings();
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+    }
   };
   return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
       <ResponsiveSidebar>
@@ -387,7 +631,12 @@ const AdminDashboard = () => {
 
         {/* Content */}
         <div className="flex-1 p-3 md:p-6">
-          {activeSection === "overview" && <div className="space-y-4 md:space-y-6">
+          {loading && (
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
+            </div>
+          )}
+          {activeSection === "overview" && !loading && <div className="space-y-4 md:space-y-6">
               {/* Stats Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white">
@@ -395,7 +644,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-purple-100 text-xs md:text-sm">Total Users</p>
-                        <p className="text-xl md:text-3xl font-bold">1,247</p>
+                        <p className="text-xl md:text-3xl font-bold">{overview.TotalUsers.toLocaleString()}</p>
                       </div>
                       <User className="h-6 w-6 md:h-8 md:w-8 text-purple-100" />
                     </div>
@@ -407,7 +656,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-600 text-xs md:text-sm">Assessments Completed</p>
-                        <p className="text-xl md:text-3xl font-bold text-green-600">892</p>
+                        <p className="text-xl md:text-3xl font-bold text-green-600">{overview.AssessmentsCompleted.toLocaleString()}</p>
                       </div>
                       <Brain className="h-6 w-6 md:h-8 md:w-8 text-green-500" />
                     </div>
@@ -419,7 +668,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-600 text-xs md:text-sm">Resumes Uploaded</p>
-                        <p className="text-xl md:text-3xl font-bold text-blue-600">634</p>
+                        <p className="text-xl md:text-3xl font-bold text-blue-600">{overview.ResumesUploaded.toLocaleString()}</p>
                       </div>
                       <Upload className="h-6 w-6 md:h-8 md:w-8 text-blue-500" />
                     </div>
@@ -431,7 +680,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-600 text-xs md:text-sm">Career Matches</p>
-                        <p className="text-xl md:text-3xl font-bold text-indigo-600">1,456</p>
+                        <p className="text-xl md:text-3xl font-bold text-indigo-600">{overview.CareerMatches.toLocaleString()}</p>
                       </div>
                       <Target className="h-6 w-6 md:h-8 md:w-8 text-indigo-500" />
                     </div>
@@ -447,22 +696,16 @@ const AdminDashboard = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm md:text-base">Software Engineer</span>
-                        <Badge className="text-xs">234 matches</Badge>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm md:text-base">Data Scientist</span>
-                        <Badge className="text-xs">189 matches</Badge>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm md:text-base">UX Designer</span>
-                        <Badge className="text-xs">156 matches</Badge>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm md:text-base">Business Analyst</span>
-                        <Badge className="text-xs">142 matches</Badge>
-                      </div>
+                      {topCareers.length > 0 ? (
+                        topCareers.slice(0, 5).map((career: any, index: number) => (
+                          <div key={index} className="flex justify-between items-center">
+                            <span className="text-sm md:text-base">{career.CareerName || career.careerName}</span>
+                            <Badge className="text-xs">{career.MatchCount || career.matchCount} matches</Badge>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm text-gray-500">No data available</p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -473,34 +716,32 @@ const AdminDashboard = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm md:text-base">JavaScript</span>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={85} className="w-12 md:w-20 h-2" />
-                          <span className="text-xs md:text-sm">85%</span>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm md:text-base">Python</span>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={72} className="w-12 md:w-20 h-2" />
-                          <span className="text-xs md:text-sm">72%</span>
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm md:text-base">Communication</span>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={68} className="w-12 md:w-20 h-2" />
-                          <span className="text-xs md:text-sm">68%</span>
-                        </div>
-                      </div>
+                      {skills.length > 0 ? (
+                        skills.slice(0, 3).map((skill: any, index: number) => {
+                          const usageCount = careers.filter((c: any) => 
+                            (c.RequiredSkills || []).some((s: string) => s.includes(skill.Name || skill.name))
+                          ).length;
+                          const percentage = careers.length > 0 ? Math.round((usageCount / careers.length) * 100) : 0;
+                          return (
+                            <div key={index} className="flex justify-between items-center">
+                              <span className="text-sm md:text-base">{skill.Name || skill.name}</span>
+                              <div className="flex items-center space-x-2">
+                                <Progress value={percentage} className="w-12 md:w-20 h-2" />
+                                <span className="text-xs md:text-sm">{percentage}%</span>
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <p className="text-sm text-gray-500">No data available</p>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
               </div>
             </div>}
 
-          {activeSection === "users" && <div className="space-y-4 md:space-y-6">
+          {activeSection === "users" && !loading && <div className="space-y-4 md:space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -528,9 +769,9 @@ const AdminDashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {filteredUsers.map(user => <tr key={user.id} className="border-b hover:bg-gray-50">
-                            <td className="p-2 md:p-3 font-medium text-xs md:text-sm">{user.name}</td>
-                            <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.email}</td>
+                        {filteredUsers.length > 0 ? filteredUsers.map((user: any) => <tr key={user.id} className="border-b hover:bg-gray-50">
+                            <td className="p-2 md:p-3 font-medium text-xs md:text-sm">{user.name || user.fullName || "N/A"}</td>
+                            <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.email || "N/A"}</td>
                              <td className="p-2 md:p-3">
                                <div className="flex items-center space-x-2">
                                  <Switch checked={user.status === "Active"} onCheckedChange={checked => handleUserStatusToggle(user.id, checked)} className="data-[state=checked]:bg-green-600" />
@@ -539,7 +780,7 @@ const AdminDashboard = () => {
                                  </span>
                                </div>
                              </td>
-                            <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.joined}</td>
+                            <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.joined || "N/A"}</td>
                             <td className="p-2 md:p-3">
                               {user.assessmentCompleted ? <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500" /> : <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />}
                             </td>
@@ -551,12 +792,16 @@ const AdminDashboard = () => {
                                  <Button size="sm" variant="outline" className="p-1 md:p-2" onClick={() => handleViewUser(user.id)}>
                                    <Eye className="h-3 w-3 md:h-4 md:w-4" />
                                  </Button>
-                                <Button size="sm" variant="outline" className="text-red-600 p-1 md:p-2">
+                                <Button size="sm" variant="outline" className="text-red-600 p-1 md:p-2" onClick={() => handleDeleteUser(user.id)}>
                                   <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
                                 </Button>
                               </div>
                             </td>
-                          </tr>)}
+                          </tr>) : (
+                          <tr>
+                            <td colSpan={7} className="p-4 text-center text-gray-500">No users found</td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -564,7 +809,7 @@ const AdminDashboard = () => {
               </Card>
             </div>}
 
-          {activeSection === "assessments" && <div className="space-y-6">
+          {activeSection === "assessments" && !loading && <div className="space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Assessment Results</CardTitle>
@@ -582,25 +827,29 @@ const AdminDashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {mockAssessments.map(assessment => <tr key={assessment.id} className="border-b hover:bg-gray-50">
-                            <td className="p-3 font-medium">{assessment.userName}</td>
+                        {assessments.length > 0 ? assessments.map((assessment: any) => <tr key={assessment.id} className="border-b hover:bg-gray-50">
+                            <td className="p-3 font-medium">{assessment.userName || "Guest"}</td>
                             <td className="p-3">
-                              <Badge variant="outline">{assessment.personalityType}</Badge>
+                              <Badge variant="outline">{assessment.personalityType || "N/A"}</Badge>
                             </td>
                             <td className="p-3">
                               <div className="flex items-center space-x-2">
-                                <Progress value={assessment.score} className="w-16 h-2" />
-                                <span className="text-sm">{assessment.score}%</span>
+                                <Progress value={assessment.score || 0} className="w-16 h-2" />
+                                <span className="text-sm">{assessment.score || 0}%</span>
                               </div>
                             </td>
-                            <td className="p-3 text-gray-600">{assessment.completedDate}</td>
+                            <td className="p-3 text-gray-600">{assessment.completedDate || "N/A"}</td>
                             <td className="p-3">
                               <Button size="sm" variant="outline" onClick={() => handleViewAssessment(assessment.id)}>
                                 <Eye className="h-4 w-4 mr-2" />
                                 View Details
                               </Button>
                             </td>
-                          </tr>)}
+                          </tr>) : (
+                          <tr>
+                            <td colSpan={5} className="p-4 text-center text-gray-500">No assessments found</td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -608,12 +857,12 @@ const AdminDashboard = () => {
               </Card>
             </div>}
 
-          {activeSection === "resumes" && <div className="space-y-6">
+          {activeSection === "resumes" && !loading && <div className="space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle>Resume Management</CardTitle>
-                    <Button variant="outline">
+                    <Button variant="outline" onClick={fetchResumes}>
                       <RefreshCw className="h-4 w-4 mr-2" />
                       Refresh
                     </Button>
@@ -633,34 +882,51 @@ const AdminDashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {mockResumes.map(resume => <tr key={resume.id} className="border-b hover:bg-gray-50">
-                            <td className="p-3 font-medium">{resume.userName}</td>
-                            <td className="p-3 text-gray-600">{resume.fileName}</td>
-                            <td className="p-3">
-                              <Badge variant={resume.status === "Analyzed" ? "default" : "secondary"}>
-                                {resume.status}
-                              </Badge>
-                            </td>
-                            <td className="p-3 text-gray-600">{resume.uploadDate}</td>
-                            <td className="p-3">
-                              <div className="flex flex-wrap gap-1">
-                                {resume.skills.slice(0, 3).map((skill, index) => <Badge key={index} variant="outline" className="text-xs">
-                                    {skill}
-                                  </Badge>)}
-                                {resume.skills.length > 3 && <Badge variant="outline" className="text-xs">
-                                    +{resume.skills.length - 3}
-                                  </Badge>}
-                              </div>
-                            </td>
-                            <td className="p-3">
-                              <div className="flex space-x-2">
-                                <Button size="sm" variant="outline">
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                                
-                              </div>
-                            </td>
-                          </tr>)}
+                        {resumes.length > 0 ? resumes.map((resume: any) => {
+                          const skillsList = resume.skills || [];
+                          return (
+                            <tr key={resume.id} className="border-b hover:bg-gray-50">
+                              <td className="p-3 font-medium">{resume.userName || "Guest"}</td>
+                              <td className="p-3 text-gray-600">{resume.fileName || "N/A"}</td>
+                              <td className="p-3">
+                                <Badge variant={resume.status === "Analyzed" ? "default" : "secondary"}>
+                                  {resume.status || "Pending"}
+                                </Badge>
+                              </td>
+                              <td className="p-3 text-gray-600">{resume.uploadDate || "N/A"}</td>
+                              <td className="p-3">
+                                <div className="flex flex-wrap gap-1">
+                                  {skillsList.slice(0, 3).map((skill: string, index: number) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {skill}
+                                    </Badge>
+                                  ))}
+                                  {skillsList.length > 3 && (
+                                    <Badge variant="outline" className="text-xs">
+                                      +{skillsList.length - 3}
+                                    </Badge>
+                                  )}
+                                  {skillsList.length === 0 && (
+                                    <span className="text-xs text-gray-400">No skills</span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="p-3">
+                                <div className="flex space-x-2">
+                                  {resume.fileURL && (
+                                    <Button size="sm" variant="outline" onClick={() => window.open(resume.fileURL, '_blank')}>
+                                      <Download className="h-4 w-4" />
+                                    </Button>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        }) : (
+                          <tr>
+                            <td colSpan={6} className="p-4 text-center text-gray-500">No resumes found</td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -668,7 +934,7 @@ const AdminDashboard = () => {
               </Card>
             </div>}
 
-          {activeSection === "careers" && <div className="space-y-6">
+          {activeSection === "careers" && !loading && <div className="space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
                   <div className="flex justify-between items-center">
@@ -681,42 +947,58 @@ const AdminDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4">
-                    {mockCareers.map(career => <Card key={career.id} className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-lg">{career.name}</h3>
-                            <p className="text-gray-600 mb-3">{career.description}</p>
-                            <div className="space-y-2">
-                              <div>
-                                <span className="text-sm font-medium">Required Traits: </span>
-                                {career.requiredTraits.map((trait, index) => <Badge key={index} variant="outline" className="mr-1">
-                                    {trait}
-                                  </Badge>)}
-                              </div>
-                              <div>
-                                <span className="text-sm font-medium">Skills: </span>
-                                {career.skills.map((skill, index) => <Badge key={index} variant="secondary" className="mr-1">
-                                    {skill}
-                                  </Badge>)}
+                    {careers.length > 0 ? careers.map((career: any) => {
+                      const requiredTraits = career.PersonalityMatchs || career.personalityMatchs || [];
+                      const skills = career.RequiredSkills || career.requiredSkills || [];
+                      return (
+                        <Card key={career.id} className="p-4">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h3 className="font-semibold text-lg">{career.name || career.Name}</h3>
+                              <p className="text-gray-600 mb-3">{career.description || career.Description || ""}</p>
+                              <div className="space-y-2">
+                                {requiredTraits.length > 0 && (
+                                  <div>
+                                    <span className="text-sm font-medium">Required Traits: </span>
+                                    {requiredTraits.map((trait: string, index: number) => (
+                                      <Badge key={index} variant="outline" className="mr-1">
+                                        {trait}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                )}
+                                {skills.length > 0 && (
+                                  <div>
+                                    <span className="text-sm font-medium">Skills: </span>
+                                    {skills.map((skill: string, index: number) => (
+                                      <Badge key={index} variant="secondary" className="mr-1">
+                                        {skill}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             </div>
+                            <div className="flex space-x-2">
+                              <Button size="sm" variant="outline" onClick={() => handleEditCareer(career.id)}>
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button size="sm" variant="outline" className="text-red-600" onClick={() => handleDeleteCareer(career.id)}>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
-                          <div className="flex space-x-2">
-                            <Button size="sm" variant="outline" onClick={() => handleEditCareer(career.id)}>
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button size="sm" variant="outline" className="text-red-600">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </Card>)}
+                        </Card>
+                      );
+                    }) : (
+                      <p className="text-center text-gray-500 p-4">No careers found</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
             </div>}
 
-          {activeSection === "skills" && <div className="space-y-6">
+          {activeSection === "skills" && !loading && <div className="space-y-6">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardHeader>
                   <div className="flex justify-between items-center">
@@ -739,31 +1021,44 @@ const AdminDashboard = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {mockSkills.map(skill => <tr key={skill.id} className="border-b hover:bg-gray-50">
-                            <td className="p-3 font-medium">{skill.name}</td>
-                            <td className="p-3">
-                              <Badge variant={skill.category === "Technical" ? "default" : "secondary"}>
-                                {skill.category}
-                              </Badge>
-                            </td>
-                            <td className="p-3">
-                              <div className="flex flex-wrap gap-1">
-                                {skill.linkedCareers.map((career, index) => <Badge key={index} variant="outline" className="text-xs">
-                                    {career}
-                                  </Badge>)}
-                              </div>
-                            </td>
-                            <td className="p-3">
-                              <div className="flex space-x-2">
-                                <Button size="sm" variant="outline" onClick={() => handleEditSkill(skill.id)}>
-                                  <Edit className="h-4 w-4" />
-                                </Button>
-                                <Button size="sm" variant="outline" className="text-red-600">
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>)}
+                        {skills.length > 0 ? skills.map((skill: any) => {
+                          const linkedCareers = skill.LinkedCareers || skill.linkedCareers || [];
+                          return (
+                            <tr key={skill.id} className="border-b hover:bg-gray-50">
+                              <td className="p-3 font-medium">{skill.name || skill.Name}</td>
+                              <td className="p-3">
+                                <Badge variant={skill.category === "Technical" || skill.Category === "Technical" ? "default" : "secondary"}>
+                                  {skill.category || skill.Category || "N/A"}
+                                </Badge>
+                              </td>
+                              <td className="p-3">
+                                <div className="flex flex-wrap gap-1">
+                                  {linkedCareers.length > 0 ? linkedCareers.map((career: string, index: number) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {career}
+                                    </Badge>
+                                  )) : (
+                                    <span className="text-xs text-gray-400">None</span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="p-3">
+                                <div className="flex space-x-2">
+                                  <Button size="sm" variant="outline" onClick={() => handleEditSkill(skill.id)}>
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <Button size="sm" variant="outline" className="text-red-600" onClick={() => handleDeleteSkill(skill.id)}>
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        }) : (
+                          <tr>
+                            <td colSpan={4} className="p-4 text-center text-gray-500">No skills found</td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -820,7 +1115,7 @@ const AdminDashboard = () => {
                     </Select>
                   </div>
 
-                  <Button className="w-full text-sm md:text-base">
+                  <Button className="w-full text-sm md:text-base" onClick={handleSaveApiSettings}>
                     Save API Settings
                   </Button>
                 </CardContent>

@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 // 20-question AI-based personality sorter (friendly UI text)
 const questions = [
@@ -161,22 +163,7 @@ const PersonalityTest = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
-      <header className="container mx-auto px-4 py-6">
-        <nav className="flex justify-between items-center">
-          <Link
-            to="/"
-            className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"
-          >
-            CareerCompass
-          </Link>
-          <Link to="/">
-            <Button variant="ghost">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-        </nav>
-      </header>
+      <Header variant="back" />
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
@@ -238,6 +225,9 @@ const PersonalityTest = () => {
           </Card>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

@@ -4,28 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Users, Award, TrendingUp, CheckCircle, Star, ArrowRight, BookOpen, Target, BarChart3, MessageCircle, Shield, Zap, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              CareerCompass
-            </Link>
-            <nav className="flex space-x-4">
-              <Link to="/login" className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all">
-                Sign In
-              </Link>
-              <Link to="/signup" className="border border-purple-600 text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-all">
-                Sign Up
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 text-center">
@@ -63,19 +49,19 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-purple-600">10,000+</div>
+              <div className="text-3xl font-bold text-blue-600">100+</div>
               <div className="text-gray-600">Students Guided</div>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-blue-600">95%</div>
+              <div className="text-3xl font-bold text-blue-600">99%</div>
               <div className="text-gray-600">Accuracy Rate</div>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-indigo-600">500+</div>
+              <div className="text-3xl font-bold text-blue-600">100+</div>
               <div className="text-gray-600">Career Paths</div>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-green-600">24/7</div>
+              <div className="text-3xl font-bold text-blue-600">24/7</div>
               <div className="text-gray-600">AI Support</div>
             </div>
           </div>
@@ -146,7 +132,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 1
               </div>
               <h3 className="text-lg font-semibold mb-2">Take Assessment</h3>
@@ -162,7 +148,7 @@ const Index = () => {
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 bg-indigo-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 3
               </div>
               <h3 className="text-lg font-semibold mb-2">Get Matches</h3>
@@ -170,7 +156,7 @@ const Index = () => {
             </div>
 
             <div className="text-center">
-              <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 4
               </div>
               <h3 className="text-lg font-semibold mb-2">Plan Your Path</h3>
@@ -274,7 +260,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/personality-test">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg">
+              <Button size="lg" variant="outline" className=" bg-transparent border-white text-white hover:bg-white hover:text-purple-600 px-8 py-3 text-lg">
                 Try Demo Assessment
               </Button>
             </Link>
@@ -283,51 +269,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4 block">
-                CareerCompass
-              </Link>
-              <p className="text-gray-400">
-                Guiding students to their ideal careers through AI-powered insights and personalized recommendations.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
-                <li><Link to="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
-                <li><Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
-                <li><Link to="/cookie-policy" className="hover:text-white transition-colors">Cookie Policy</Link></li>
-                <li><a href="/press" className="hover:text-white transition-colors">Press</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-4">Services</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Personality Assessment</li>
-                <li>Resume Analysis</li>
-                <li>Career Matching</li>
-                <li>Skills Development</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-4">Contact Info</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>support@careercompass.com</li>
-                <li>+1 (555) 012-3456</li>
-                <li>San Francisco, CA</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 CareerCompass. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
