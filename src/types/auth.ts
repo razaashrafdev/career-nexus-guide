@@ -6,8 +6,10 @@ export interface LoginRequest {
 export interface LoginResponse {
   statusCode: number;
   data: {
+    Id : string;
     fullName: string;
     email: string;
+    RoleName : string;
     isTwoFactorEnabled: boolean;
     token: string;
   };
@@ -30,9 +32,10 @@ export interface RegisterResponse {
 }
 
 export interface User {
-  id: string;
+  Id?: number;
   fullName: string;
   email: string;
+  RoleName : string;
   token: string;
 }
 

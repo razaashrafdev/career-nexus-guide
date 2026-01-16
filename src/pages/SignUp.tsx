@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "@/services/authService";
+
 const SignUp = () => {
   const [formData, setFormData] = useState({  
     firstName: "",
@@ -26,6 +27,10 @@ const SignUp = () => {
       [e.target.name]: e.target.value
     });
   };
+//   setTimeout(() => {
+//   authService.removeToken(); // clear any login session
+//   navigate("/login");
+// }, 1300);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -53,7 +58,7 @@ if (result.error) {
   setMessage("Account Created Successfully");
   setIsLoading(false);
   setTimeout(() => {
-    navigate("/dashboard");
+    navigate("/login");
   }, 1500);
 }
     // Simulate registration process
