@@ -19,10 +19,10 @@ const About = () => {
           <div className="max-w-6xl mx-auto text-center">
             <p className="text-purple-300 text-sm font-medium mb-4 uppercase tracking-wider">About CareerCompass</p>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight max-w-5xl mx-auto">
-              Discovering Your Perfect Career Path Through AI Innovation
+              Smart Career Powered by AI
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              Empowering students worldwide to unlock their true potential and find careers that align with their personality, skills, and aspirations using cutting-edge artificial intelligence.
+              Empowering students to explore careers that truly align with their personality, skills, and future aspirations through AI innovation.
             </p>
           </div>
         </div>
@@ -34,7 +34,7 @@ const About = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900 leading-tight">
-                We are helping students achieve their dreams through cutting-edge AI technology
+                Helping Students Achieve Their Dreams with AI
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed mb-6">
                 At CareerCompass, with a vision to deliver innovative, high-quality digital solutions, we have grown into a leading company specializing in career guidance, personality assessment, and AI-powered job matching.
@@ -90,12 +90,12 @@ const About = () => {
               </div>
             </div>
             <div>
-              <p className="text-purple-300 text-sm font-medium mb-4 uppercase tracking-wider">5+ Years of Innovation</p>
+
               <h2 className="text-3xl md:text-4xl font-bold mb-6 leading-tight">
                 Our journey of growth and innovation
               </h2>
               <p className="text-lg text-gray-300 leading-relaxed">
-                Since our inception, CareerCompass has been on a journey of growth and innovation. With over 5 years of experience in the tech industry, we have successfully delivered comprehensive career guidance solutions, including personality tests, resume analysis, and AI-powered job matching. Our ability to adapt to the evolving needs of our clients and the industry has been key to our success.
+                Since our inception, CareerCompass has focused on building innovative AI-driven career guidance solutions, combining personality assessment and skill analysis to support students in an evolving job market.
               </p>
             </div>
           </div>
@@ -108,7 +108,7 @@ const About = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900 leading-tight">
-                Why choose CareerCompass for your career journey?
+                Why choose CareerCompass?
               </h2>
               <div className="space-y-6 mb-8">
                 <div className="flex items-start space-x-4">
@@ -170,10 +170,10 @@ const About = () => {
           <div className="max-w-4xl mx-auto text-center">
             <div className="text-6xl text-purple-300 mb-6 font-serif">"</div>
             <blockquote className="text-2xl md:text-3xl font-light mb-8 leading-relaxed italic">
-              CareerCompass developed our stunning career guidance platform that boosted our student success rate by 94% within the first three months. Their AI-powered assessment and personalized recommendations have significantly increased our students' career satisfaction.
+              CareerCompass helped us elevate our counseling approach by combining AI-powered assessments with personalized career guidance. The platform significantly improved how students understand their strengths and make confident career decisions.”
             </blockquote>
             <div className="text-purple-300 text-sm font-medium uppercase tracking-wider">
-              JANE ANDERSON<br />
+              GURU CHATGPT<br />
               <span className="text-purple-400">CAREER COUNSELOR</span>
             </div>
           </div>
@@ -188,7 +188,7 @@ const About = () => {
               Ready to take your career to the next level?
             </h2>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of students who have discovered their perfect career path with CareerCompass.
+              Join thousands of students who are discovering their ideal career paths with CareerCompass, guided by AI-driven insights and personalized recommendations.
             </p>
             <Link to="/personality-test">
               <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 text-lg rounded-full hover:shadow-lg transition-all duration-300">

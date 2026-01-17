@@ -51,7 +51,7 @@ const Footer = () => {
             <ul className="space-y-2 text-gray-400">
               <li>support@careercompass.com</li>
               <li>+1 (555) 012-3456</li>
-              <li>San Francisco, CA</li>
+              <li>Karachi, Pakistan</li>
             </ul>
           </div>
         </div>

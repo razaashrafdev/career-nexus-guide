@@ -15,56 +15,77 @@ const Terms = () => {
         <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
           Terms of Service
         </h1>
-        
+
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg space-y-6">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">1. Acceptance of Terms</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Introduction</h2>
           <p className="text-gray-600">
-            By accessing or using CareerCompass, you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, you may not use our services.
+            Welcome to CareerCompass. By accessing or using our website and services, you agree to comply with these Terms of Service. These terms govern your use of our platform, AI-powered career guidance tools, and any content provided through our services.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">2. Description of Service</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Use of Services</h2>
           <p className="text-gray-600">
-            CareerCompass provides AI-powered career guidance, personality assessments, resume analysis, and related services to help students and professionals discover their ideal career paths.
+            You may use our services only for lawful purposes and in accordance with these Terms. You agree not to use the platform to submit false information, violate intellectual property rights, or engage in any activities that could harm CareerCompass or other users.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">3. User Accounts</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Account Registration</h2>
           <p className="text-gray-600">
-            To access certain features, you may be required to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.
+            Certain features of the platform require you to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You agree to provide accurate and up-to-date information when registering.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">4. User Content</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Intellectual Property</h2>
           <p className="text-gray-600">
-            You may be able to submit content to CareerCompass, such as resume information and assessment responses. You retain ownership of your content, but you grant us a license to use, modify, and display your content in connection with providing our services.
+            All content, software, AI models, and materials provided on CareerCompass are owned by or licensed to us and are protected by applicable intellectual property laws. You may not copy, reproduce, or distribute our materials without explicit permission.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">5. Acceptable Use</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Limitations of Liability</h2>
           <p className="text-gray-600">
-            You agree not to use CareerCompass for any unlawful or prohibited purpose. You may not attempt to gain unauthorized access to our systems or interfere with the operation of our services.
+            CareerCompass provides career guidance tools and AI recommendations for educational purposes. While we strive for accuracy, we do not guarantee specific outcomes or career results. Users acknowledge that the platform is a guidance tool and that CareerCompass is not responsible for decisions made based on our recommendations.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">6. Intellectual Property</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Termination</h2>
           <p className="text-gray-600">
-            CareerCompass and its content are protected by copyright, trademark, and other intellectual property laws. You may not reproduce, modify, or distribute our content without our permission.
+            We may suspend or terminate your access to the platform at any time if you violate these Terms of Service or engage in conduct that we consider harmful or unlawful. Termination does not limit our right to take any other legal actions.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">7. Disclaimer of Warranties</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Updates to Terms</h2>
           <p className="text-gray-600">
-            CareerCompass is provided "as is" without any warranties, express or implied. We do not guarantee the accuracy, completeness, or reliability of our services.
+            We may update these Terms of Service from time to time. Any changes will be posted on this page with the updated effective date. Continued use of our services constitutes acceptance of the revised terms.
           </p>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">8. Limitation of Liability</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Contact Us
+          </h2>
           <p className="text-gray-600">
-            In no event shall CareerCompass be liable for any damages arising out of your use of our services.
+            If you have any questions or concerns about this Privacy Policy,
+            please contact us at:
           </p>
+          <ul className="text-gray-600 space-y-2">
+            <li className="flex items-center">
+              <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
+              <a
+                href="mailto:support@careercompass.com"
+                className="hover:text-purple-400 transition-colors break-all"
+              >
+                support@careercompass.com
+              </a>
+            </li>
+            <li className="flex items-center">
+              <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
+              <a
+                href="tel:+1-555-0123"
+                className="hover:text-purple-400 transition-colors"
+              >
+                +1 (555) 012-3456
+              </a>
+            </li>
+            <li className="flex items-center">
+              <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+              <span>Karachi, Pakistan</span>
+            </li>
+          </ul>
 
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">9. Changes to Terms</h2>
           <p className="text-gray-600">
-            We may modify these Terms at any time. Your continued use of CareerCompass after any changes constitutes your acceptance of the new Terms.
-          </p>
-
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">10. Governing Law</h2>
-          <p className="text-gray-600">
-            These Terms shall be governed by the laws of the State of California.
+            Effective Date: January 1, 2026
           </p>
         </div>
       </div>

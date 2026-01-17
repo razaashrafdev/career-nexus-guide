@@ -15,135 +15,41 @@ const Privacy = () => {
         <h1 className="text-4xl font-bold mb-8 text-center bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
           Privacy Policy
         </h1>
-        
+
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg space-y-6">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
             Introduction
           </h2>
           <p className="text-gray-600">
-            Your privacy is important to us. This Privacy Policy explains how
-            CareerCompass ("we," "us," or "our") collects, uses, and protects
-            your personal information when you use our website and services.
+            At CareerCompass, your privacy is our top priority. We are committed to protecting your personal information and ensuring that your data is handled responsibly. When you use our website and services, we may collect information such as your name, email, academic details from assessments, or resume uploads. We also track how you interact with the platform to improve the quality and effectiveness of our career guidance services.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
             Information We Collect
           </h2>
           <p className="text-gray-600">
-            We may collect the following types of information:
-          </p>
-          <ul className="list-disc list-inside text-gray-600 space-y-2">
-            <li>
-              <strong>Personal Information:</strong> Name, email address,
-              contact information, and demographic data.
-            </li>
-            <li>
-              <strong>Assessment Data:</strong> Responses and results from
-              personality and skills assessments.
-            </li>
-            <li>
-              <strong>Resume Information:</strong> Data extracted from uploaded
-              resumes, including skills, experience, and education.
-            </li>
-            <li>
-              <strong>Usage Data:</strong> Information about how you use our
-              website and services, including pages visited, features used, and
-              time spent on the site.
-            </li>
-            <li>
-              <strong>Device Information:</strong> IP address, browser type,
-              operating system, and device identifiers.
-            </li>
-          </ul>
-
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-            How We Use Your Information
-          </h2>
-          <p className="text-gray-600">
-            We use your information for the following purposes:
-          </p>
-          <ul className="list-disc list-inside text-gray-600 space-y-2">
-            <li>
-              To provide and personalize our services, including career
-              recommendations and skill gap analysis.
-            </li>
-            <li>
-              To analyze and improve our website and services.
-            </li>
-            <li>
-              To communicate with you about updates, promotions, and other
-              relevant information.
-            </li>
-            <li>
-              To respond to your inquiries and provide customer support.
-            </li>
-            <li>
-              To ensure the security and integrity of our website and services.
-            </li>
-          </ul>
-
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-            Data Sharing and Disclosure
-          </h2>
-          <p className="text-gray-600">
-            We may share your information with:
-          </p>
-          <ul className="list-disc list-inside text-gray-600 space-y-2">
-            <li>
-              <strong>Service Providers:</strong> Third-party vendors who assist
-              us in providing our services, such as hosting, analytics, and
-              customer support.
-            </li>
-            <li>
-              <strong>Business Partners:</strong> Universities and companies
-              that partner with us to offer career opportunities and resources.
-            </li>
-            <li>
-              <strong>Legal Authorities:</strong> When required by law or to
-              protect our rights and interests.
-            </li>
-          </ul>
-          <p className="text-gray-600">
-            We will not sell your personal information to third parties.
+            The information we collect is used to provide personalized AI-powered career recommendations that align with your skills, personality, and aspirations. It also helps us enhance platform features and communicate important updates to you.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
             Data Security
           </h2>
           <p className="text-gray-600">
-            We implement industry-standard security measures to protect your
-            personal information from unauthorized access, use, or disclosure.
-            These measures include encryption, firewalls, and regular security
-            assessments.
+            All data is securely stored following industry-standard practices, and access is restricted to authorized personnel only. We take data protection seriously to ensure your information remains safe.
+          </p>
+
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Sharing Information
+          </h2>
+          <p className="text-gray-600">
+            We do not sell or share your personal information with third parties for marketing purposes. Any data shared with trusted partners is strictly used to deliver our services effectively and efficiently.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
             Your Rights
           </h2>
           <p className="text-gray-600">
-            You have the following rights regarding your personal information:
-          </p>
-          <ul className="list-disc list-inside text-gray-600 space-y-2">
-            <li>
-              <strong>Access:</strong> You can request access to the personal
-              information we hold about you.
-            </li>
-            <li>
-              <strong>Correction:</strong> You can request that we correct any
-              inaccurate or incomplete information.
-            </li>
-            <li>
-              <strong>Deletion:</strong> You can request that we delete your
-              personal information, subject to certain exceptions.
-            </li>
-            <li>
-              <strong>Opt-Out:</strong> You can opt-out of receiving
-              promotional communications from us.
-            </li>
-          </ul>
-          <p className="text-gray-600">
-            To exercise these rights, please contact us at
-            support@careercompass.com.
+          You have control over your personal information and can request access, correction, or deletion at any time. You may also opt out of communications from us whenever you wish.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
@@ -183,12 +89,12 @@ const Privacy = () => {
             </li>
             <li className="flex items-center">
               <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-              <span>San Francisco, CA</span>
+              <span>Karachi, Pakistan</span>
             </li>
           </ul>
 
           <p className="text-gray-600">
-            Effective Date: January 1, 2025
+            Effective Date: January 1, 2026
           </p>
         </div>
       </div>

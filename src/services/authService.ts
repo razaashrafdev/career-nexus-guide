@@ -8,7 +8,7 @@ import {
   JWTPayload,
 } from "@/types/auth";
 
-const API_BASE_URL = "https://localhost:7270";
+const API_BASE_URL = "http://localhost:8080";
 const TOKEN_KEY = "career_nexus_token";
 
 export const authService = {
@@ -35,9 +35,10 @@ export const authService = {
           },
         };
       }
- localStorage.setItem(TOKEN_KEY,data.token);
       // ✅ Token Save
-      this.saveToken(data.data.token);
+      if (data.data?.token) {
+        this.saveToken(data.data.token);
+      }
 
       return { success: data as LoginResponse };
     } catch (error) {

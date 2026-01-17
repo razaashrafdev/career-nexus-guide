@@ -96,9 +96,9 @@ useEffect(() => {
 useEffect(() => {
   const fetchLatestResume = async () => {
     try {
-      const response = await fetch("https://localhost:7270/api/Resume/latest", {
+      const response = await fetch("http://localhost:8080/api/Resume/latest", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+          Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
         }
       });
 
@@ -137,9 +137,9 @@ useEffect(() => {
 useEffect(() => {
   const fetchLatestResume = async () => {
     try {
-      const response = await fetch("https://localhost:7270/api/Resume/latest", {
+      const response = await fetch("http://localhost:8080/api/Resume/latest", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
+          Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
         }
       });
 
