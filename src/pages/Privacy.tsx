@@ -21,7 +21,7 @@ const Privacy = () => {
             Introduction
           </h2>
           <p className="text-gray-600">
-            At CareerCompass, your privacy is our top priority. We are committed to protecting your personal information and ensuring that your data is handled responsibly. When you use our website and services, we may collect information such as your name, email, academic details from assessments, or resume uploads. We also track how you interact with the platform to improve the quality and effectiveness of our career guidance services.
+            At CareerNexus, your privacy is our top priority. We are committed to protecting your personal information and ensuring that your data is handled responsibly. When you use our website and services, we may collect information such as your name, email, academic details from assessments, or resume uploads. We also track how you interact with the platform to improve the quality and effectiveness of our career guidance services.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
@@ -72,19 +72,19 @@ const Privacy = () => {
             <li className="flex items-center">
               <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
               <a
-                href="mailto:support@careercompass.com"
+                href="mailto:careernexus.team@gmail.com"
                 className="hover:text-purple-400 transition-colors break-all"
               >
-                support@careercompass.com
+                careernexus.team@gmail.com
               </a>
             </li>
             <li className="flex items-center">
               <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
               <a
-                href="tel:+1-555-0123"
+                href="https://wa.me/923008974168"
                 className="hover:text-purple-400 transition-colors"
               >
-                +1 (555) 012-3456
+                +92 300 8974168
               </a>
             </li>
             <li className="flex items-center">

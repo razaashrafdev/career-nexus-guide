@@ -23,7 +23,7 @@ const Header = ({ variant = "default" }: HeaderProps) => {
           <nav className="flex items-center relative">
             {/* Logo - Left */}
             <Link to="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent z-10">
-              CareerCompass
+              CareerNexus
             </Link>
             
             {/* Desktop Navigation - Centered */}
@@ -95,7 +95,7 @@ const Header = ({ variant = "default" }: HeaderProps) => {
         <div className="flex items-center relative">
           {/* Logo - Left */}
           <Link to="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent z-10">
-            CareerCompass
+            CareerNexus
           </Link>
           
           {/* Desktop Navigation - Centered */}

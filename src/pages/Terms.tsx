@@ -19,12 +19,12 @@ const Terms = () => {
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg space-y-6">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Introduction</h2>
           <p className="text-gray-600">
-            Welcome to CareerCompass. By accessing or using our website and services, you agree to comply with these Terms of Service. These terms govern your use of our platform, AI-powered career guidance tools, and any content provided through our services.
+            Welcome to CareerNexus. By accessing or using our website and services, you agree to comply with these Terms of Service. These terms govern your use of our platform, AI-powered career guidance tools, and any content provided through our services.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Use of Services</h2>
           <p className="text-gray-600">
-            You may use our services only for lawful purposes and in accordance with these Terms. You agree not to use the platform to submit false information, violate intellectual property rights, or engage in any activities that could harm CareerCompass or other users.
+            You may use our services only for lawful purposes and in accordance with these Terms. You agree not to use the platform to submit false information, violate intellectual property rights, or engage in any activities that could harm CareerNexus or other users.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Account Registration</h2>
@@ -34,12 +34,12 @@ const Terms = () => {
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Intellectual Property</h2>
           <p className="text-gray-600">
-            All content, software, AI models, and materials provided on CareerCompass are owned by or licensed to us and are protected by applicable intellectual property laws. You may not copy, reproduce, or distribute our materials without explicit permission.
+            All content, software, AI models, and materials provided on CareerNexus are owned by or licensed to us and are protected by applicable intellectual property laws. You may not copy, reproduce, or distribute our materials without explicit permission.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Limitations of Liability</h2>
           <p className="text-gray-600">
-            CareerCompass provides career guidance tools and AI recommendations for educational purposes. While we strive for accuracy, we do not guarantee specific outcomes or career results. Users acknowledge that the platform is a guidance tool and that CareerCompass is not responsible for decisions made based on our recommendations.
+            CareerNexus provides career guidance tools and AI recommendations for educational purposes. While we strive for accuracy, we do not guarantee specific outcomes or career results. Users acknowledge that the platform is a guidance tool and that CareerNexus is not responsible for decisions made based on our recommendations.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Termination</h2>
@@ -63,19 +63,19 @@ const Terms = () => {
             <li className="flex items-center">
               <Mail className="h-4 w-4 mr-2 flex-shrink-0" />
               <a
-                href="mailto:support@careercompass.com"
+                href="mailto:careernexus.team@gmail.com"
                 className="hover:text-purple-400 transition-colors break-all"
               >
-                support@careercompass.com
+                careernexus.team@gmail.com
               </a>
             </li>
             <li className="flex items-center">
               <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
               <a
-                href="tel:+1-555-0123"
+                href="https://wa.me/923008974168"
                 className="hover:text-purple-400 transition-colors"
               >
-                +1 (555) 012-3456
+                +92 300 8974168
               </a>
             </li>
             <li className="flex items-center">

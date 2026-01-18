@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4 block">
-              CareerCompass
+              CareerNexus
             </Link>
             <p className="text-gray-400 mb-4">
               Guiding students to their ideal careers through AI-powered insights and personalized recommendations.
@@ -49,14 +49,20 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-4">Contact Info</h4>
             <ul className="space-y-2 text-gray-400">
-              <li>support@careercompass.com</li>
-              <li>+1 (555) 012-3456</li>
+              <li>careernexus.team@gmail.com</li>
+              <li>
+                <a
+                  href="https://wa.me/923008974168"
+                >
+                  +92 300 8974168
+                </a>
+              </li>
               <li>Karachi, Pakistan</li>
             </ul>
           </div>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2026 CareerCompass. All rights reserved.</p>
+          <p>&copy; 2026 CareerNexus. All rights reserved.</p>
         </div>
       </div>
     </footer>

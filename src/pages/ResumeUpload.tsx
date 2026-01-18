@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Upload, FileText, CheckCircle, Brain, Target, TrendingUp, Sparkles, Loader2 } from "lucide-react";
 import { resumeService } from "@/services/resumeService";
 import { useToast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
@@ -89,18 +90,14 @@ const ResumeUpload = () => {
       <Header variant="back" />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative container mx-auto px-4 py-24 md:py-32">
+      <section className="py-20 relative bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 text-white overflow-hidden">
+        <div className="relative container mx-auto px-4">
           <div className="max-w-6xl mx-auto text-center">
-            <div className="flex justify-center mb-6">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30">
-                <FileText className="h-10 w-10 text-white" />
-              </div>
-            </div>
-            <p className="text-purple-300 text-sm font-medium mb-4 uppercase tracking-wider">Resume Analysis</p>
+            <Badge className="mb-6 bg-white/20 hover:bg-white/20 text-white-700">
+              Resume Analysis
+            </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight max-w-4xl mx-auto">
-              Upload Your Resume for AI-Powered Analysis
+              Upload Your Resume
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
               Get personalized career recommendations, skill gap analysis, and job matching based on your resume. Our AI will analyze your experience and suggest the perfect career paths.
@@ -129,11 +126,10 @@ const ResumeUpload = () => {
               </CardHeader>
               <CardContent className="space-y-6 p-8">
                 {/* File Upload Area */}
-                <div className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all ${
-                  uploadedFile 
-                    ? 'border-green-500 bg-green-50' 
+                <div className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all ${uploadedFile
+                    ? 'border-green-500 bg-green-50'
                     : 'border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50/30'
-                }`}>
+                  }`}>
                   {uploadedFile ? (
                     <div className="space-y-4">
                       <div className="flex justify-center">
@@ -220,7 +216,7 @@ const ResumeUpload = () => {
       </section>
 
       {/* Features Section */}
-      <section className="bg-gradient-to-r from-gray-900 to-purple-900 text-white py-16 md:py-24">
+      <section className="relative bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 text-white overflow-hidden py-16 md:py-24">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
@@ -241,7 +237,7 @@ const ResumeUpload = () => {
                   Advanced AI extracts skills, experience, and qualifications from your resume with precision.
                 </p>
               </div>
-              
+
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mb-4">
                   <Target className="h-6 w-6 text-white" />
@@ -251,7 +247,7 @@ const ResumeUpload = () => {
                   Get matched with careers that align with your skills, experience, and personality.
                 </p>
               </div>
-              
+
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center mb-4">
                   <TrendingUp className="h-6 w-6 text-white" />
@@ -290,7 +286,7 @@ const ResumeUpload = () => {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                   <CheckCircle className="h-5 w-5 text-blue-600" />
@@ -302,7 +298,7 @@ const ResumeUpload = () => {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                   <CheckCircle className="h-5 w-5 text-purple-600" />
@@ -314,7 +310,7 @@ const ResumeUpload = () => {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-start space-x-4">
                 <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
                   <CheckCircle className="h-5 w-5 text-orange-600" />

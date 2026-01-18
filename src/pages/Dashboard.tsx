@@ -96,7 +96,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchLatestResume = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/Resume/latest", {
+      const response = await fetch("http://localhost:7270/api/Resume/latest", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
         }
@@ -137,7 +137,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchLatestResume = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/Resume/latest", {
+      const response = await fetch("http://localhost:7270/api/Resume/latest", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
         }
@@ -292,7 +292,7 @@ useEffect(() => {
       <ResponsiveSidebar>
         <div className="p-4 md:p-6 border-b border-gray-200">
           <Link to="/" className="text-lg md:text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            CareerCompass
+            CareerNexus
           </Link>
         </div>
 
