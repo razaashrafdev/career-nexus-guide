@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle, MessageCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
@@ -47,11 +48,12 @@ const Contact = () => {
       <Header variant="back" />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative container mx-auto px-4 py-24 md:py-32">
+      <section className="py-20 relative bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 text-white overflow-hidden">
+        <div className="relative container mx-auto px-4">
           <div className="max-w-6xl mx-auto text-center">
-            <p className="text-purple-300 text-sm font-medium mb-4 uppercase tracking-wider">Get in Touch</p>
+            <Badge className="mb-6 bg-white/20 hover:bg-white/20 text-white-700">
+              Get in Touch
+            </Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight max-w-4xl mx-auto">
               We're Here to Help You
             </h1>
@@ -74,7 +76,7 @@ const Contact = () => {
               <p className="text-lg text-gray-600 leading-relaxed mb-8">
                 Get in touch with our team. We're here to answer your questions and help you on your career journey.
               </p>
-              
+
               <div className="space-y-6 mb-8">
                 <div className="flex items-start space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
@@ -83,11 +85,11 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1 text-lg">Email</h3>
                     <p className="text-gray-600 mb-2">We'll respond within 24 hours</p>
-                    <a 
-                      href="mailto:support@careercompass.com" 
+                    <a
+                      href="mailto:careernexus.team@gmail.com"
                       className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
                     >
-                      support@careercompass.com
+                      careernexus.team@gmail.com
                     </a>
                   </div>
                 </div>
@@ -99,11 +101,11 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1 text-lg">Phone</h3>
                     <p className="text-gray-600 mb-2">Monday - Friday, 9 AM - 6 PM EST</p>
-                    <a 
-                      href="tel:+1-555-0123" 
+                    <a
+                      href="https://wa.me/923008974168"
                       className="text-green-600 hover:text-green-700 transition-colors font-medium"
                     >
-                      +1 (555) 012-3456
+                      +92 300 8974168
                     </a>
                   </div>
                 </div>
@@ -115,9 +117,7 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1 text-lg">Office Location</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      123 Career Boulevard<br />
-                      San Francisco, CA 94105<br />
-                      United States
+                      Karachi, Pakistan
                     </p>
                   </div>
                 </div>
@@ -138,15 +138,15 @@ const Contact = () => {
                           Send us a message
                         </h2>
                       </div>
-                      
+
                       <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid md:grid-cols-2 gap-4">
                           <div>
                             <Label htmlFor="firstName" className="text-sm font-medium text-gray-700 mb-2 block">
                               First Name *
                             </Label>
-                            <Input 
-                              id="firstName" 
+                            <Input
+                              id="firstName"
                               required
                               value={formData.firstName}
                               onChange={(e) => handleInputChange("firstName", e.target.value)}
@@ -158,8 +158,8 @@ const Contact = () => {
                             <Label htmlFor="lastName" className="text-sm font-medium text-gray-700 mb-2 block">
                               Last Name *
                             </Label>
-                            <Input 
-                              id="lastName" 
+                            <Input
+                              id="lastName"
                               required
                               value={formData.lastName}
                               onChange={(e) => handleInputChange("lastName", e.target.value)}
@@ -168,14 +168,14 @@ const Contact = () => {
                             />
                           </div>
                         </div>
-                        
+
                         <div>
                           <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-2 block">
                             Email Address *
                           </Label>
-                          <Input 
-                            id="email" 
-                            type="email" 
+                          <Input
+                            id="email"
+                            type="email"
                             required
                             value={formData.email}
                             onChange={(e) => handleInputChange("email", e.target.value)}
@@ -183,13 +183,13 @@ const Contact = () => {
                             placeholder="john@example.com"
                           />
                         </div>
-                        
+
                         <div>
                           <Label htmlFor="message" className="text-sm font-medium text-gray-700 mb-2 block">
                             Message *
                           </Label>
-                          <Textarea 
-                            id="message" 
+                          <Textarea
+                            id="message"
                             required
                             value={formData.message}
                             onChange={(e) => handleInputChange("message", e.target.value)}
@@ -198,9 +198,9 @@ const Contact = () => {
                             placeholder="Please describe how we can help you..."
                           />
                         </div>
-                        
+
                         <div className="pt-4">
-                          <Button 
+                          <Button
                             type="submit"
                             className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-lg transition-all text-white px-8 py-3 h-11"
                           >
@@ -221,8 +221,8 @@ const Contact = () => {
                       <p className="text-gray-600 mb-6">
                         Thank you for contacting us. We'll get back to you within 24 hours.
                       </p>
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         onClick={() => setIsSubmitted(false)}
                         className="border-gray-300"
                       >
@@ -256,21 +256,21 @@ const Contact = () => {
                   Our assessments use scientifically validated models with 85-90% accuracy in career recommendations.
                 </p>
               </div>
-              
+
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                 <h3 className="font-semibold text-lg mb-3 text-white">Is my data secure?</h3>
                 <p className="text-gray-300 leading-relaxed">
                   Yes, we use enterprise-grade encryption and strict privacy protocols to protect your information.
                 </p>
               </div>
-              
+
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                 <h3 className="font-semibold text-lg mb-3 text-white">Can I retake assessments?</h3>
                 <p className="text-gray-300 leading-relaxed">
                   Absolutely! You can retake assessments anytime from your dashboard for updated results.
                 </p>
               </div>
-              
+
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                 <h3 className="font-semibold text-lg mb-3 text-white">Do you offer personal counseling?</h3>
                 <p className="text-gray-300 leading-relaxed">

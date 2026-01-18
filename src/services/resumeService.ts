@@ -1,6 +1,6 @@
 import { ApiError } from "@/types/auth";
 const TOKEN_KEY = "career_nexus_token";
-const API_BASE_URL = "http://localhost:8080/api/Resume";
+const API_BASE_URL = "http://localhost:7270/api/Resume";
 export const resumeService = {
   async uploadResume(file: File): Promise<{
     success?: { statusCode: number; data: unknown };
