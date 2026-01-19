@@ -7,8 +7,8 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent mb-4 block">
-              CareerNexus
+            <Link to="/" className="mb-4 inline-block">
+              <img src="/footer-icon.png" alt="CareerNexus Logo" className="h-12 w-auto" />
             </Link>
             <p className="text-gray-400 mb-4">
               Guiding students to their ideal careers through AI-powered insights and personalized recommendations.

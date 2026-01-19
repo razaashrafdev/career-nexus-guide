@@ -22,8 +22,8 @@ const Header = ({ variant = "default" }: HeaderProps) => {
         <div className="container mx-auto px-4 py-4">
           <nav className="flex items-center relative">
             {/* Logo - Left */}
-            <Link to="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent z-10">
-              CareerNexus
+            <Link to="/" className="flex items-center z-10">
+              <img src="/header-icon.png" alt="CareerNexus Logo" className="h-10 w-auto md:h-12 md:w-auto" />
             </Link>
             
             {/* Desktop Navigation - Centered */}
@@ -94,8 +94,8 @@ const Header = ({ variant = "default" }: HeaderProps) => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center relative">
           {/* Logo - Left */}
-          <Link to="/" className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent z-10">
-            CareerNexus
+          <Link to="/" className="flex items-center z-10">
+            <img src="/header-icon.png" alt="CareerNexus Logo" className="h-10 w-auto md:h-12 md:w-auto" />
           </Link>
           
           {/* Desktop Navigation - Centered */}

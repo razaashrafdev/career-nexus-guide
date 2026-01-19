@@ -103,3 +103,30 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Fade up animation - respects prefers-reduced-motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .animate-fade-up {
+      animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-fade-up {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
