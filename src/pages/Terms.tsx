@@ -19,12 +19,12 @@ const Terms = () => {
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg space-y-6">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Introduction</h2>
           <p className="text-gray-600">
-            Welcome to CareerNexus. By accessing or using our website and services, you agree to comply with these Terms of Service. These terms govern your use of our platform, AI-powered career guidance tools, and any content provided through our services.
+            Welcome to Career Nexus. By accessing or using our website and services, you agree to comply with these Terms of Service. These terms govern your use of our platform, AI-powered career guidance tools, and any content provided through our services.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Use of Services</h2>
           <p className="text-gray-600">
-            You may use our services only for lawful purposes and in accordance with these Terms. You agree not to use the platform to submit false information, violate intellectual property rights, or engage in any activities that could harm CareerNexus or other users.
+            You may use our services only for lawful purposes and in accordance with these Terms. You agree not to use the platform to submit false information, violate intellectual property rights, or engage in any activities that could harm Career Nexus or other users.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Account Registration</h2>
@@ -34,12 +34,12 @@ const Terms = () => {
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Intellectual Property</h2>
           <p className="text-gray-600">
-            All content, software, AI models, and materials provided on CareerNexus are owned by or licensed to us and are protected by applicable intellectual property laws. You may not copy, reproduce, or distribute our materials without explicit permission.
+            All content, software, AI models, and materials provided on Career Nexus are owned by or licensed to us and are protected by applicable intellectual property laws. You may not copy, reproduce, or distribute our materials without explicit permission.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Limitations of Liability</h2>
           <p className="text-gray-600">
-            CareerNexus provides career guidance tools and AI recommendations for educational purposes. While we strive for accuracy, we do not guarantee specific outcomes or career results. Users acknowledge that the platform is a guidance tool and that CareerNexus is not responsible for decisions made based on our recommendations.
+            Career Nexus provides career guidance tools and AI recommendations for educational purposes. While we strive for accuracy, we do not guarantee specific outcomes or career results. Users acknowledge that the platform is a guidance tool and that Career Nexus is not responsible for decisions made based on our recommendations.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">Termination</h2>

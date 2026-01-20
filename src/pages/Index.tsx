@@ -98,7 +98,7 @@ const Index = () => {
           <AnimatedElement>
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
-                Why Choose CareerNexus?
+                Why Choose Career Nexus?
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Our comprehensive platform combines cutting-edge AI with proven career guidance methodologies
@@ -243,7 +243,7 @@ const Index = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={80}>
                   <p className="text-gray-600 mb-4">
-                    "CareerNexus helped me discover my passion for UX design. The assessment was incredibly accurate and the recommendations were spot-on!"
+                    "Career Nexus helped me discover my passion for UX design. The assessment was incredibly accurate and the recommendations were spot-on!"
                   </p>
                 </AnimatedElement>
                 <AnimatedElement delay={160}>
@@ -327,7 +327,7 @@ const Index = () => {
           </AnimatedElement>
           <AnimatedElement delay={100}>
             <p className="text-xl mb-8 opacity-90">
-              Join thousands of students who have found their ideal career paths with CareerNexus.
+              Join thousands of students who have found their ideal career paths with Career Nexus.
             </p>
           </AnimatedElement>
           <AnimatedElement delay={200}>

@@ -21,7 +21,7 @@ const About = () => {
           <div className="max-w-6xl mx-auto text-center">
             <AnimatedElement delay={0}>
               <Badge className="mb-6 bg-white/20 hover:bg-white/20 text-white-700">
-                About CareerNexus
+                About Career Nexus
               </Badge>
             </AnimatedElement>
             <AnimatedElement delay={80}>
@@ -50,7 +50,7 @@ const About = () => {
               </AnimatedElement>
               <AnimatedElement delay={100}>
                 <p className="text-lg text-gray-600 leading-relaxed mb-6">
-                  At CareerNexus, with a vision to deliver innovative, high-quality digital solutions, we have grown into a leading company specializing in career guidance, personality assessment, and AI-powered job matching.
+                  At Career Nexus, with a vision to deliver innovative, high-quality digital solutions, we have grown into a leading company specializing in career guidance, personality assessment, and AI-powered job matching.
                 </p>
               </AnimatedElement>
             </div>
@@ -145,7 +145,7 @@ const About = () => {
               </AnimatedElement>
               <AnimatedElement delay={100}>
                 <p className="text-lg text-gray-300 leading-relaxed max-w-xl">
-                  Since our inception, CareerNexus has focused on building innovative AI-driven career guidance solutions, combining personality assessment and skill analysis to support students in an evolving job market.
+                  Since our inception, Career Nexus has focused on building innovative AI-driven career guidance solutions, combining personality assessment and skill analysis to support students in an evolving job market.
                 </p>
               </AnimatedElement>
             </div>
@@ -160,7 +160,7 @@ const About = () => {
             <div>
               <AnimatedElement delay={0}>
                 <h2 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900 leading-tight">
-                  Why choose CareerNexus?
+                  Why choose Career Nexus?
                 </h2>
               </AnimatedElement>
               <div className="space-y-6 mb-8">
@@ -240,7 +240,7 @@ const About = () => {
             </AnimatedElement>
             <AnimatedElement delay={100}>
               <blockquote className="text-2xl md:text-3xl font-light mb-8 leading-relaxed italic">
-                CareerNexus helped us elevate our counseling approach by combining AI-powered assessments with personalized career guidance. The platform significantly improved how students understand their strengths and make confident career decisions."
+                Career Nexus helped us elevate our counseling approach by combining AI-powered assessments with personalized career guidance. The platform significantly improved how students understand their strengths and make confident career decisions."
               </blockquote>
             </AnimatedElement>
             <AnimatedElement delay={200}>
@@ -263,7 +263,7 @@ const About = () => {
             </AnimatedElement>
             <AnimatedElement delay={100}>
               <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                Join thousands of students who are discovering their ideal career paths with CareerNexus, guided by AI-driven insights and personalized recommendations.
+                Join thousands of students who are discovering their ideal career paths with Career Nexus, guided by AI-driven insights and personalized recommendations.
               </p>
             </AnimatedElement>
             <AnimatedElement delay={200}>

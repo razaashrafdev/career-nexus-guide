@@ -89,7 +89,7 @@ const SignUp = () => {
           Back to Home
         </Link>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-          Join CareerNexus
+          Join Career Nexus
         </h1>
         <p className="text-gray-600 mt-2">Start your personalized career journey today</p>
       </div>

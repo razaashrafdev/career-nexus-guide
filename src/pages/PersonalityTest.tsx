@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { AnimatedElement } from "@/components/AnimatedElement";
 
 // 20-question AI-based personality sorter (friendly UI text)
 const questions = [
@@ -169,57 +170,68 @@ const PersonalityTest = () => {
         <div className="max-w-2xl mx-auto">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
             <CardHeader>
-              <div className="flex justify-between items-center mb-4">
-                <CardTitle className="text-2xl">Personality Assessment</CardTitle>
-                <span className="text-sm text-gray-500">
-                  Question {currentQuestion + 1} of {questions.length}
-                </span>
-              </div>
-              <Progress value={progress} className="w-full" />
+              <AnimatedElement delay={0}>
+                <div className="flex justify-between items-center mb-4">
+                  <CardTitle className="text-2xl">Personality Assessment</CardTitle>
+                  <span className="text-sm text-gray-500">
+                    Question {currentQuestion + 1} of {questions.length}
+                  </span>
+                </div>
+              </AnimatedElement>
+              <AnimatedElement delay={80}>
+                <Progress value={progress} className="w-full" />
+              </AnimatedElement>
             </CardHeader>
 
             <CardContent className="space-y-6">
               <div>
-                <h3 className="text-xl font-semibold mb-6 text-gray-800">
-                  {questions[currentQuestion].question}
-                </h3>
+                <AnimatedElement delay={0}>
+                  <h3 className="text-xl font-semibold mb-6 text-gray-800">
+                    {questions[currentQuestion].question}
+                  </h3>
+                </AnimatedElement>
                 <div className="space-y-3">
                   {questions[currentQuestion].options.map((option, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleAnswer(option.value)}
-                      className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
-                        answers[currentQuestion] === option.value
-                          ? "border-purple-500 bg-purple-50 text-purple-700"
-                          : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                      }`}
-                    >
-                      {option.text} {/* Only friendly text shown */}
-                    </button>
+                    <AnimatedElement key={index} delay={100 + index * 50}>
+                      <button
+                        onClick={() => handleAnswer(option.value)}
+                        className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
+                          answers[currentQuestion] === option.value
+                            ? "border-purple-500 bg-purple-50 text-purple-700"
+                            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        {option.text} {/* Only friendly text shown */}
+                      </button>
+                    </AnimatedElement>
                   ))}
                 </div>
               </div>
 
               <div className="flex justify-between pt-6">
-                <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  disabled={currentQuestion === 0}
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Previous
-                </Button>
+                <AnimatedElement delay={300}>
+                  <Button
+                    variant="outline"
+                    onClick={handlePrevious}
+                    disabled={currentQuestion === 0}
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Previous
+                  </Button>
+                </AnimatedElement>
 
-                <Button
-                  onClick={handleNext}
-                  disabled={!isAnswered}
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                >
-                  {currentQuestion === questions.length - 1
-                    ? "Complete Test"
-                    : "Next"}
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
+                <AnimatedElement delay={350}>
+                  <Button
+                    onClick={handleNext}
+                    disabled={!isAnswered}
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                  >
+                    {currentQuestion === questions.length - 1
+                      ? "Complete Test"
+                      : "Next"}
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </AnimatedElement>
               </div>
             </CardContent>
           </Card>

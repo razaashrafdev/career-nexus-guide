@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <Link to="/" className="mb-4 inline-block">
-              <img src="/footer-icon.png" alt="CareerNexus Logo" className="h-12 w-auto" />
+              <img src="/footer-icon.png" alt="Career Nexus Logo" className="h-12 w-auto" />
             </Link>
             <p className="text-gray-400 mb-4">
               Guiding students to their ideal careers through AI-powered insights and personalized recommendations.
@@ -62,7 +62,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-          <p>&copy; 2026 CareerNexus. All rights reserved.</p>
+          <p>&copy; 2026 Career Nexus. All rights reserved.</p>
         </div>
       </div>
     </footer>
