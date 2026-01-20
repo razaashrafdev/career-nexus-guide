@@ -292,7 +292,7 @@ useEffect(() => {
       <ResponsiveSidebar>
         <div className="p-4 md:p-6 border-b border-gray-200">
           <Link to="/" className="text-lg md:text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            CareerNexus
+            Career Nexus
           </Link>
         </div>
 

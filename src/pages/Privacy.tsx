@@ -21,7 +21,7 @@ const Privacy = () => {
             Introduction
           </h2>
           <p className="text-gray-600">
-            At CareerNexus, your privacy is our top priority. We are committed to protecting your personal information and ensuring that your data is handled responsibly. When you use our website and services, we may collect information such as your name, email, academic details from assessments, or resume uploads. We also track how you interact with the platform to improve the quality and effectiveness of our career guidance services.
+            At Career Nexus, your privacy is our top priority. We are committed to protecting your personal information and ensuring that your data is handled responsibly. When you use our website and services, we may collect information such as your name, email, academic details from assessments, or resume uploads. We also track how you interact with the platform to improve the quality and effectiveness of our career guidance services.
           </p>
 
           <h2 className="text-2xl font-semibold mb-4 text-gray-800">
