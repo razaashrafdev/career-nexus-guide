@@ -43,7 +43,7 @@ const Index = () => {
                   </Button>
                 </Link>
                 <Link to="/resume-upload">
-                  <Button size="lg" variant="outline" className="border-purple-600 text-black hover:bg-purple-50 px-8 py-3 text-lg">
+                  <Button size="lg" variant="outline" className="text-black hover:bg-purple-50 px-8 py-3 text-lg">
                     <Upload className="mr-2 h-5 w-5" />
                     Upload Resume
                   </Button>
