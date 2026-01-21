@@ -71,10 +71,10 @@ const AdminDashboard = () => {
   // Real data from API
   const [loading, setLoading] = useState(false);
   const [overview, setOverview] = useState({
-    TotalUsers: 0,
-    AssessmentsCompleted: 0,
-    ResumesUploaded: 0,
-    CareerMatches: 0
+    totalUsers: 0,
+    assessmentsCompleted: 0,
+    resumesUploaded: 0,
+    careerMatches: 0
   });
   const [users, setUsers] = useState<any[]>([]);
   const [assessments, setAssessments] = useState<any[]>([]);
@@ -644,7 +644,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-purple-100 text-xs md:text-sm">Total Users</p>
-                        <p className="text-xl md:text-3xl font-bold">{overview.TotalUsers.toLocaleString()}</p>
+                        <p className="text-xl md:text-3xl font-bold">{overview.totalUsers.toLocaleString()}</p>
                       </div>
                       <User className="h-6 w-6 md:h-8 md:w-8 text-purple-100" />
                     </div>
@@ -656,7 +656,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-600 text-xs md:text-sm">Assessments Completed</p>
-                        <p className="text-xl md:text-3xl font-bold text-green-600">{overview.AssessmentsCompleted.toLocaleString()}</p>
+                        <p className="text-xl md:text-3xl font-bold text-green-600">{overview.assessmentsCompleted.toLocaleString()}</p>
                       </div>
                       <Brain className="h-6 w-6 md:h-8 md:w-8 text-green-500" />
                     </div>
@@ -668,7 +668,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-600 text-xs md:text-sm">Resumes Uploaded</p>
-                        <p className="text-xl md:text-3xl font-bold text-blue-600">{overview.ResumesUploaded.toLocaleString()}</p>
+                        <p className="text-xl md:text-3xl font-bold text-blue-600">{overview.resumesUploaded.toLocaleString()}</p>
                       </div>
                       <Upload className="h-6 w-6 md:h-8 md:w-8 text-blue-500" />
                     </div>
@@ -680,7 +680,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-gray-600 text-xs md:text-sm">Career Matches</p>
-                        <p className="text-xl md:text-3xl font-bold text-indigo-600">{overview.CareerMatches.toLocaleString()}</p>
+                        <p className="text-xl md:text-3xl font-bold text-indigo-600">{overview.careerMatches.toLocaleString()}</p>
                       </div>
                       <Target className="h-6 w-6 md:h-8 md:w-8 text-indigo-500" />
                     </div>
