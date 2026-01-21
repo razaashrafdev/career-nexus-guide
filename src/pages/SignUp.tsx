@@ -162,13 +162,19 @@ const SignUp = () => {
               <input type="checkbox" id="terms" checked={agreedToTerms} onChange={e => setAgreedToTerms(e.target.checked)} className="mt-1 rounded border-gray-300" />
               <label htmlFor="terms" className="text-sm text-gray-600">
                 I agree to the{" "}
-                <a href="#" className="text-purple-600 hover:text-purple-700">
+                <Link
+                  to="/terms"
+                  className="text-purple-600 hover:text-purple-700 underline"
+                >
                   Terms of Service
-                </a>{" "}
+                </Link>{" "}
                 and{" "}
-                <a href="#" className="text-purple-600 hover:text-purple-700">
+                <Link
+                  to="/privacy"
+                  className="text-purple-600 hover:text-purple-700 underline"
+                >
                   Privacy Policy
-                </a>
+                </Link>
               </label>
             </div>
 

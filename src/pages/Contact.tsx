@@ -91,7 +91,7 @@ const Contact = () => {
               <div className="space-y-6 mb-8">
                 <AnimatedElement delay={0}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
                       <Mail className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
@@ -110,14 +110,14 @@ const Contact = () => {
                 <AnimatedElement delay={100}>
                   <div className="flex items-start space-x-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <Phone className="h-6 w-6 text-green-600" />
+                      <Phone className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1 text-lg">Phone</h3>
                       <p className="text-gray-600 mb-2">Monday - Friday, 9 AM - 6 PM EST</p>
                       <a
                         href="https://wa.me/923008974168"
-                        className="text-green-600 hover:text-green-700 transition-colors font-medium"
+                        className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
                       >
                         +92 300 8974168
                       </a>
@@ -127,8 +127,8 @@ const Contact = () => {
 
                 <AnimatedElement delay={200}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <MapPin className="h-6 w-6 text-purple-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <MapPin className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1 text-lg">Office Location</h3>
