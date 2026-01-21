@@ -251,7 +251,7 @@ const ResumeUpload = () => {
             <div className="grid md:grid-cols-3 gap-6">
               <AnimatedElement delay={0}>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mb-4">
                     <Brain className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2 text-white">AI-Powered Analysis</h3>
@@ -275,7 +275,7 @@ const ResumeUpload = () => {
 
               <AnimatedElement delay={200}>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center mb-4">
                     <TrendingUp className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2 text-white">Skills Development</h3>
@@ -306,8 +306,8 @@ const ResumeUpload = () => {
             <div className="grid md:grid-cols-2 gap-8">
               <AnimatedElement delay={0}>
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 text-lg">Instant Analysis</h3>
@@ -320,7 +320,7 @@ const ResumeUpload = () => {
 
               <AnimatedElement delay={100}>
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
@@ -335,7 +335,7 @@ const ResumeUpload = () => {
               <AnimatedElement delay={200}>
                 <div className="flex items-start space-x-4">
                   <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-purple-600" />
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 text-lg">Job Recommendations</h3>
@@ -348,8 +348,8 @@ const ResumeUpload = () => {
 
               <AnimatedElement delay={300}>
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-orange-600" />
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 text-lg">Privacy Protected</h3>

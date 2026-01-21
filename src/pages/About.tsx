@@ -58,7 +58,7 @@ const About = () => {
               <div className="grid grid-cols-2 gap-6">
                 <AnimatedElement delay={0}>
                   <div className="text-center bg-white/80 rounded-xl p-6 shadow-sm">
-                    <div className="text-3xl font-bold text-purple-600 mb-2">
+                    <div className="text-3xl font-bold text-blue-600 mb-2">
                       <AnimatedCounter value={100} suffix="+" />
                     </div>
                     <div className="text-sm text-gray-600 font-medium">Students Helped</div>
@@ -74,7 +74,7 @@ const About = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={200}>
                   <div className="text-center bg-white/80 rounded-xl p-6 shadow-sm">
-                    <div className="text-3xl font-bold text-green-600 mb-2">
+                    <div className="text-3xl font-bold text-blue-600 mb-2">
                       <AnimatedCounter value={100} suffix="+" />
                     </div>
                     <div className="text-sm text-gray-600 font-medium">Career Paths</div>
@@ -82,7 +82,7 @@ const About = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={300}>
                   <div className="text-center bg-white/80 rounded-xl p-6 shadow-sm">
-                    <div className="text-3xl font-bold text-orange-600 mb-2">24/7</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-2">24/7</div>
                     <div className="text-sm text-gray-600 font-medium">AI Support</div>
                   </div>
                 </AnimatedElement>
@@ -167,7 +167,7 @@ const About = () => {
                 <AnimatedElement delay={0}>
                   <div className="flex items-start space-x-4">
                     <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
+                      <CheckCircle className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-2 text-lg">Expertise</h3>
@@ -177,7 +177,7 @@ const About = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={100}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
                       <CheckCircle className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
@@ -188,8 +188,8 @@ const About = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={200}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                      <CheckCircle className="h-5 w-5 text-indigo-600" />
+                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                      <CheckCircle className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-2 text-lg">End-to-End Solutions</h3>

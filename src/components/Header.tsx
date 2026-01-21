@@ -13,6 +13,8 @@ const Header = ({ variant = "default" }: HeaderProps) => {
   const menuItems = [
     { label: "Home", path: "/" },
     { label: "About", path: "/about" },
+    { label: "Assesment", path: "/personality-test" },
+    { label: "Resume", path: "/resume-upload" },
     { label: "Contact Us", path: "/contact" },
   ];
 
