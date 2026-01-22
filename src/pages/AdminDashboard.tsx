@@ -45,10 +45,13 @@ const AdminDashboard = () => {
   };
 
   // Modal states
-  const [viewUserModal, setViewUserModal] = useState({
-    isOpen: false,
-    user: null as any
-  });
+ const [viewUserModal, setViewUserModal] = useState<{
+  isOpen: boolean;
+  user: UserData | null;
+}>({
+  isOpen: false,
+  user: null,
+});
   const [viewAssessmentModal, setViewAssessmentModal] = useState({
     isOpen: false,
     assessment: null as any
@@ -304,10 +307,19 @@ const AdminDashboard = () => {
   const handleViewUser = async (userId: number) => {
     const result = await adminService.getUser(userId);
     if (result.success) {
+      const user = result.success;
       setViewUserModal({
-        isOpen: true,
-        user: result.success
-      });
+  isOpen: true,
+  user: {
+    id: user.id,
+    fullName: user.fullName || "",
+    email: user.email || "",
+    isActive: Boolean(user.isActive),
+    createdOn: user.createdOn,
+    assessmentCompleted: Boolean(user.assessmentCompleted),
+    resumeUploaded: Boolean(user.resumeUploaded),
+  },
+});
     } else if (result.error) {
       toast({
         title: "Error",
@@ -1181,10 +1193,18 @@ const AdminDashboard = () => {
       </div>
 
       {/* Modals */}
-      <ViewUserModal isOpen={viewUserModal.isOpen} onClose={() => setViewUserModal({
+    <ViewUserModal
+  isOpen={viewUserModal.isOpen}
+  user={viewUserModal.user}   // ✅ NOT viewUserModal
+  onClose={() =>
+    setViewUserModal({
       isOpen: false,
-      user: null
-    })} user={viewUserModal.user} onStatusToggle={handleUserStatusToggle} />
+      user: null,
+    })
+  }
+  onStatusToggle={handleUserStatusToggle}
+/>
+
 
       <ViewAssessmentModal isOpen={viewAssessmentModal.isOpen} onClose={() => setViewAssessmentModal({
       isOpen: false,
