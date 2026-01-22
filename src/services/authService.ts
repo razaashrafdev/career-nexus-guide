@@ -8,7 +8,7 @@ import {
   JWTPayload,
 } from "@/types/auth";
 
-const API_BASE_URL = "http://localhost:7270";
+const API_BASE_URL = "http://career-nexus.runasp.net";
 const TOKEN_KEY = "career_nexus_token";
 
 export const authService = {

@@ -96,7 +96,7 @@ useEffect(() => {
 useEffect(() => {
   const fetchLatestResume = async () => {
     try {
-      const response = await fetch("http://localhost:7270/api/Resume/latest", {
+      const response = await fetch("http://career-nexus.runasp.net/api/Resume/latest", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
         }
@@ -133,44 +133,44 @@ useEffect(() => {
 }, []);
 // Convert backend jobVacancies object → array for UI
 
-// FETCH LATEST RESUME FROM BACKEND
-useEffect(() => {
-  const fetchLatestResume = async () => {
-    try {
-      const response = await fetch("http://localhost:7270/api/Resume/latest", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
-        }
-      });
+// // FETCH LATEST RESUME FROM BACKEND
+// useEffect(() => {
+//   const fetchLatestResume = async () => {
+//     try {
+//       const response = await fetch("http://localhost:7270/api/Resume/latest", {
+//         headers: {
+//           Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
+//         }
+//       });
 
-      if (response.status === 404) {
-        return;
-      }
+//       if (response.status === 404) {
+//         return;
+//       }
 
-      const data = await response.json();
+//       const data = await response.json();
 
-      setResumeData({
-        fileURL: data.fileURL,
-        parsedSkills: data.parsedSkills,
-        analysis: data.analysis,
-        uploadedAt: data.uploadedAt
-      });
+//       setResumeData({
+//         fileURL: data.fileURL,
+//         parsedSkills: data.parsedSkills,
+//         analysis: data.analysis,
+//         uploadedAt: data.uploadedAt
+//       });
 
-      setUserData(prev => ({
-        ...prev,
-        resumeUploaded: true,
-        careerScore: data.analysis?.matchPercentage || 0,
-        recommendedCareers: data.analysis?.careerRecommendation || [],
-        skills: data.analysis?.matchedSkills || []
-      }));
+//       setUserData(prev => ({
+//         ...prev,
+//         resumeUploaded: true,
+//         careerScore: data.analysis?.matchPercentage || 0,
+//         recommendedCareers: data.analysis?.careerRecommendation || [],
+//         skills: data.analysis?.matchedSkills || []
+//       }));
 
-    } catch (error) {
-      console.log("Error fetching resume:", error);
-    }
-  };
+//     } catch (error) {
+//       console.log("Error fetching resume:", error);
+//     }
+//   };
 
-  fetchLatestResume();
-}, []);
+//   fetchLatestResume();
+// }, []);
 
 // ⭐⭐ ADD THIS useEffect RIGHT HERE (3rd position)
 useEffect(() => {
