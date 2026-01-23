@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { CalendarDays, Mail, User, CheckCircle, XCircle } from "lucide-react";
 
-interface UserData {
+export interface UserData {
   id: number;
   userName: string;
   fullName: string;
