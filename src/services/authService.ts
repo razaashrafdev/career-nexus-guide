@@ -38,6 +38,8 @@ export const authService = {
       // ✅ Token Save
       if (data.data?.token) {
         this.saveToken(data.data.token);
+        localStorage.setItem("roleName", data.data.roleName);
+        localStorage.setItem("fullName", data.data.fullName);
       }
 
       return { success: data as LoginResponse };
@@ -208,17 +210,39 @@ async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
 
     if (this.isTokenExpired(token)) {
       this.removeToken();
+      localStorage.removeItem("userData");
+      localStorage.removeItem("roleName");
+      localStorage.removeItem("fullName");
       return null;
     }
 
     const decoded = this.decodeToken(token);
-    if (!decoded) return null;
+    if (!decoded) {
+      // Invalid token, clear everything
+      this.removeToken();
+      localStorage.removeItem("userData");
+      localStorage.removeItem("roleName");
+      localStorage.removeItem("fullName");
+      return null;
+    }
+
+    // Try to get RoleName from localStorage if not in token
+    const roleName = localStorage.getItem("roleName") || decoded.RoleName || "";
+    
+    // If we don't have essential data, don't restore session
+    if (!decoded.unique_name && !decoded.email) {
+      this.removeToken();
+      localStorage.removeItem("userData");
+      localStorage.removeItem("roleName");
+      localStorage.removeItem("fullName");
+      return null;
+    }
 
     // 👇 consistent User return
     return {
       Id: Number(decoded.primarysid) || 0,
-      fullName: decoded.unique_name || "",
-      RoleName: decoded.RoleName || "",
+      fullName: decoded.unique_name || localStorage.getItem("fullName") || "",
+      RoleName: roleName,
       email: decoded.email || "",
       token,
     };
