@@ -316,13 +316,7 @@ useEffect(() => {
           </ul>
         </nav>
 
-        <div className="p-2 md:p-4 border-t border-gray-200">
-          <Link to="/">
-            <Button variant="outline" size="sm" className="w-full justify-start mb-2 text-xs md:text-sm">
-              <Home className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-              <span>Back to Home</span>
-            </Button>
-          </Link>
+        <div className="p-2 md:p-4 border-t border-gray-200 mt-auto">
           <Button onClick={handleLogout} variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
             <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
             <span>Logout</span>
@@ -331,9 +325,9 @@ useEffect(() => {
       </ResponsiveSidebar>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen md:ml-0">
+      <div className="flex-1 flex flex-col min-h-screen md:ml-64">
         {/* Header */}
-        <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 p-3 md:p-6 ml-16 md:ml-0">
+        <header className="fixed top-0 right-0 left-0 md:left-64 bg-white backdrop-blur-sm border-b border-gray-200 py-2 px-3 md:py-[14px] md:px-6 z-40">
           <div className="flex justify-between items-center">
             <div className="min-w-0 flex-1">
               <h1 className="text-lg md:text-2xl font-bold text-gray-800 truncate">Student Dashboard</h1>
@@ -344,7 +338,7 @@ useEffect(() => {
         </header>
 
         {/* Content */}
-        <div className="flex-1 p-3 md:p-6 ml-16 md:ml-0 overflow-x-hidden">
+        <div className="flex-1 p-3 md:p-6 ml-16 md:ml-0 overflow-x-hidden mt-[76px] md:mt-[98px]">
           {activeSection === "overview" && <div className="space-y-4 md:space-y-6 max-w-full">
               {/* Guidance Message */}
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
