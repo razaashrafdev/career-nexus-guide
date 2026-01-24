@@ -27,7 +27,8 @@ const AdminDashboard = () => {
   const [resumesDisplayCount, setResumesDisplayCount] = useState(10);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
+  
+  
   const [apiSettings, setApiSettings] = useState({
     indeedApiKey: "",
     chatgptApiKey: "",
@@ -341,12 +342,14 @@ const AdminDashboard = () => {
         isOpen: true,
         user: {
           id: user.id,
+          userName: user.userName || "",
+          roleName: user.roleName || "",
           fullName: user.fullName || "",
           email: user.email || "",
-          isActive: Boolean(user.isActive),
-          createdOn: user.createdOn,
-          assessmentCompleted: Boolean(user.assessmentCompleted),
-          resumeUploaded: Boolean(user.resumeUploaded),
+          isActive: user.isActive || false,
+          createdOn: user.createdOn || "",
+          assessmentCompleted: user.assessmentCompleted || false,
+          resumeUploaded: user.resumeUploaded || false,
         },
       });
     } else if (result.error) {
@@ -807,8 +810,8 @@ const AdminDashboard = () => {
                       <Award className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <CardTitle className="text-base md:text-lg font-bold text-gray-800">Most Recommended Careers</CardTitle>
-                      <p className="text-xs text-gray-500 font-light mt-0.5">Top career matches from assessments</p>
+                      <CardTitle className="text-base md:text-lg font-bold text-gray-800">Top Assessment Results</CardTitle>
+                      <p className="text-xs text-gray-500 font-light mt-0.5">Top results matches from assessments</p>
                     </div>
                   </div>
                   <Badge variant="outline" className="text-xs">

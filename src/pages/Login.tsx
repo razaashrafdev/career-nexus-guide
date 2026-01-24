@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,36 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { login } = useAuth();
+  const { login, isAuthenticated, user, isLoading: authLoading } = useAuth();
+
+  // Redirect authenticated users to their appropriate dashboard
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && user) {
+      const roleName = user.RoleName || localStorage.getItem("roleName");
+      if (roleName === "Admin") {
+        navigate("/admin-dashboard", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    }
+  }, [isAuthenticated, user, authLoading, navigate]);
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render login form if already authenticated (redirect will happen)
+  if (isAuthenticated && user) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,17 +55,25 @@ const Login = () => {
       const result = await login({ email, password }); // ✅ Use AuthContext login
 
       if (result.success) {
-        const roleName = localStorage.getItem("roleName");
-        const fullName = localStorage.getItem("fullName") || "User";
+        // Wait a moment for auth context to update
+        setTimeout(() => {
+          debugger;
+          const roleName = localStorage.getItem("roleName");
+          const fullName = localStorage.getItem("fullName") || "User";
 
-        toast({
-          title: "Login Successful",
-          description: `Welcome back, ${fullName}`,
-        });
+          toast({
+            title: "Login Successful",
+            description: `Welcome back, ${fullName}`,
+          });
 
-        // ✅ Role-based navigation
-        if (roleName === "Admin") navigate("/admin-dashboard");
-        else navigate("/dashboard");
+          // ✅ Role-based navigation - only redirect after successful login
+          if (roleName === "Admin") {
+           
+            navigate("/admin-dashboard", { replace: true });
+          } else {
+            navigate("/dashboard", { replace: true });
+          }
+        }, 100);
       } else {
         toast({
           title: "Login Failed",
