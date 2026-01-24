@@ -22,6 +22,9 @@ import { adminService } from "@/services/adminService";
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
+  const [usersDisplayCount, setUsersDisplayCount] = useState(10);
+  const [assessmentsDisplayCount, setAssessmentsDisplayCount] = useState(10);
+  const [resumesDisplayCount, setResumesDisplayCount] = useState(10);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -30,6 +33,12 @@ const AdminDashboard = () => {
     chatgptApiKey: "",
     deepseekApiKey: "",
     activeAiModel: "chatgpt"
+  });
+
+  // Profile information state
+  const [profileInfo, setProfileInfo] = useState({
+    fullName: user?.fullName || "",
+    email: user?.email || ""
   });
 
   // Password change state
@@ -129,13 +138,22 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (activeSection === "users") {
       fetchUsers();
+      setUsersDisplayCount(10); // Reset to initial count when switching to users section
     }
   }, [activeSection]);
+
+  // Reset display count when search term changes
+  useEffect(() => {
+    if (activeSection === "users") {
+      setUsersDisplayCount(10);
+    }
+  }, [searchTerm, activeSection]);
 
   // Fetch Assessments
   useEffect(() => {
     if (activeSection === "assessments") {
       fetchAssessments();
+      setAssessmentsDisplayCount(10); // Reset to initial count when switching to assessments section
     }
   }, [activeSection]);
 
@@ -143,6 +161,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     if (activeSection === "resumes") {
       fetchResumes();
+      setResumesDisplayCount(10); // Reset to initial count when switching to resumes section
     }
   }, [activeSection]);
 
@@ -166,6 +185,16 @@ const AdminDashboard = () => {
       fetchSettings();
     }
   }, [activeSection]);
+
+  // Sync profile info with user object
+  useEffect(() => {
+    if (user) {
+      setProfileInfo({
+        fullName: user.fullName || "",
+        email: user.email || ""
+      });
+    }
+  }, [user]);
 
   const fetchOverview = async () => {
     setLoading(true);
@@ -676,24 +705,24 @@ const AdminDashboard = () => {
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <p className="text-gray-500 text-xs md:text-sm font-medium mb-2 uppercase tracking-wide">Assessments</p>
-                    <p className="text-3xl md:text-4xl font-bold text-green-600 mb-1">{overview.assessmentsCompleted.toLocaleString()}</p>
+                    <p className="text-3xl md:text-4xl font-bold text-blue-600 mb-1">{overview.assessmentsCompleted.toLocaleString()}</p>
                     <p className="text-gray-400 text-xs font-light">Completed Tests</p>
                   </div>
                   <div className="bg-green-50 rounded-xl p-3 group-hover:bg-green-100 transition-colors">
-                    <Brain className="h-6 w-6 md:h-7 md:w-7 text-green-600" />
+                    <Brain className="h-6 w-6 md:h-7 md:w-7 text-blue-600" />
                   </div>
                 </div>
                 {overview.totalUsers > 0 && (
                   <div className="mt-4 pt-4 border-t border-gray-100">
                     <div className="flex items-center justify-between text-xs mb-2">
                       <span className="text-gray-500">Completion Rate</span>
-                      <span className="text-green-600 font-semibold">
+                      <span className="text-blue-600 font-semibold">
                         {Math.round((overview.assessmentsCompleted / overview.totalUsers) * 100)}%
                       </span>
                     </div>
                     <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                       <div
-                        className="bg-green-600 h-full rounded-full transition-all duration-500"
+                        className="bg-blue-600 h-full rounded-full transition-all duration-500"
                         style={{ width: `${Math.min((overview.assessmentsCompleted / overview.totalUsers) * 100, 100)}%` }}
                       ></div>
                     </div>
@@ -836,7 +865,7 @@ const AdminDashboard = () => {
               <CardHeader className="border-b border-gray-100 pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="bg-gradient-to-r from-green-500 to-blue-500 p-2 rounded-lg">
+                    <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-lg">
                       <TrendingUp className="h-5 w-5 text-white" />
                     </div>
                     <div>
@@ -871,7 +900,7 @@ const AdminDashboard = () => {
                           <div className="flex items-center gap-2">
                             <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
                               <div
-                                className="bg-gradient-to-r from-green-500 to-blue-500 h-full rounded-full transition-all duration-500"
+                                className="bg-gradient-to-r from-blue-500 to-blue-500 h-full rounded-full transition-all duration-500"
                                 style={{ width: `${percentage}%` }}
                               ></div>
                             </div>
@@ -899,7 +928,7 @@ const AdminDashboard = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div className="text-center">
                   <p className="text-xs text-gray-600 font-medium mb-1">Assessment Rate</p>
-                  <p className="text-2xl md:text-3xl font-bold text-green-600">
+                  <p className="text-2xl md:text-3xl font-bold text-blue-600">
                     {overview.totalUsers > 0 ? Math.round((overview.assessmentsCompleted / overview.totalUsers) * 100) : 0}%
                   </p>
                 </div>
@@ -928,9 +957,12 @@ const AdminDashboard = () => {
 
         {activeSection === "users" && !loading && <div className="space-y-4 md:space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <CardTitle className="text-base md:text-lg">Manage Users</CardTitle>
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+                  <User className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Manage Users</span>
+                </CardTitle>
                 <div className="flex items-center space-x-4 w-full sm:w-auto">
                   <div className="relative flex-1 sm:flex-none">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -939,7 +971,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[600px]">
                   <thead>
@@ -954,12 +986,12 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.length > 0 ? filteredUsers.map((user: any) => <tr key={user.id} className="border-b hover:bg-gray-50">
+                    {filteredUsers.length > 0 ? filteredUsers.slice(0, usersDisplayCount).map((user: any) => <tr key={user.id} className="border-b hover:bg-gray-50">
                       <td className="p-2 md:p-3 font-medium text-xs md:text-sm">{user.name || user.fullName || "N/A"}</td>
                       <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.email || "N/A"}</td>
                       <td className="p-2 md:p-3">
                         <div className="flex items-center space-x-2">
-                          <Switch checked={user.status === "Active"} onCheckedChange={checked => handleUserStatusToggle(user.id, checked)} className="data-[state=checked]:bg-green-600" />
+                          <Switch checked={user.status === "Active"} onCheckedChange={checked => handleUserStatusToggle(user.id, checked)} className="data-[state=checked]:bg-blue-600" />
                           <span className="text-xs text-gray-600">
                             {user.status === "Active" ? "Active" : "Inactive"}
                           </span>
@@ -967,10 +999,10 @@ const AdminDashboard = () => {
                       </td>
                       <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.joined || "N/A"}</td>
                       <td className="p-2 md:p-3">
-                        {user.assessmentCompleted ? <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500" /> : <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />}
+                        {user.assessmentCompleted ? <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-blue-500" /> : <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />}
                       </td>
                       <td className="p-2 md:p-3">
-                        {user.resumeUploaded ? <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500" /> : <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />}
+                        {user.resumeUploaded ? <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-blue-500" /> : <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />}
                       </td>
                       <td className="p-2 md:p-3">
                         <div className="flex space-x-1 md:space-x-2">
@@ -990,16 +1022,36 @@ const AdminDashboard = () => {
                   </tbody>
                 </table>
               </div>
+              {filteredUsers.length > usersDisplayCount && (
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    onClick={() => setUsersDisplayCount(prev => prev + 10)}
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                  >
+                    Load More
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>}
 
         {activeSection === "assessments" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle>Assessment Results</CardTitle>
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+                  <Brain className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Assessment Results</span>
+                </CardTitle>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={fetchAssessments}>
+                  <RefreshCw className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Refresh</span>
+                </Button>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -1012,14 +1064,14 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {assessments.length > 0 ? assessments.map((assessment: any) => <tr key={assessment.id} className="border-b hover:bg-gray-50">
+                    {assessments.length > 0 ? assessments.slice(0, assessmentsDisplayCount).map((assessment: any) => <tr key={assessment.id} className="border-b hover:bg-gray-50">
                       <td className="p-3 font-medium">{assessment.userName || "Guest"}</td>
                       <td className="p-3">
                         <Badge variant="outline">{assessment.personalityType || "N/A"}</Badge>
                       </td>
                       <td className="p-3">
                         <div className="flex items-center space-x-2">
-                          <Progress value={assessment.score || 0} className="w-16 h-2" />
+                          <Progress value={assessment.score || 0} className="w-16 h-2 [&>div]:bg-blue-600" />
                           <span className="text-sm">{assessment.score || 0}%</span>
                         </div>
                       </td>
@@ -1038,22 +1090,36 @@ const AdminDashboard = () => {
                   </tbody>
                 </table>
               </div>
+              {assessments.length > assessmentsDisplayCount && (
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    onClick={() => setAssessmentsDisplayCount(prev => prev + 10)}
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                  >
+                    Load More
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>}
 
         {activeSection === "resumes" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
               <div className="flex justify-between items-center">
-                <CardTitle>Resume Management</CardTitle>
-                <Button variant="outline" onClick={fetchResumes}>
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Refresh
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+                  <FileText className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Resume Management</span>
+                </CardTitle>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={fetchResumes}>
+                  <RefreshCw className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Refresh</span>
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -1067,14 +1133,14 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {resumes.length > 0 ? resumes.map((resume: any) => {
+                    {resumes.length > 0 ? resumes.slice(0, resumesDisplayCount).map((resume: any) => {
                       const skillsList = resume.skills || [];
                       return (
                         <tr key={resume.id} className="border-b hover:bg-gray-50">
                           <td className="p-3 font-medium">{resume.userName || "Guest"}</td>
                           <td className="p-3 text-gray-600">{resume.fileName || "N/A"}</td>
                           <td className="p-3">
-                            <Badge variant={resume.status === "Analyzed" ? "default" : "secondary"}>
+                            <Badge className="bg-blue-600 text-white hover:bg-blue-700" variant={resume.status === "Analyzed" ? "default" : "secondary"}>
                               {resume.status || "Pending"}
                             </Badge>
                           </td>
@@ -1115,22 +1181,36 @@ const AdminDashboard = () => {
                   </tbody>
                 </table>
               </div>
+              {resumes.length > resumesDisplayCount && (
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    onClick={() => setResumesDisplayCount(prev => prev + 10)}
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700"
+                  >
+                    Load More
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>}
 
         {activeSection === "careers" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
               <div className="flex justify-between items-center">
-                <CardTitle>Career Management</CardTitle>
-                <Button onClick={() => setAddCareerModal(true)}>
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+                  <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Career Management</span>
+                </CardTitle>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={() => setAddCareerModal(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Career
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 md:p-6">
               <div className="grid gap-4">
                 {careers.length > 0 ? careers.map((career: any) => {
                   const requiredTraits = career.PersonalityMatchs || career.personalityMatchs || [];
@@ -1185,16 +1265,19 @@ const AdminDashboard = () => {
 
         {activeSection === "skills" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
               <div className="flex justify-between items-center">
-                <CardTitle>Skills Management</CardTitle>
-                <Button onClick={() => setAddSkillModal(true)}>
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+                  <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Skills Management</span>
+                </CardTitle>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={() => setAddSkillModal(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Skill
                 </Button>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -1212,7 +1295,7 @@ const AdminDashboard = () => {
                         <tr key={skill.id} className="border-b hover:bg-gray-50">
                           <td className="p-3 font-medium">{skill.name || skill.Name}</td>
                           <td className="p-3">
-                            <Badge variant={skill.category === "Technical" || skill.Category === "Technical" ? "default" : "secondary"}>
+                            <Badge className="bg-blue-600 text-white hover:bg-blue-700" variant={skill.category === "Technical" || skill.Category === "Technical" ? "default" : "secondary"}>
                               {skill.category || skill.Category || "N/A"}
                             </Badge>
                           </td>
@@ -1251,117 +1334,93 @@ const AdminDashboard = () => {
           </Card>
         </div>}
 
-        {activeSection === "settings" && <div className="space-y-4 md:space-y-6">
-          <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
-                <Key className="h-4 w-4 md:h-5 md:w-5" />
-                <span>API Keys Management</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
-              <div className="grid gap-4">
-                <div>
-                  <label className="text-xs md:text-sm font-medium mb-2 block">Indeed API Key</label>
-                  <Input type="password" placeholder="Enter Indeed API key for job matching" value={apiSettings.indeedApiKey} onChange={e => setApiSettings({
-                    ...apiSettings,
-                    indeedApiKey: e.target.value
-                  })} className="text-sm" />
-                </div>
-                <div>
-                  <label className="text-xs md:text-sm font-medium mb-2 block">ChatGPT API Key</label>
-                  <Input type="password" placeholder="Enter OpenAI API key for ChatGPT" value={apiSettings.chatgptApiKey} onChange={e => setApiSettings({
-                    ...apiSettings,
-                    chatgptApiKey: e.target.value
-                  })} className="text-sm" />
-                </div>
-                <div>
-                  <label className="text-xs md:text-sm font-medium mb-2 block">DeepSeek API Key</label>
-                  <Input type="password" placeholder="Enter DeepSeek API key" value={apiSettings.deepseekApiKey} onChange={e => setApiSettings({
-                    ...apiSettings,
-                    deepseekApiKey: e.target.value
-                  })} className="text-sm" />
-                </div>
-              </div>
-
-              <div className="border-t pt-4">
-                <label className="text-xs md:text-sm font-medium mb-2 block">Active AI Model for Chat Counselor</label>
-                <Select value={apiSettings.activeAiModel} onValueChange={value => setApiSettings({
-                  ...apiSettings,
-                  activeAiModel: value
-                })}>
-                  <SelectTrigger className="w-full text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="chatgpt">ChatGPT</SelectItem>
-                    <SelectItem value="deepseek">DeepSeek</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button className="w-full text-sm md:text-base" onClick={handleSaveApiSettings}>
-                Save API Settings
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 text-base md:text-lg">
-                <Key className="h-4 w-4 md:h-5 md:w-5" />
-                <span>Change Password</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
-              <div className="grid gap-4">
-                <div>
-                  <label className="text-xs md:text-sm font-medium mb-2 block">Current Password</label>
-                  <Input
-                    type="password"
-                    placeholder="Enter your current password"
-                    value={passwordSettings.currentPassword}
-                    onChange={e => setPasswordSettings({
-                      ...passwordSettings,
-                      currentPassword: e.target.value
-                    })}
-                    className="text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs md:text-sm font-medium mb-2 block">New Password</label>
-                  <Input
-                    type="password"
-                    placeholder="Enter your new password"
-                    value={passwordSettings.newPassword}
-                    onChange={e => setPasswordSettings({
-                      ...passwordSettings,
-                      newPassword: e.target.value
-                    })}
-                    className="text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs md:text-sm font-medium mb-2 block">Confirm New Password</label>
-                  <Input
-                    type="password"
-                    placeholder="Confirm your new password"
-                    value={passwordSettings.confirmPassword}
-                    onChange={e => setPasswordSettings({
-                      ...passwordSettings,
-                      confirmPassword: e.target.value
-                    })}
-                    className="text-sm"
-                  />
+        {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
+            <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+              <Settings className="h-5 w-5 md:h-6 md:w-6" />
+              <span>Account Settings</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 md:p-6">
+            <div className="space-y-6">
+              {/* Profile Information */}
+              <div className="space-y-4">
+                <h3 className="text-sm md:text-base font-semibold">Profile Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs md:text-sm font-medium text-gray-700">Full Name</label>
+                    <Input
+                      value={profileInfo.fullName}
+                      onChange={(e) => setProfileInfo({ ...profileInfo, fullName: e.target.value })}
+                      className="mt-1 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs md:text-sm font-medium text-gray-700">Email</label>
+                    <Input
+                      value={profileInfo.email}
+                      onChange={(e) => setProfileInfo({ ...profileInfo, email: e.target.value })}
+                      className="mt-1 text-sm"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <Button onClick={handlePasswordChange} className="w-full text-sm md:text-base">
-                Change Password
-              </Button>
-            </CardContent>
-          </Card>
-        </div>}
+              {/* Password Change */}
+              <div className="space-y-4">
+                <h3 className="text-sm md:text-base font-semibold">Change Password</h3>
+                <form onSubmit={(e) => { e.preventDefault(); handlePasswordChange(); }} className="space-y-3">
+                  <div>
+                    <label className="text-xs md:text-sm font-medium text-gray-700">Current Password</label>
+                    <Input
+                      type="password"
+                      placeholder="Enter current password"
+                      className="mt-1 text-sm"
+                      value={passwordSettings.currentPassword}
+                      onChange={e => setPasswordSettings({
+                        ...passwordSettings,
+                        currentPassword: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs md:text-sm font-medium text-gray-700">New Password</label>
+                    <Input
+                      type="password"
+                      placeholder="Enter new password"
+                      className="mt-1 text-sm"
+                      value={passwordSettings.newPassword}
+                      onChange={e => setPasswordSettings({
+                        ...passwordSettings,
+                        newPassword: e.target.value
+                      })}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs md:text-sm font-medium text-gray-700">Confirm New Password</label>
+                    <Input
+                      type="password"
+                      placeholder="Confirm new password"
+                      className="mt-1 text-sm"
+                      value={passwordSettings.confirmPassword}
+                      onChange={e => setPasswordSettings({
+                        ...passwordSettings,
+                        confirmPassword: e.target.value
+                      })}
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm w-full"
+                  >
+                    Update Profile
+                  </Button>
+                </form>
+              </div>
+            </div>
+          </CardContent>
+        </Card>}
       </div>
     </div>
 
