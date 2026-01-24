@@ -63,22 +63,21 @@ const Dashboard = () => {
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mock user data - in real app this would come from backend
-  const [userData, setUserData] = useState({
+  // Mock user data - in real app this would come from backend<<<<<<< feature/view-user-modal-fix
+ const [userData, setUserData] = useState({
+  name: user.fullName || "User",
+  email: user.email || "",
+  assessmentCompleted: false,
+  resumeUploaded: true,
+  personalityType: "",
+  personalityDescription: "",
+  careerScore: 0,
+  recommendedCareers: [],
+  skills: []
+});
 
-    name: user.fullName || "User",
-    email: user.email || "",
-    assessmentCompleted: false,
-    resumeUploaded: true,
-    personalityType: "",
-    careerScore: 0,
-    recommendedCareers: [],
-    skills: []
-  });
-  const [resumeData, setResumeData] = useState<ResumeData>({});
-  const [careers, setCareers] = useState<CareerUIModel[]>([]);
-
-
+ const [resumeData, setResumeData] = useState<ResumeData>({});
+const [careers, setCareers] = useState<CareerUIModel[]>([]);
 
   useEffect(() => {
     if (location.state?.from === "resume") {
@@ -91,7 +90,9 @@ const Dashboard = () => {
         careerScore: data.analysis?.careerCount || 0,
       }));
     }
+
   }, [location.state]);
+
 
 
   // FETCH LATEST RESUME FROM BACKEND
@@ -219,7 +220,38 @@ const Dashboard = () => {
       setConfirmPassword("");
     }
   };
+useEffect(() => {
+  const fetchPersonalityResult = async () => {
+    try {
+      const response = await fetch(
+        "http://career-nexus.runasp.net/api/Personality/GetUserResult",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
+          },
+        }
+      );
 
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.isSuccess && result.data) {
+        setUserData(prev => ({
+          ...prev,
+          assessmentCompleted: result.data.isCompleted,
+          personalityType: result.data.personalityType,
+          personalityDescription: result.data.description,
+          careerScore: result.data.careerScore
+        }));
+      }
+    } catch (error) {
+      console.log("Personality result error:", error);
+    }
+  };
+
+  fetchPersonalityResult();
+}, []);
 
   const sidebarItems = [{
     id: "overview",
@@ -670,6 +702,146 @@ const Dashboard = () => {
           )}
 
 
+          {/* Other sections remain the same but add responsive padding and text sizes */}
+          {activeSection === "personality" && (
+  <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+    <CardHeader>
+      <CardTitle className="flex items-center gap-3 text-lg md:text-xl font-bold">
+        <Brain className="h-6 w-6 text-purple-600" />
+        Personality Assessment
+      </CardTitle>
+    </CardHeader>
+
+    <CardContent className="p-4 md:p-6 space-y-6">
+      {userData.assessmentCompleted ? (
+        <>
+          {/* Personality Type */}
+          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-6 shadow">
+            <p className="text-sm uppercase tracking-wide text-purple-200">
+              Your Personality Type
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mt-1">
+              {userData.personalityType}
+            </h2>
+          </div>
+
+          {/* Description */}
+          <Card className="p-5 md:p-6 bg-gradient-to-br from-purple-50 to-blue-50 shadow-md rounded-xl">
+            <h3 className="text-base md:text-lg font-semibold text-purple-700 mb-3">
+              Personality Insights
+            </h3>
+
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-line">
+              {userData.personalityDescription}
+            </p>
+          </Card>
+
+          {/* Retake Button */}
+          <Link to="/personality-test">
+            <Button variant="outline" className="mt-4">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Retake Assessment
+            </Button>
+          </Link>
+        </>
+      ) : (
+        <div className="text-center py-8">
+          <Brain className="h-16 w-16 text-purple-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">
+            Take Your Personality Assessment
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Discover your personality type and get AI-powered career guidance.
+          </p>
+          <Link to="/personality-test">
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600">
+              Start Assessment
+            </Button>
+          </Link>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+)}
+
+
+          {activeSection === "resume" && (
+  <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+    <CardHeader>
+      <CardTitle className="text-base md:text-lg">Resume Analysis</CardTitle>
+    </CardHeader>
+
+    <CardContent className="p-4 md:p-6">
+      {userData.resumeUploaded ? (
+        <div className="space-y-6">
+
+          {/* Resume Info */}
+          <p className="text-sm md:text-base text-green-700 font-semibold">
+            Latest Resume Found (Uploaded: {resumeData.uploadedAt ? new Date(resumeData.uploadedAt).toLocaleDateString() : "N/A"})
+          </p>
+          {resumeData.fileURL && (
+            <a
+              href={resumeData.fileURL}
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-600 underline text-sm md:text-base"
+            >
+              View Uploaded Resume
+            </a>
+          )}
+
+          {/* Parsed Skills */}
+          <Card className="bg-gradient-to-r from-purple-50 to-blue-50 p-4 shadow rounded-lg">
+            <CardTitle className="text-sm md:text-base font-semibold mb-2">Parsed Skills</CardTitle>
+            <div className="flex flex-wrap gap-2">
+              {resumeData.parsedSkills
+                ? resumeData.parsedSkills.split(",").map((skill, index) => (
+                    <Badge key={index} variant="secondary">{skill}</Badge>
+                  ))
+                : "No skills extracted"}
+            </div>
+          </Card>
+
+          {/* Suggestions */}
+          <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 p-4 shadow rounded-lg">
+            <CardTitle className="text-sm md:text-base font-semibold mb-2">Suggestions</CardTitle>
+            <ul className="list-disc list-inside text-sm md:text-base text-gray-700 space-y-1">
+              {resumeData.analysis?.suggestions?.length
+                ? resumeData.analysis.suggestions.map((suggestion: string, index: number) => (
+                    <li key={index}>{suggestion}</li>
+                  ))
+                : "No suggestions available"}
+            </ul>
+          </Card>
+
+          {/* Update Button */}
+          <Link to="/resume-upload">
+            <Button variant="outline" className="text-sm md:text-base mt-2">
+              <Upload className="h-4 w-4 mr-2" />
+              Update Resume
+            </Button>
+          </Link>
+
+        </div>
+      ) : (
+        // No Resume Uploaded
+        <div className="text-center py-6 md:py-8">
+          <FileText className="h-12 w-12 md:h-16 md:w-16 text-blue-500 mx-auto mb-4" />
+          <h3 className="text-base md:text-lg font-semibold mb-2">Upload Your Resume</h3>
+          <p className="text-sm md:text-base text-gray-600 mb-4">
+            Upload your resume to get AI-powered analysis and personalized recommendations.
+          </p>
+          <Link to="/resume-upload">
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 text-sm md:text-base">
+              Upload Resume
+            </Button>
+          </Link>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+)}
+
           {activeSection === "careers" && (
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
@@ -757,6 +929,7 @@ const Dashboard = () => {
                 )}
               </CardContent>
             </Card>
+
           )}
 
 
