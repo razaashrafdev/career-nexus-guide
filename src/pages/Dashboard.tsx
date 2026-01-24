@@ -62,17 +62,18 @@ const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   
   // Mock user data - in real app this would come from backend
-  const [userData, setUserData] = useState({
-    
-    name: user.fullName || "User",
-   email: user.email || "",
-    assessmentCompleted: false,
-    resumeUploaded: true,
-    personalityType: "",
-    careerScore: 0,
-    recommendedCareers: [],
-    skills: []
-  });
+ const [userData, setUserData] = useState({
+  name: user.fullName || "User",
+  email: user.email || "",
+  assessmentCompleted: false,
+  resumeUploaded: true,
+  personalityType: "",
+  personalityDescription: "",
+  careerScore: 0,
+  recommendedCareers: [],
+  skills: []
+});
+
  const [resumeData, setResumeData] = useState<ResumeData>({});
 const [careers, setCareers] = useState<CareerUIModel[]>([]);
 
@@ -133,44 +134,7 @@ useEffect(() => {
 }, []);
 // Convert backend jobVacancies object → array for UI
 
-// // FETCH LATEST RESUME FROM BACKEND
-// useEffect(() => {
-//   const fetchLatestResume = async () => {
-//     try {
-//       const response = await fetch("http://localhost:7270/api/Resume/latest", {
-//         headers: {
-//           Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
-//         }
-//       });
 
-//       if (response.status === 404) {
-//         return;
-//       }
-
-//       const data = await response.json();
-
-//       setResumeData({
-//         fileURL: data.fileURL,
-//         parsedSkills: data.parsedSkills,
-//         analysis: data.analysis,
-//         uploadedAt: data.uploadedAt
-//       });
-
-//       setUserData(prev => ({
-//         ...prev,
-//         resumeUploaded: true,
-//         careerScore: data.analysis?.matchPercentage || 0,
-//         recommendedCareers: data.analysis?.careerRecommendation || [],
-//         skills: data.analysis?.matchedSkills || []
-//       }));
-
-//     } catch (error) {
-//       console.log("Error fetching resume:", error);
-//     }
-//   };
-
-//   fetchLatestResume();
-// }, []);
 
 // ⭐⭐ ADD THIS useEffect RIGHT HERE (3rd position)
 useEffect(() => {
@@ -217,7 +181,38 @@ useEffect(() => {
       setConfirmPassword("");
     }
   };
+useEffect(() => {
+  const fetchPersonalityResult = async () => {
+    try {
+      const response = await fetch(
+        "http://career-nexus.runasp.net/api/Personality/GetUserResult",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
+          },
+        }
+      );
 
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.isSuccess && result.data) {
+        setUserData(prev => ({
+          ...prev,
+          assessmentCompleted: result.data.isCompleted,
+          personalityType: result.data.personalityType,
+          personalityDescription: result.data.description,
+          careerScore: result.data.careerScore
+        }));
+      }
+    } catch (error) {
+      console.log("Personality result error:", error);
+    }
+  };
+
+  fetchPersonalityResult();
+}, []);
 
   const sidebarItems = [{
     id: "overview",
@@ -476,30 +471,67 @@ useEffect(() => {
             </div>}
 
           {/* Other sections remain the same but add responsive padding and text sizes */}
-          {activeSection === "personality" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-base md:text-lg">Personality Assessment</CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 md:p-6">
-                {userData.assessmentCompleted ? <div className="space-y-4">
-                    <p className="text-sm md:text-base">Your personality type: <strong>{userData.personalityType}</strong></p>
-                    <p className="text-sm md:text-base">Assessment completed successfully!</p>
-                    <Button variant="outline" className="text-sm md:text-base">
-                      <RefreshCw className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                      Retake Assessment
-                    </Button>
-                  </div> : <div className="text-center py-6 md:py-8">
-                    <Brain className="h-12 w-12 md:h-16 md:w-16 text-purple-500 mx-auto mb-4" />
-                    <h3 className="text-base md:text-lg font-semibold mb-2">Take Your Personality Assessment</h3>
-                    <p className="text-sm md:text-base text-gray-600 mb-4">Discover your personality type and get personalized career recommendations.</p>
-                    <Link to="/personality-test">
-                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm md:text-base">
-                        Start Assessment
-                      </Button>
-                    </Link>
-                  </div>}
-              </CardContent>
-            </Card>}
+          {activeSection === "personality" && (
+  <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
+    <CardHeader>
+      <CardTitle className="flex items-center gap-3 text-lg md:text-xl font-bold">
+        <Brain className="h-6 w-6 text-purple-600" />
+        Personality Assessment
+      </CardTitle>
+    </CardHeader>
+
+    <CardContent className="p-4 md:p-6 space-y-6">
+      {userData.assessmentCompleted ? (
+        <>
+          {/* Personality Type */}
+          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-6 shadow">
+            <p className="text-sm uppercase tracking-wide text-purple-200">
+              Your Personality Type
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mt-1">
+              {userData.personalityType}
+            </h2>
+          </div>
+
+          {/* Description */}
+          <Card className="p-5 md:p-6 bg-gradient-to-br from-purple-50 to-blue-50 shadow-md rounded-xl">
+            <h3 className="text-base md:text-lg font-semibold text-purple-700 mb-3">
+              Personality Insights
+            </h3>
+
+            <p className="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-line">
+              {userData.personalityDescription}
+            </p>
+          </Card>
+
+          {/* Retake Button */}
+          <Link to="/personality-test">
+            <Button variant="outline" className="mt-4">
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Retake Assessment
+            </Button>
+          </Link>
+        </>
+      ) : (
+        <div className="text-center py-8">
+          <Brain className="h-16 w-16 text-purple-500 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">
+            Take Your Personality Assessment
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Discover your personality type and get AI-powered career guidance.
+          </p>
+          <Link to="/personality-test">
+            <Button className="bg-gradient-to-r from-purple-600 to-blue-600">
+              Start Assessment
+            </Button>
+          </Link>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+)}
+
 
          {activeSection === "resume" && (
   <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">

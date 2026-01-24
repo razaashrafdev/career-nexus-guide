@@ -38,6 +38,8 @@ export const authService = {
       // ✅ Token Save
       if (data.data?.token) {
         this.saveToken(data.data.token);
+        //this.saveToken(data.data.RoleName);
+
       }
 
       return { success: data as LoginResponse };
