@@ -39,7 +39,7 @@ const ResponsiveSidebar = ({ children, className }: ResponsiveSidebarProps) => {
         className={cn(
           "fixed left-0 top-0 h-screen w-64 bg-white/90 backdrop-blur-sm shadow-lg border-r border-gray-200 transform transition-transform duration-300 ease-in-out z-50 flex flex-col",
           isOpen ? "translate-x-0" : "-translate-x-full",
-          "md:translate-x-0 md:relative md:z-auto",
+          "md:translate-x-0",
           className
         )}
       >
@@ -57,7 +57,7 @@ const ResponsiveSidebar = ({ children, className }: ResponsiveSidebarProps) => {
           </div>
         )}
         
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 flex flex-col overflow-hidden">
           {children}
         </div>
       </div>
