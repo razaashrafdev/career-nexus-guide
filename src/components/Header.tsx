@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Menu, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface HeaderProps {
   variant?: "default" | "back";
@@ -9,6 +9,7 @@ interface HeaderProps {
 
 const Header = ({ variant = "default" }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const menuItems = [
     { label: "Home", path: "/" },
@@ -17,6 +18,14 @@ const Header = ({ variant = "default" }: HeaderProps) => {
     { label: "Resume", path: "/resume-upload" },
     { label: "Contact Us", path: "/contact" },
   ];
+
+  // Helper function to check if a menu item is active
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname === path;
+  };
 
   if (variant === "back") {
     return (
@@ -34,7 +43,9 @@ const Header = ({ variant = "default" }: HeaderProps) => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
+                  className={`text-gray-700 hover:text-purple-600 transition-colors font-medium pb-1 ${
+                    isActive(item.path) ? 'border-b-2 border-purple-600' : ''
+                  }`}
                 >
                   {item.label}
                 </Link>
@@ -69,7 +80,9 @@ const Header = ({ variant = "default" }: HeaderProps) => {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="text-gray-700 hover:text-purple-600 transition-colors font-medium py-2"
+                    className={`text-gray-700 hover:text-purple-600 transition-colors font-medium py-2 ${
+                      isActive(item.path) ? 'border-b-2 border-purple-600' : ''
+                    }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -106,7 +119,9 @@ const Header = ({ variant = "default" }: HeaderProps) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="text-gray-700 hover:text-purple-600 transition-colors font-medium"
+                className={`text-gray-700 hover:text-purple-600 transition-colors font-medium pb-1 ${
+                  isActive(item.path) ? 'border-b-2 border-purple-600' : ''
+                }`}
               >
                 {item.label}
               </Link>
@@ -141,7 +156,9 @@ const Header = ({ variant = "default" }: HeaderProps) => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className="text-gray-700 hover:text-purple-600 transition-colors font-medium py-2"
+                  className={`text-gray-700 hover:text-purple-600 transition-colors font-medium py-2 ${
+                    isActive(item.path) ? 'border-b-2 border-purple-600' : ''
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}

@@ -229,8 +229,15 @@ async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
     // Try to get RoleName from localStorage if not in token
     const roleName = localStorage.getItem("roleName") || decoded.RoleName || "";
     
-    // If we don't have essential data, don't restore session
-    if (!decoded.unique_name && !decoded.email) {
+    // Get email from token (unique_name) or localStorage
+    // unique_name in JWT typically contains the email
+    const email = (decoded as any).email || decoded.unique_name || "";
+    
+    // Get fullName from token or localStorage
+    const fullName = decoded.unique_name || localStorage.getItem("fullName") || "";
+    
+    // If we don't have essential data (email/unique_name), don't restore session
+    if (!decoded.unique_name && !email) {
       this.removeToken();
       localStorage.removeItem("userData");
       localStorage.removeItem("roleName");
@@ -238,12 +245,24 @@ async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
       return null;
     }
 
+    // Try to get email from localStorage userData if available
+    let finalEmail = email;
+    const userDataStr = localStorage.getItem("userData");
+    if (userDataStr && !finalEmail) {
+      try {
+        const userData = JSON.parse(userDataStr);
+        finalEmail = userData.email || finalEmail;
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+
     // 👇 consistent User return
     return {
       Id: Number(decoded.primarysid) || 0,
-      fullName: decoded.unique_name || localStorage.getItem("fullName") || "",
+      fullName: fullName,
       RoleName: roleName,
-      email: decoded.email || "",
+      email: finalEmail || decoded.unique_name || "",
       token,
     };
   },

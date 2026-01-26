@@ -245,7 +245,7 @@ const About = () => {
             </AnimatedElement>
             <AnimatedElement delay={200}>
               <div className="text-purple-300 text-sm font-medium uppercase tracking-wider">
-                GURU CHATGPT
+                Career Nexus
               </div>
             </AnimatedElement>
           </div>
