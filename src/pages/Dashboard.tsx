@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { authService } from "@/services/authService";
 import { useState } from "react";
+import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -98,9 +99,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchLatestResume = async () => {
       try {
-        const response = await fetch("http://career-nexus.runasp.net/api/Resume/latest", {
+        const response = await fetch(API_ENDPOINTS.GET_LATEST_RESUME, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`
+            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`
           }
         });
 
