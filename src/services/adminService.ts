@@ -1,7 +1,5 @@
 import { ApiError } from "@/types/auth";
-
-const API_BASE_URL = "http://career-nexus.runasp.net";
-const TOKEN_KEY = "career_nexus_token";
+import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem("token");
@@ -15,7 +13,7 @@ export const adminService = {
   // Overview Stats
   async getOverview() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Overview`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_OVERVIEW, {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -42,7 +40,7 @@ export const adminService = {
   // Users
   async getUsers() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Users`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_USERS, {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -68,7 +66,7 @@ export const adminService = {
 
   async getUser(id: number) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/User/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_USER(id), {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -121,7 +119,7 @@ export const adminService = {
 
   async deleteUser(id: number) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/User/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_USER(id), {
         method: "DELETE",
         headers: getAuthHeaders(),
       });
@@ -174,7 +172,7 @@ export const adminService = {
 
   async getAssessment(id: number) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Assessment/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_ASSESSMENT(id), {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -228,7 +226,7 @@ export const adminService = {
   // Careers
   async getCareers() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Careers`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_CAREERS, {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -299,7 +297,7 @@ export const adminService = {
     }
   ) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Career/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_CAREER_BY_ID(id), {
         method: "PUT",
         headers: getAuthHeaders(),
         body: JSON.stringify({
@@ -358,7 +356,7 @@ export const adminService = {
   // Skills
   async getSkills() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Skills`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_SKILLS, {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -426,7 +424,7 @@ export const adminService = {
     }
   ) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Skill/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_SKILL_BY_ID(id), {
         method: "PUT",
         headers: getAuthHeaders(),
         body: JSON.stringify({
@@ -484,7 +482,7 @@ export const adminService = {
   // Settings
   async getSettings() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Settings`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_SETTINGS, {
         method: "GET",
         headers: getAuthHeaders(),
       });
@@ -538,7 +536,7 @@ export const adminService = {
   // Stats
   async getTopCareers() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Stats/TopCareers`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_STATS_TOP_CAREERS, {
         method: "GET",
         headers: getAuthHeaders(),
       });

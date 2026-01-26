@@ -132,7 +132,7 @@ const Privacy = () => {
                 <li className="flex items-center">
                   <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
                   <a
-                    href="https://wa.me/923008974168"
+                    href={getWhatsAppLink()}
                     className="hover:text-purple-400 transition-colors"
                   >
                     +92 300 8974168

@@ -7,9 +7,7 @@ import {
   ApiError,
   JWTPayload,
 } from "@/types/auth";
-
-const API_BASE_URL = "http://career-nexus.runasp.net";
-const TOKEN_KEY = "career_nexus_token";
+import { API_BASE_URL, TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 
 export const authService = {
   // ✅ LOGIN
@@ -58,7 +56,7 @@ export const authService = {
     newUser: RegisterRequest
   ): Promise<{ success?: RegisterResponse; error?: ApiError }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Account/Register`, {
+      const response = await fetch(API_ENDPOINTS.REGISTER, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),
@@ -89,7 +87,7 @@ export const authService = {
   // ✅ FORGOT PASSWORD
 async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Account/ForgotPassword`, {
+    const response = await fetch(API_ENDPOINTS.FORGOT_PASSWORD, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -131,7 +129,7 @@ async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
         };
       }
 
-      const response = await fetch(`${API_BASE_URL}/api/Account/ChangePassword`, {
+      const response = await fetch(API_ENDPOINTS.CHANGE_PASSWORD, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

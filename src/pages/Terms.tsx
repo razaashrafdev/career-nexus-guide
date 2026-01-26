@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
 import { Badge } from "@/components/ui/badge";
+import { getWhatsAppLink } from "@/config/api";
 
 const Terms = () => {
   return (
@@ -127,7 +128,7 @@ const Terms = () => {
                 <li className="flex items-center">
                   <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
                   <a
-                    href="https://wa.me/923008974168"
+                    href={getWhatsAppLink()}
                     className="hover:text-purple-400 transition-colors"
                   >
                     +92 300 8974168
