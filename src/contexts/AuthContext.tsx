@@ -17,6 +17,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let guestSessionId = localStorage.getItem("guestSessionId");
+  if (!guestSessionId) {
+    guestSessionId = crypto.randomUUID();
+    localStorage.setItem("guestSessionId", guestSessionId);
+  }
     const restoreSession = async () => {
       try {
         const token = authService.getToken();
@@ -106,6 +111,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (roleName) {
           localStorage.setItem("roleName", roleName);
         }
+
+// 🔥 GUEST DATA MIGRATION (ADD THIS)
+const guestSessionId = localStorage.getItem("guestSessionId");
+
+if (guestSessionId) {
+  try {
+    await fetch("http://career-nexus.runasp.net/api/Resume/MigrateGuestData", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userData.token}`,
+      },
+      body: JSON.stringify({ guestSessionId }),
+    });
+
+    // guest session clean
+    localStorage.removeItem("guestSessionId");
+  } catch (err) {
+    console.error("Guest data migration failed", err);
+  }
+}
+
 
         return { success: true };
       }

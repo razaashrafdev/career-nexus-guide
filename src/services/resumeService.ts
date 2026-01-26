@@ -7,16 +7,35 @@ export const resumeService = {
     error?: ApiError;
 }> {
   try {
-    const token = localStorage.getItem(TOKEN_KEY);
+const token = localStorage.getItem(TOKEN_KEY);
+if (!token) {
+  return {
+    error: { isSuccess: false, message: "User not logged in" },
+  };
+}
+const guestSessionId = localStorage.getItem("guestSessionId");
+
 const formData = new FormData();
 formData.append("ResumeFile", file);
-    const response = await fetch(`${API_BASE_URL}/UploadResume`, {
+
+// 👇 guest case support
+if (!token && guestSessionId) {
+  formData.append("GuestSessionId", guestSessionId);
+}
+
+const headers: HeadersInit = {};
+
+// 👇 logged-in case
+if (token) {
+  headers.Authorization = `Bearer ${token}`;
+}
+
+const response = await fetch(`${API_BASE_URL}/UploadResume`, {
   method: "POST",
   body: formData,
-  headers: {
-    Authorization: `Bearer ${token}`, // Token must be sent
-  },
+  headers,
 });
+
     const result = await response.json();
 
     if (!response.ok) {
