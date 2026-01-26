@@ -54,4 +54,6 @@ export interface JWTPayload {
   iat: number;
   iss: string;
   aud: string;
+  email?: string; // Optional, some tokens may include email
+  RoleName?: string; // Optional, some tokens may include role
 }

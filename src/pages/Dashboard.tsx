@@ -338,7 +338,7 @@ const Dashboard = () => {
         </header>
 
         {/* Content */}
-        <div className="flex-1 p-3 md:p-6 ml-16 md:ml-0 overflow-x-hidden mt-[76px] md:mt-[98px]">
+        <div className="flex-1 p-3 md:p-6 overflow-x-hidden mt-[76px] md:mt-[98px]">
           {activeSection === "overview" && <div className="space-y-4 md:space-y-6 max-w-full">
             {/* Guidance Message */}
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
@@ -471,8 +471,13 @@ const Dashboard = () => {
 
           {/* Other sections remain the same but add responsive padding and text sizes */}
           {activeSection === "personality" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle className="text-base md:text-lg">Personality Assessment</CardTitle>
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                  <Brain className="h-5 w-5 md:h-6 md:w-6" />
+                  Personality Assessment
+                </CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="p-4 md:p-6">
               {userData.assessmentCompleted ? <div className="space-y-4">
@@ -497,21 +502,21 @@ const Dashboard = () => {
 
           {activeSection === "resume" && (
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base md:text-lg text-white flex items-center gap-2">
+              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                     <FileText className="h-5 w-5 md:h-6 md:w-6" />
                     Resume Analysis
                   </CardTitle>
                   <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-                      {resumeData.uploadedAt
-                        ? `Uploaded ${new Date(resumeData.uploadedAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}`
-                        : "Resume uploaded"}
-                    </Badge>
+                    {resumeData.uploadedAt
+                      ? `Uploaded ${new Date(resumeData.uploadedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}`
+                      : "Resume uploaded"}
+                  </Badge>
                 </div>
               </CardHeader>
 
@@ -551,13 +556,17 @@ const Dashboard = () => {
 
                           {/* All Parsed Skills */}
                           {resumeData.parsedSkills && (
-                            <div className="flex justify-between p-4 items-center rounded-lg border-l-4 shadow-sm hover:shadow-md transition-all duration-300 border-blue-300 pb-4">
+                            <div className="p-4 items-center rounded-lg border-l-4 shadow-sm hover:shadow-md transition-all duration-300 border-blue-300 pb-4">
                               <div className="flex items-center gap-2.5 mb-4">
-                                <h4 className="pt-2 text-base font-semibold">
-                                  All Extracted Skills
+                                <FileText className="w-5 md:h-6 md:w-6" />
+                                <h4 className="text-base font-semibold">
+                                  Extracted Skills
                                 </h4>
                               </div>
-                              <div className="flex flex-wrap gap-2.5 pl-5">
+                              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                                These skills are taken from resume using exact keyword matches:
+                              </p>
+                              <div className="flex flex-wrap gap-2.5">
                                 {resumeData.parsedSkills.split(",").map((skill, index) => (
                                   <Badge
                                     key={index}
@@ -628,9 +637,9 @@ const Dashboard = () => {
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3 pt-1">
                       {resumeData.fileURL && (
-                        <a 
-                          href={resumeData.fileURL} 
-                          download 
+                        <a
+                          href={resumeData.fileURL}
+                          download
                           className="flex-1"
                         >
                           <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base h-12 font-medium shadow-sm hover:shadow-md transition-all duration-200">
@@ -672,17 +681,17 @@ const Dashboard = () => {
 
           {activeSection === "careers" && (
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base md:text-lg text-white flex items-center gap-2">
+              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                  <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                     <Target className="h-5 w-5 md:h-6 md:w-6" />
                     Career Recommendations
                   </CardTitle>
                   {careers.length > 0 && (
-                      <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
-                        {careers.length} {careers.length === 1 ? 'Career' : 'Careers'}
-                      </Badge>
-                    )}
+                    <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-xs sm:text-sm whitespace-nowrap">
+                      {careers.length} {careers.length === 1 ? 'Career' : 'Careers'}
+                    </Badge>
+                  )}
                 </div>
               </CardHeader>
 
@@ -720,15 +729,15 @@ const Dashboard = () => {
                           <div className="space-y-4">
                             {career.jobs.map((job, j) => (
                               <div key={j} className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
-                                <div className="flex items-start justify-between gap-4">
-                                  <div className="flex-1 min-w-0">
-                                    <h3 className="text-base font-semibold text-gray-900 mb-2">{job.title}</h3>
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                  <div className="flex-1 min-w-0 w-full sm:w-auto">
+                                    <h3 className="text-base font-semibold text-gray-900 mb-2 break-words">{job.title}</h3>
                                     <div className="space-y-1">
-                                      <p className="text-sm text-gray-600 flex items-center gap-2">
-                                        <span className="font-medium">Company:</span> {job.company}
+                                      <p className="text-sm text-gray-600 flex flex-wrap items-center gap-2">
+                                        <span className="font-medium">Company:</span> <span className="break-words">{job.company}</span>
                                       </p>
-                                      <p className="text-sm text-gray-600 flex items-center gap-2">
-                                        <span className="font-medium">Location:</span> {job.location}
+                                      <p className="text-sm text-gray-600 flex flex-wrap items-center gap-2">
+                                        <span className="font-medium">Location:</span> <span className="break-words">{job.location}</span>
                                       </p>
                                       {job.postedAt && (
                                         <p className="text-xs text-gray-500">
@@ -741,7 +750,7 @@ const Dashboard = () => {
                                     href={job.url}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg text-sm font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md flex-shrink-0"
+                                    className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg text-sm font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-sm hover:shadow-md flex-shrink-0 w-full sm:w-auto"
                                   >
                                     <ArrowRight className="h-4 w-4" />
                                     Apply Now
@@ -763,9 +772,9 @@ const Dashboard = () => {
 
           {activeSection === "skills" && (
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-base md:text-lg text-white flex items-center gap-2">
+              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                     <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
                     Skills Development
                   </CardTitle>
@@ -885,11 +894,13 @@ const Dashboard = () => {
           {activeSection === "ai-chat" && (
             <div className="space-y-4 md:space-y-6 max-w-full">
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-                  <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
-                    <Brain className="h-5 w-5 md:h-6 md:w-6" />
-                    <span>AI Chat Counselor</span>
-                  </CardTitle>
+                <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                      <Brain className="h-5 w-5 md:h-6 md:w-6" />
+                      AI Chat Counselor
+                    </CardTitle>
+                  </div>
                 </CardHeader>
                 <CardContent className="p-4 md:p-6">
                   <div className="space-y-4">
@@ -939,11 +950,13 @@ const Dashboard = () => {
           )}
 
           {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
-                <Settings className="h-5 w-5 md:h-6 md:w-6" />
-                <span>Account Settings</span>
-              </CardTitle>
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                  <Settings className="h-5 w-5 md:h-6 md:w-6" />
+                  <span>Account Settings</span>
+                </CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="p-4 md:p-6">
               <div className="space-y-6">
