@@ -52,7 +52,7 @@ const Footer = () => {
               <li>careernexus.team@gmail.com</li>
               <li>
                 <a
-                  href="https://wa.me/923008974168"
+                  href={getWhatsAppLink()}
                 >
                   +92 300 8974168
                 </a>

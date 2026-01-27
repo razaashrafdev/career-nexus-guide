@@ -1,6 +1,5 @@
 import { ApiError } from "@/types/auth";
-const TOKEN_KEY = "career_nexus_token";
-const API_BASE_URL = "http://career-nexus.runasp.net/api/Resume";
+import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 export const resumeService = {
   async uploadResume(file: File): Promise<{
     success?: { statusCode: number; data: unknown };
@@ -18,6 +17,7 @@ const guestSessionId = localStorage.getItem("guestSessionId");
 const formData = new FormData();
 formData.append("ResumeFile", file);
 
+
 // 👇 guest case support
 if (!token && guestSessionId) {
   formData.append("GuestSessionId", guestSessionId);
@@ -31,6 +31,7 @@ if (token) {
 }
 
 const response = await fetch(`${API_BASE_URL}/UploadResume`, {
+
   method: "POST",
   body: formData,
   headers,
@@ -64,7 +65,7 @@ const response = await fetch(`${API_BASE_URL}/UploadResume`, {
     try {
       const token = localStorage.getItem(TOKEN_KEY);
 
-      const response = await fetch(`${API_BASE_URL}/latest`, {
+      const response = await fetch(API_ENDPOINTS.GET_LATEST_RESUME, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

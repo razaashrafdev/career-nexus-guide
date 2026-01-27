@@ -27,8 +27,8 @@ const AdminDashboard = () => {
   const [resumesDisplayCount, setResumesDisplayCount] = useState(10);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  
-  
+
+
   const [apiSettings, setApiSettings] = useState({
     indeedApiKey: "",
     chatgptApiKey: "",
@@ -960,9 +960,9 @@ const AdminDashboard = () => {
 
         {activeSection === "users" && !loading && <div className="space-y-4 md:space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <User className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Manage Users</span>
                 </CardTitle>
@@ -1042,15 +1042,15 @@ const AdminDashboard = () => {
 
         {activeSection === "assessments" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-              <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <Brain className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Assessment Results</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={fetchAssessments}>
-                  <RefreshCw className="h-5 w-5 md:h-6 md:w-6" />
-                  <span>Refresh</span>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={fetchAssessments}>
+                  <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="ml-1 sm:ml-2">Refresh</span>
                 </Button>
               </div>
             </CardHeader>
@@ -1110,15 +1110,15 @@ const AdminDashboard = () => {
 
         {activeSection === "resumes" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-              <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <FileText className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Resume Management</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={fetchResumes}>
-                  <RefreshCw className="h-5 w-5 md:h-6 md:w-6" />
-                  <span>Refresh</span>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={fetchResumes}>
+                  <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="ml-1 sm:ml-2">Refresh</span>
                 </Button>
               </div>
             </CardHeader>
@@ -1201,15 +1201,15 @@ const AdminDashboard = () => {
 
         {activeSection === "careers" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-              <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
-                  <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                  <Target className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Career Management</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={() => setAddCareerModal(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Career
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={() => setAddCareerModal(true)}>
+                  <Plus className="h-4 w-4" />
+                  <span className="ml-1 sm:ml-2">Add Career</span>
                 </Button>
               </div>
             </CardHeader>
@@ -1220,39 +1220,45 @@ const AdminDashboard = () => {
                   const skills = career.RequiredSkills || career.requiredSkills || [];
                   return (
                     <Card key={career.id} className="p-4">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-lg">{career.name || career.Name}</h3>
-                          <p className="text-gray-600 mb-3">{career.description || career.Description || ""}</p>
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                        <div className="flex-1 min-w-0 w-full">
+                          <h3 className="font-semibold text-base sm:text-lg break-words">{career.name || career.Name}</h3>
+                          <p className="text-gray-600 mb-3 text-sm sm:text-base break-words">{career.description || career.Description || ""}</p>
                           <div className="space-y-2">
                             {requiredTraits.length > 0 && (
                               <div>
-                                <span className="text-sm font-medium">Required Traits: </span>
-                                {requiredTraits.map((trait: string, index: number) => (
-                                  <Badge key={index} variant="outline" className="mr-1">
-                                    {trait}
-                                  </Badge>
-                                ))}
+                                <span className="text-xs sm:text-sm font-medium">Required Traits: </span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {requiredTraits.map((trait: string, index: number) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {trait}
+                                    </Badge>
+                                  ))}
+                                </div>
                               </div>
                             )}
                             {skills.length > 0 && (
                               <div>
-                                <span className="text-sm font-medium">Skills: </span>
-                                {skills.map((skill: string, index: number) => (
-                                  <Badge key={index} variant="secondary" className="mr-1">
-                                    {skill}
-                                  </Badge>
-                                ))}
+                                <span className="text-xs sm:text-sm font-medium">Skills: </span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {skills.map((skill: string, index: number) => (
+                                    <Badge key={index} variant="secondary" className="text-xs">
+                                      {skill}
+                                    </Badge>
+                                  ))}
+                                </div>
                               </div>
                             )}
                           </div>
                         </div>
-                        <div className="flex space-x-2">
-                          <Button size="sm" variant="outline" onClick={() => handleEditCareer(career.id)}>
+                        <div className="flex space-x-2 flex-shrink-0 w-full sm:w-auto justify-end sm:justify-start">
+                          <Button size="sm" variant="outline" onClick={() => handleEditCareer(career.id)} className="flex-1 sm:flex-none">
                             <Edit className="h-4 w-4" />
+                            <span className="ml-1 sm:hidden">Edit</span>
                           </Button>
-                          <Button size="sm" variant="outline" className="text-red-600" onClick={() => handleDeleteCareer(career.id)}>
+                          <Button size="sm" variant="outline" className="text-red-600 flex-1 sm:flex-none" onClick={() => handleDeleteCareer(career.id)}>
                             <Trash2 className="h-4 w-4" />
+                            <span className="ml-1 sm:hidden">Delete</span>
                           </Button>
                         </div>
                       </div>
@@ -1268,15 +1274,15 @@ const AdminDashboard = () => {
 
         {activeSection === "skills" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-              <div className="flex justify-between items-center">
-                <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Skills Management</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30" onClick={() => setAddSkillModal(true)}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Skill
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={() => setAddSkillModal(true)}>
+                  <Plus className="h-4 w-4" />
+                  <span className="ml-1 sm:ml-2">Add Skill</span>
                 </Button>
               </div>
             </CardHeader>
@@ -1338,11 +1344,13 @@ const AdminDashboard = () => {
         </div>}
 
         {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-            <CardTitle className="flex items-center space-x-2 text-base md:text-lg text-white">
-              <Settings className="h-5 w-5 md:h-6 md:w-6" />
-              <span>Account Settings</span>
-            </CardTitle>
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                  <Settings className="h-5 w-5 md:h-6 md:w-6" />
+                <span>Account Settings</span>
+              </CardTitle>
+            </div>
           </CardHeader>
           <CardContent className="p-4 md:p-6">
             <div className="space-y-6">

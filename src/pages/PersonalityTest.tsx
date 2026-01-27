@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
+import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 
 // 20-question AI-based personality sorter (friendly UI text)
 const questions = [
@@ -175,12 +176,12 @@ const submitAssessment = async () => {
 
     // 2️⃣ API call
     const response = await fetch(
-      "http://career-nexus.runasp.net/api/Personality/analyze?useAi=true",
+      `${API_ENDPOINTS.ANALYZE_PERSONALITY}?useAi=true`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
         },
         body: JSON.stringify({ answers: answerArray }),
       }

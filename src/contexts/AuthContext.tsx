@@ -45,22 +45,49 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Restore user from token and localStorage
         const restoredUser = await authService.restoreSession();
         
-        // Only set user if we have a valid restored user with all required fields
-        if (restoredUser && restoredUser.token && restoredUser.email) {
+        // Only set user if we have a valid restored user with token
+        if (restoredUser && restoredUser.token) {
           // Also restore from localStorage if available for consistency
           const userDataStr = localStorage.getItem("userData");
           if (userDataStr) {
             try {
               const userData = JSON.parse(userDataStr);
+              // Ensure email is set from localStorage if missing
+              if (userData.email && !restoredUser.email) {
+                restoredUser.email = userData.email;
+              }
               // Ensure RoleName is set from localStorage if not in token
               if (userData.roleName && !restoredUser.RoleName) {
                 restoredUser.RoleName = userData.roleName;
+              }
+              // Ensure fullName is set from localStorage if not in token
+              if (userData.fullName && !restoredUser.fullName) {
+                restoredUser.fullName = userData.fullName;
               }
             } catch (e) {
               // Ignore parse errors
             }
           }
-          setUser(restoredUser);
+          
+          // Final check: ensure we have at least email or unique_name (from token)
+          // If email is still missing, try to get it from unique_name in token
+          if (!restoredUser.email) {
+            const decoded = authService.decodeToken(restoredUser.token);
+            if (decoded && decoded.unique_name) {
+              restoredUser.email = decoded.unique_name;
+            }
+          }
+          
+          // Only set user if we have essential fields (token and email)
+          if (restoredUser.email) {
+            setUser(restoredUser);
+          } else {
+            // Missing essential data, clear everything
+            authService.removeToken();
+            localStorage.removeItem("userData");
+            localStorage.removeItem("roleName");
+            localStorage.removeItem("fullName");
+          }
         } else {
           // Invalid session, clear everything
           authService.removeToken();

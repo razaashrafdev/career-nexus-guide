@@ -116,7 +116,7 @@ const Contact = () => {
                       <h3 className="font-semibold text-gray-900 mb-1 text-lg">Phone</h3>
                       <p className="text-gray-600 mb-2">Monday - Friday, 9 AM - 6 PM EST</p>
                       <a
-                        href="https://wa.me/923008974168"
+                        href={getWhatsAppLink()}
                         className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
                       >
                         +92 300 8974168
