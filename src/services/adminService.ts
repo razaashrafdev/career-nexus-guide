@@ -92,7 +92,7 @@ export const adminService = {
 
   async updateUserStatus(id: number, isActive: boolean) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/User/${id}/Status`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_USER_STATUS(id), {
         method: "PUT",
         headers: getAuthHeaders(),
         body: JSON.stringify({ isActive }),
@@ -146,14 +146,20 @@ export const adminService = {
   // Assessments
   async getAssessments() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Assessments`, {
+      const url = API_ENDPOINTS.ADMIN_ASSESSMENTS;
+      console.log("Fetching assessments from:", url);
+      
+      const response = await fetch(url, {
         method: "GET",
         headers: getAuthHeaders(),
       });
 
+      console.log("Assessment response status:", response.status);
+
       const data = await response.json();
 
       if (!response.ok || !data.isSuccess) {
+        console.error("Assessment fetch error:", data);
         return {
           error: {
             isSuccess: false,
@@ -164,6 +170,7 @@ export const adminService = {
 
       return { success: data.data };
     } catch (error) {
+      console.error("Assessment fetch exception:", error);
       return {
         error: { isSuccess: false, message: "Unable to connect to server." },
       };
@@ -199,14 +206,20 @@ export const adminService = {
   // Resumes
   async getResumes() {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Resumes`, {
+      const url = API_ENDPOINTS.ADMIN_RESUMES;
+      console.log("Fetching resumes from:", url);
+      
+      const response = await fetch(url, {
         method: "GET",
         headers: getAuthHeaders(),
       });
 
+      console.log("Resume response status:", response.status);
+
       const data = await response.json();
 
       if (!response.ok || !data.isSuccess) {
+        console.error("Resume fetch error:", data);
         return {
           error: {
             isSuccess: false,
@@ -217,6 +230,7 @@ export const adminService = {
 
       return { success: data.data };
     } catch (error) {
+      console.error("Resume fetch exception:", error);
       return {
         error: { isSuccess: false, message: "Unable to connect to server." },
       };
@@ -257,7 +271,7 @@ export const adminService = {
     personalityMatchs?: string[];
   }) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Career`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_CAREER, {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({
@@ -329,7 +343,7 @@ export const adminService = {
 
   async deleteCareer(id: number) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Career/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_CAREER_BY_ID(id), {
         method: "DELETE",
         headers: getAuthHeaders(),
       });
@@ -386,7 +400,7 @@ export const adminService = {
     description?: string;
   }) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Skill`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_SKILL, {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({
@@ -455,7 +469,7 @@ export const adminService = {
 
   async deleteSkill(id: number) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Skill/${id}`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_SKILL_BY_ID(id), {
         method: "DELETE",
         headers: getAuthHeaders(),
       });
@@ -508,7 +522,7 @@ export const adminService = {
 
   async updateSettings(settings: Record<string, string>) {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/Admin/Settings`, {
+      const response = await fetch(API_ENDPOINTS.ADMIN_SETTINGS, {
         method: "PUT",
         headers: getAuthHeaders(),
         body: JSON.stringify(settings),

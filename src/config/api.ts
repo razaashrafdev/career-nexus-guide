@@ -8,6 +8,16 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://career-
 export const API_RESUME_BASE_URL = import.meta.env.VITE_API_RESUME_BASE_URL || `${API_BASE_URL}/api/Resume`;
 export const API_PERSONALITY_BASE_URL = import.meta.env.VITE_API_PERSONALITY_BASE_URL || `${API_BASE_URL}/api/Personality`;
 
+// Debug: Log API configuration (only in development)
+if (import.meta.env.DEV) {
+  console.log("API Configuration loaded:", {
+    API_BASE_URL,
+    API_RESUME_BASE_URL,
+    API_PERSONALITY_BASE_URL,
+    TOKEN_KEY: import.meta.env.VITE_TOKEN_KEY || "career_nexus_token",
+  });
+}
+
 // Storage Keys
 export const TOKEN_KEY = import.meta.env.VITE_TOKEN_KEY || "career_nexus_token";
 

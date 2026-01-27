@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Mail, CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
@@ -19,13 +21,17 @@ const ResetPassword = () => {
   const result = await authService.forgotPassword(email);
 
   if (result.error) {
-    alert(result.error.message); // ❌ e.g. "User not found or unable to reset password"
+    toast({
+      title: "Reset Failed",
+      description: result.error.message,
+      variant: "destructive"
+    });
     setIsLoading(false);
     return;
   }
 
   setIsLoading(false);
-  setIsSubmitted(true); // ✅ Show success message card
+  setIsSubmitted(true);
 };
 
   if (isSubmitted) {

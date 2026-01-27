@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
 import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
+import { useToast } from "@/hooks/use-toast";
 
 // 20-question AI-based personality sorter (friendly UI text)
 const questions = [
@@ -141,6 +142,7 @@ const PersonalityTest = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
@@ -161,49 +163,58 @@ const PersonalityTest = () => {
   };
 
   const isAnswered = answers[currentQuestion] !== undefined;
-const submitAssessment = async () => {
-  try {
-    // 1️⃣ answers object → ordered array (0–19)
-    const answerArray = Object.keys(answers)
-      .sort((a, b) => Number(a) - Number(b))
-      .map((key) => {
-        const val = answers[Number(key)];
-        // simple numeric mapping
-        if (val.endsWith("++")) return 5;
-        if (val.endsWith("+")) return 4;
-        return 2;
-      });
 
-    // 2️⃣ API call
-    const response = await fetch(
-      `${API_ENDPOINTS.ANALYZE_PERSONALITY}?useAi=true`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
-        },
-        body: JSON.stringify({ answers: answerArray }),
+  const submitAssessment = async () => {
+    try {
+      // 1️⃣ answers object → ordered array (0–19)
+      const answerArray = Object.keys(answers)
+        .sort((a, b) => Number(a) - Number(b))
+        .map((key) => {
+          const val = answers[Number(key)];
+          // simple numeric mapping
+          if (val.endsWith("++")) return 5;
+          if (val.endsWith("+")) return 4;
+          return 2;
+        });
+
+      // 2️⃣ API call
+      const response = await fetch(
+        `${API_ENDPOINTS.ANALYZE_PERSONALITY}?useAi=true`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+          },
+          body: JSON.stringify({ answers: answerArray }),
+        }
+      );
+
+      const result = await response.json();
+
+      // 3️⃣ success
+      if (result.isSuccess) {
+        navigate("/dashboard", {
+          state: {
+            personalityResult: result.data,
+          },
+        });
+      } else {
+        toast({
+          title: "Assessment Failed",
+          description: result.message || "Assessment failed",
+          variant: "destructive"
+        });
       }
-    );
-
-    const result = await response.json();
-
-    // 3️⃣ success
-    if (result.isSuccess) {
-      navigate("/dashboard", {
-        state: {
-          personalityResult: result.data,
-        },
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Error",
+        description: "Something went wrong while submitting assessment",
+        variant: "destructive"
       });
-    } else {
-      alert(result.message || "Assessment failed");
     }
-  } catch (err) {
-    console.error(err);
-    alert("Something went wrong while submitting assessment");
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">

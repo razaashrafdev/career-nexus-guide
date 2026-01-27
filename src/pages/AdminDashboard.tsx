@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key, Loader2 } from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, EyeOff, Trash2, Edit, Download, Plus, Key, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -47,6 +47,13 @@ const AdminDashboard = () => {
     currentPassword: "",
     newPassword: "",
     confirmPassword: ""
+  });
+
+  // Password visibility state
+  const [showPasswords, setShowPasswords] = useState({
+    current: false,
+    new: false,
+    confirm: false
   });
 
   const handleLogout = () => {
@@ -127,6 +134,61 @@ const AdminDashboard = () => {
   }];
   const filteredUsers = users.filter(user => (user.name || "").toLowerCase().includes(searchTerm.toLowerCase()) || (user.email || "").toLowerCase().includes(searchTerm.toLowerCase()));
 
+  // Define fetch functions before useEffect hooks that use them
+  const fetchAssessments = useCallback(async () => {
+    console.log("fetchAssessments called");
+    setLoading(true);
+    try {
+      const result = await adminService.getAssessments();
+      console.log("Assessment result:", result);
+      if (result.success) {
+        setAssessments(result.success);
+      } else if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error in fetchAssessments:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch assessments",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
+  const fetchResumes = useCallback(async () => {
+    console.log("fetchResumes called");
+    setLoading(true);
+    try {
+      const result = await adminService.getResumes();
+      console.log("Resume result:", result);
+      if (result.success) {
+        setResumes(result.success);
+      } else if (result.error) {
+        toast({
+          title: "Error",
+          description: result.error.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error in fetchResumes:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch resumes",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [toast]);
+
   // Fetch Overview Data
   useEffect(() => {
     if (activeSection === "overview") {
@@ -153,18 +215,20 @@ const AdminDashboard = () => {
   // Fetch Assessments
   useEffect(() => {
     if (activeSection === "assessments") {
+      console.log("Fetching assessments - activeSection:", activeSection);
       fetchAssessments();
       setAssessmentsDisplayCount(10); // Reset to initial count when switching to assessments section
     }
-  }, [activeSection]);
+  }, [activeSection, fetchAssessments]);
 
   // Fetch Resumes
   useEffect(() => {
     if (activeSection === "resumes") {
+      console.log("Fetching resumes - activeSection:", activeSection);
       fetchResumes();
       setResumesDisplayCount(10); // Reset to initial count when switching to resumes section
     }
-  }, [activeSection]);
+  }, [activeSection, fetchResumes]);
 
   // Fetch Careers
   useEffect(() => {
@@ -225,36 +289,6 @@ const AdminDashboard = () => {
     setLoading(false);
     if (result.success) {
       setUsers(result.success);
-    } else if (result.error) {
-      toast({
-        title: "Error",
-        description: result.error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const fetchAssessments = async () => {
-    setLoading(true);
-    const result = await adminService.getAssessments();
-    setLoading(false);
-    if (result.success) {
-      setAssessments(result.success);
-    } else if (result.error) {
-      toast({
-        title: "Error",
-        description: result.error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const fetchResumes = async () => {
-    setLoading(true);
-    const result = await adminService.getResumes();
-    setLoading(false);
-    if (result.success) {
-      setResumes(result.success);
     } else if (result.error) {
       toast({
         title: "Error",
@@ -960,8 +994,8 @@ const AdminDashboard = () => {
 
         {activeSection === "users" && !loading && <div className="space-y-4 md:space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <User className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Manage Users</span>
@@ -1042,8 +1076,8 @@ const AdminDashboard = () => {
 
         {activeSection === "assessments" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <Brain className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Assessment Results</span>
@@ -1110,8 +1144,8 @@ const AdminDashboard = () => {
 
         {activeSection === "resumes" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <FileText className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Resume Management</span>
@@ -1201,8 +1235,8 @@ const AdminDashboard = () => {
 
         {activeSection === "careers" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <Target className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Career Management</span>
@@ -1274,8 +1308,8 @@ const AdminDashboard = () => {
 
         {activeSection === "skills" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Skills Management</span>
@@ -1344,12 +1378,12 @@ const AdminDashboard = () => {
         </div>}
 
         {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-              <div className="flex justify-between items-center">
+          <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg pt-5 pb-3 px-4 min-h-[65px] flex items-center">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <Settings className="h-5 w-5 md:h-6 md:w-6" />
-                <span>Account Settings</span>
-              </CardTitle>
+                  <span>Account Settings</span>
+                </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="p-4 md:p-6">
@@ -1383,42 +1417,69 @@ const AdminDashboard = () => {
                 <form onSubmit={(e) => { e.preventDefault(); handlePasswordChange(); }} className="space-y-3">
                   <div>
                     <label className="text-xs md:text-sm font-medium text-gray-700">Current Password</label>
-                    <Input
-                      type="password"
-                      placeholder="Enter current password"
-                      className="mt-1 text-sm"
-                      value={passwordSettings.currentPassword}
-                      onChange={e => setPasswordSettings({
-                        ...passwordSettings,
-                        currentPassword: e.target.value
-                      })}
-                    />
+                    <div className="relative mt-1">
+                      <Input
+                        type={showPasswords.current ? "text" : "password"}
+                        placeholder="Enter current password"
+                        className="text-sm pr-10"
+                        value={passwordSettings.currentPassword}
+                        onChange={e => setPasswordSettings({
+                          ...passwordSettings,
+                          currentPassword: e.target.value
+                        })}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showPasswords.current ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <label className="text-xs md:text-sm font-medium text-gray-700">New Password</label>
-                    <Input
-                      type="password"
-                      placeholder="Enter new password"
-                      className="mt-1 text-sm"
-                      value={passwordSettings.newPassword}
-                      onChange={e => setPasswordSettings({
-                        ...passwordSettings,
-                        newPassword: e.target.value
-                      })}
-                    />
+                    <div className="relative mt-1">
+                      <Input
+                        type={showPasswords.new ? "text" : "password"}
+                        placeholder="Enter new password"
+                        className="text-sm pr-10"
+                        value={passwordSettings.newPassword}
+                        onChange={e => setPasswordSettings({
+                          ...passwordSettings,
+                          newPassword: e.target.value
+                        })}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showPasswords.new ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <label className="text-xs md:text-sm font-medium text-gray-700">Confirm New Password</label>
-                    <Input
-                      type="password"
-                      placeholder="Confirm new password"
-                      className="mt-1 text-sm"
-                      value={passwordSettings.confirmPassword}
-                      onChange={e => setPasswordSettings({
-                        ...passwordSettings,
-                        confirmPassword: e.target.value
-                      })}
-                    />
+                    <div className="relative mt-1">
+                      <Input
+                        type={showPasswords.confirm ? "text" : "password"}
+                        placeholder="Confirm new password"
+                        className="text-sm pr-10"
+                        value={passwordSettings.confirmPassword}
+                        onChange={e => setPasswordSettings({
+                          ...passwordSettings,
+                          confirmPassword: e.target.value
+                        })}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showPasswords.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
 
                   <Button

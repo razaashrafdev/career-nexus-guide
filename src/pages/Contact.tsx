@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
+import { getWhatsAppLink } from "@/config/api";
 
 const Contact = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -117,6 +118,7 @@ const Contact = () => {
                       <p className="text-gray-600 mb-2">Monday - Friday, 9 AM - 6 PM EST</p>
                       <a
                         href={getWhatsAppLink()}
+                        target="_blank"
                         className="text-blue-600 hover:text-blue-700 transition-colors font-medium"
                       >
                         +92 300 8974168

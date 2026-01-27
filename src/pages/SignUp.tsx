@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "@/services/authService";
+import { useToast } from "@/hooks/use-toast";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +22,7 @@ const SignUp = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { toast } = useToast();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -34,11 +36,19 @@ const SignUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match!");
+      toast({
+        title: "Password Mismatch",
+        description: "Passwords don't match!",
+        variant: "destructive"
+      });
       return;
     }
     if (!agreedToTerms) {
-      alert("Please agree to the terms and conditions");
+      toast({
+        title: "Terms Required",
+        description: "Please agree to the terms and conditions",
+        variant: "destructive"
+      });
       return;
     }
     setIsLoading(true);
