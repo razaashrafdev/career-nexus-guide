@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
 import { Badge } from "@/components/ui/badge";
+import { getWhatsAppLink } from "@/config/api";
 
 const Privacy = () => {
   return (

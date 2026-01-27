@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
+import { getWhatsAppLink } from "@/config/api";
 
 const Footer = () => {
   return (
@@ -53,6 +54,7 @@ const Footer = () => {
               <li>
                 <a
                   href={getWhatsAppLink()}
+                  target="_blank"
                 >
                   +92 300 8974168
                 </a>
