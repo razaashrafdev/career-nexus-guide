@@ -57,7 +57,7 @@ const Login = () => {
       if (result.success) {
         // Wait a moment for auth context to update
         setTimeout(() => {
-          debugger;
+          
           const roleName = localStorage.getItem("roleName");
           const fullName = localStorage.getItem("fullName") || "User";
 
