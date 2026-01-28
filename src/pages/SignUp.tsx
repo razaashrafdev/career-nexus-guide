@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
+import { Eye, ArrowLeft, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "@/services/authService";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -20,9 +21,21 @@ const SignUp = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
+
+  // Redirect logged-in users
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast({
+        title: "Already Logged In",
+        description: "Please log out of your current account before creating a new one.",
+        variant: "destructive"
+      });
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate, toast]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -52,7 +65,6 @@ const SignUp = () => {
       return;
     }
     setIsLoading(true);
-    setMessage(null);
     const result = await authService.register({
       username: formData.email.split("@")[0],
       email: formData.email,
@@ -62,10 +74,17 @@ const SignUp = () => {
     });
 
     if (result.error) {
-      setMessage(result.error.message);
-      setIsLoading(false); // Email already exist ya koi aur error
+      toast({
+        title: "Registration Failed",
+        description: result.error.message,
+        variant: "destructive"
+      });
+      setIsLoading(false);
     } else {
-      setMessage("Account Created Successfully");
+      toast({
+        title: "Account Created Successfully",
+        description: "Your account has been created. Redirecting to login...",
+      });
       setIsLoading(false);
       setTimeout(() => {
         navigate("/login");
@@ -134,7 +153,7 @@ const SignUp = () => {
               <div className="relative">
                 <Input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="Create a strong password" value={formData.password} onChange={handleInputChange} required className="h-11 pr-10" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  <Eye className="h-4 w-4" />
                 </button>
               </div>
 
@@ -161,9 +180,9 @@ const SignUp = () => {
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative">
-                <Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder="Confirm your password" value={formData.confirmPassword} onChange={handleInputChange} required className="h-11 pr-10" />
-                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                <Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? "text" : "password"} placeholder="Confirm your password" value={formData.confirmPassword} onChange={handleInputChange} required className="h-11 pr-10 [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden" autoComplete="new-password" />
+                <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 z-10">
+                  <Eye className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -191,15 +210,6 @@ const SignUp = () => {
             <Button type="submit" className="w-full h-11 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700" disabled={isLoading || !agreedToTerms}>
               {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
-            {/* ✅ Add this right below button */}
-            {message && (
-              <p
-                className={`text-center text-sm mt-3 ${message.includes("Successfully") ? "text-green-600" : "text-red-600"
-                  }`}
-              >
-                {message}
-              </p>
-            )}
           </form>
 
 

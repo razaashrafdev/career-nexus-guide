@@ -15,7 +15,6 @@ import { AnimatedElement } from "@/components/AnimatedElement";
 import { getWhatsAppLink } from "@/config/api";
 
 const Contact = () => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -29,10 +28,17 @@ const Contact = () => {
     e.preventDefault();
     // Simulate form submission
     setTimeout(() => {
-      setIsSubmitted(true);
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 24 hours.",
+      });
+      // Reset form after showing toast
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        inquiry: "",
+        message: ""
       });
     }, 1000);
   };
@@ -147,128 +153,105 @@ const Contact = () => {
             <div>
               <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
                 <CardContent className="p-8">
-                  {!isSubmitted ? (
-                    <>
-                      <AnimatedElement delay={0}>
-                        <div className="flex items-center space-x-3 mb-6">
-                          <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                            <MessageCircle className="h-5 w-5 text-white" />
-                          </div>
-                          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-                            Send us a message
-                          </h2>
-                        </div>
-                      </AnimatedElement>
-
-                      <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div>
-                            <AnimatedElement delay={0}>
-                              <Label htmlFor="firstName" className="text-sm font-medium text-gray-700 mb-2 block">
-                                First Name *
-                              </Label>
-                            </AnimatedElement>
-                            <AnimatedElement delay={50}>
-                              <Input
-                                id="firstName"
-                                required
-                                value={formData.firstName}
-                                onChange={(e) => handleInputChange("firstName", e.target.value)}
-                                className="h-11 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                                placeholder="John"
-                              />
-                            </AnimatedElement>
-                          </div>
-                          <div>
-                            <AnimatedElement delay={100}>
-                              <Label htmlFor="lastName" className="text-sm font-medium text-gray-700 mb-2 block">
-                                Last Name *
-                              </Label>
-                            </AnimatedElement>
-                            <AnimatedElement delay={150}>
-                              <Input
-                                id="lastName"
-                                required
-                                value={formData.lastName}
-                                onChange={(e) => handleInputChange("lastName", e.target.value)}
-                                className="h-11 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                                placeholder="Doe"
-                              />
-                            </AnimatedElement>
-                          </div>
-                        </div>
-
-                        <div>
-                          <AnimatedElement delay={200}>
-                            <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-2 block">
-                              Email Address *
-                            </Label>
-                          </AnimatedElement>
-                          <AnimatedElement delay={250}>
-                            <Input
-                              id="email"
-                              type="email"
-                              required
-                              value={formData.email}
-                              onChange={(e) => handleInputChange("email", e.target.value)}
-                              className="h-11 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                              placeholder="john@example.com"
-                            />
-                          </AnimatedElement>
-                        </div>
-
-                        <div>
-                          <AnimatedElement delay={300}>
-                            <Label htmlFor="message" className="text-sm font-medium text-gray-700 mb-2 block">
-                              Message *
-                            </Label>
-                          </AnimatedElement>
-                          <AnimatedElement delay={350}>
-                            <Textarea
-                              id="message"
-                              required
-                              value={formData.message}
-                              onChange={(e) => handleInputChange("message", e.target.value)}
-                              rows={5}
-                              className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
-                              placeholder="Please describe how we can help you..."
-                            />
-                          </AnimatedElement>
-                        </div>
-
-                        <div className="pt-4">
-                          <AnimatedElement delay={400}>
-                            <Button
-                              type="submit"
-                              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-lg transition-all text-white px-8 py-3 h-11"
-                            >
-                              <Send className="h-4 w-4 mr-2" />
-                              Send Message
-                            </Button>
-                          </AnimatedElement>
-                        </div>
-                      </form>
-                    </>
-                  ) : (
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle className="h-8 w-8 text-green-600" />
+                  <AnimatedElement delay={0}>
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                        <MessageCircle className="h-5 w-5 text-white" />
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                        Message Sent Successfully!
-                      </h3>
-                      <p className="text-gray-600 mb-6">
-                        Thank you for contacting us. We'll get back to you within 24 hours.
-                      </p>
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsSubmitted(false)}
-                        className="border-gray-300"
-                      >
-                        Send Another Message
-                      </Button>
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                        Send us a message
+                      </h2>
                     </div>
-                  )}
+                  </AnimatedElement>
+
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <AnimatedElement delay={0}>
+                          <Label htmlFor="firstName" className="text-sm font-medium text-gray-700 mb-2 block">
+                            First Name *
+                          </Label>
+                        </AnimatedElement>
+                        <AnimatedElement delay={50}>
+                          <Input
+                            id="firstName"
+                            required
+                            value={formData.firstName}
+                            onChange={(e) => handleInputChange("firstName", e.target.value)}
+                            className="h-11 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                            placeholder="John"
+                          />
+                        </AnimatedElement>
+                      </div>
+                      <div>
+                        <AnimatedElement delay={100}>
+                          <Label htmlFor="lastName" className="text-sm font-medium text-gray-700 mb-2 block">
+                            Last Name *
+                          </Label>
+                        </AnimatedElement>
+                        <AnimatedElement delay={150}>
+                          <Input
+                            id="lastName"
+                            required
+                            value={formData.lastName}
+                            onChange={(e) => handleInputChange("lastName", e.target.value)}
+                            className="h-11 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                            placeholder="Doe"
+                          />
+                        </AnimatedElement>
+                      </div>
+                    </div>
+
+                    <div>
+                      <AnimatedElement delay={200}>
+                        <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-2 block">
+                          Email Address *
+                        </Label>
+                      </AnimatedElement>
+                      <AnimatedElement delay={250}>
+                        <Input
+                          id="email"
+                          type="email"
+                          required
+                          value={formData.email}
+                          onChange={(e) => handleInputChange("email", e.target.value)}
+                          className="h-11 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                          placeholder="john@example.com"
+                        />
+                      </AnimatedElement>
+                    </div>
+
+                    <div>
+                      <AnimatedElement delay={300}>
+                        <Label htmlFor="message" className="text-sm font-medium text-gray-700 mb-2 block">
+                          Message *
+                        </Label>
+                      </AnimatedElement>
+                      <AnimatedElement delay={350}>
+                        <Textarea
+                          id="message"
+                          required
+                          value={formData.message}
+                          onChange={(e) => handleInputChange("message", e.target.value)}
+                          rows={5}
+                          className="border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                          placeholder="Please describe how we can help you..."
+                        />
+                      </AnimatedElement>
+                    </div>
+
+                    <div className="pt-4">
+                      <AnimatedElement delay={400}>
+                        <Button
+                          type="submit"
+                          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:shadow-lg transition-all text-white px-8 py-3 h-11"
+                        >
+                          <Send className="h-4 w-4 mr-2" />
+                          Send Message
+                        </Button>
+                      </AnimatedElement>
+                    </div>
+                  </form>
                 </CardContent>
               </Card>
             </div>
