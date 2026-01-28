@@ -1,5 +1,5 @@
 import { ApiError } from "@/types/auth";
-import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
+import { TOKEN_KEY, API_ENDPOINTS} from "@/config/api";
 export const resumeService = {
   async uploadResume(file: File): Promise<{
     success?: { statusCode: number; data: unknown };
@@ -30,7 +30,7 @@ if (token) {
   headers.Authorization = `Bearer ${token}`;
 }
 
-const response = await fetch(`${API_BASE_URL}/UploadResume`, {
+const response = await fetch(API_ENDPOINTS.UPLOAD_RESUME, {
 
   method: "POST",
   body: formData,

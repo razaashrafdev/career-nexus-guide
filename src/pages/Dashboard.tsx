@@ -8,12 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Eye, EyeOff } from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Eye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { XCircle, Lightbulb } from "lucide-react";
 import { Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 // Dashboard.tsx ke upar imports ke baad
 interface ResumeAnalysis {
@@ -61,8 +62,8 @@ const Dashboard = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
   
   // Password visibility state
   const [showPasswords, setShowPasswords] = useState({
@@ -207,21 +208,31 @@ const Dashboard = () => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setMessage("New password and confirm password do not match!");
+      toast({
+        title: "Password Mismatch",
+        description: "New password and confirm password do not match!",
+        variant: "destructive"
+      });
       return;
     }
 
     setIsLoading(true);
-    setMessage("");
 
     const result = await authService.changePassword(oldPassword, newPassword);
 
     setIsLoading(false);
 
     if (result.error) {
-      setMessage(result.error.message);
+      toast({
+        title: "Password Change Failed",
+        description: result.error.message,
+        variant: "destructive"
+      });
     } else {
-      setMessage("Password changed successfully!");
+      toast({
+        title: "Password Changed Successfully",
+        description: "Your password has been updated successfully.",
+      });
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
@@ -379,198 +390,347 @@ const Dashboard = () => {
 
         {/* Content */}
         <div className="flex-1 p-3 md:p-6 overflow-x-hidden mt-[76px] md:mt-[98px]">
-          {activeSection === "overview" && <div className="space-y-4 md:space-y-6 max-w-full">
-            {/* Guidance Message */}
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-start space-x-3 md:space-x-4">
-                  <div className="flex-shrink-0">
-                    {guidance.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base md:text-lg font-semibold mb-2">{guidance.title}</h3>
-                    <p className="text-sm md:text-base text-gray-600 mb-4">{guidance.message}</p>
-                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 md:gap-3">
-                      {!userData.assessmentCompleted && <Link to="/personality-test">
-                        <Button className="bg-gradient-to-r from-purple-600 to-blue-600 w-full sm:w-auto text-sm md:text-base">
-                          <Brain className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                          Take Assessment Test
-                        </Button>
-                      </Link>}
-                      {userData.assessmentCompleted && <Link to="/personality-test">
-                        <Button variant="outline" className="w-full sm:w-auto text-sm md:text-base">
-                          <RefreshCw className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                          Retake Assessment Test
-                        </Button>
-                      </Link>}
-                      {!userData.resumeUploaded && <Link to="/resume-upload">
-                        <Button variant="outline" className="w-full sm:w-auto text-sm md:text-base">
-                          <Upload className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                          Upload Resume
-                        </Button>
-                      </Link>}
-                      {userData.resumeUploaded && <Link to="/resume-upload">
-                        <Button variant="outline" className="w-full sm:w-auto text-sm md:text-base">
-                          <FileText className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-                          Update Resume
-                        </Button>
-                      </Link>}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Stats Cards */}
+          {activeSection === "overview" && <div className="space-y-5 md:space-y-7 max-w-full">
+            {/* Enhanced Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-              <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-500 to-blue-500 text-white">
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-purple-100 text-xs md:text-sm">Completion Rate</p>
-                      <p className="text-xl md:text-3xl font-bold truncate">
+              {/* Completion Rate Card */}
+              <Card className="border-0 shadow-xl bg-gradient-to-br from-purple-600 via-purple-500 to-blue-500 text-white overflow-hidden relative group hover:shadow-2xl transition-all duration-300">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12"></div>
+                <CardContent className="p-4 sm:p-5 md:p-7 relative z-10">
+                  <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2 sm:gap-0">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-purple-100 text-xs md:text-sm font-medium mb-1 sm:mb-2 uppercase tracking-wide">Completion Rate</p>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-bold mb-1 truncate">
                         {userData.assessmentCompleted && userData.resumeUploaded ? "100%" : userData.assessmentCompleted || userData.resumeUploaded ? "50%" : "0%"}
                       </p>
+                      <p className="text-purple-100 text-xs font-light">Profile Progress</p>
                     </div>
-                    <TrendingUp className="h-6 w-6 md:h-8 md:w-8 text-purple-100 flex-shrink-0" />
+                    <div className="bg-white/20 backdrop-blur-sm rounded-xl p-2 sm:p-3 group-hover:bg-white/30 transition-colors flex-shrink-0">
+                      <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
+                    </div>
                   </div>
+                  {(userData.assessmentCompleted || userData.resumeUploaded) && (
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-white/20">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-purple-100">On Track</span>
+                        <span className="font-semibold">
+                          {userData.assessmentCompleted && userData.resumeUploaded ? "Complete" : "In Progress"}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-white">
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-gray-600 text-xs md:text-sm">Career Score</p>
-                      <p className="text-xl md:text-3xl font-bold text-green-600 truncate">
-                        {userData.careerScore || 0}%
-                      </p>
-
+              {/* Career Score Card */}
+              <Card className="border-0 shadow-lg bg-white hover:shadow-xl transition-all duration-300 group">
+                <CardContent className="p-4 sm:p-5 md:p-7">
+                  <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2 sm:gap-0">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-gray-500 text-xs md:text-sm font-medium mb-1 sm:mb-2 uppercase tracking-wide">Career Score</p>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 mb-1 truncate">{userData.careerScore || 0}%</p>
+                      <p className="text-gray-400 text-xs font-light">Match Compatibility</p>
                     </div>
-                    <Award className="h-6 w-6 md:h-8 md:w-8 text-green-500 flex-shrink-0" />
+                    <div className="bg-blue-50 rounded-xl p-2 sm:p-3 group-hover:bg-blue-100 transition-colors flex-shrink-0">
+                      <Award className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-blue-600" />
+                    </div>
                   </div>
+                  {userData.careerScore > 0 && (
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                      <div className="flex items-center justify-between text-xs mb-2">
+                        <span className="text-gray-500">Match Quality</span>
+                        <span className="text-blue-600 font-semibold">
+                          {userData.careerScore >= 80 ? "Excellent" : userData.careerScore >= 60 ? "Good" : "Fair"}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="bg-blue-600 h-full rounded-full transition-all duration-500"
+                          style={{ width: `${userData.careerScore}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-white">
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-gray-600 text-xs md:text-sm">Personality Type</p>
-                      <p className="text-xl md:text-3xl font-bold text-blue-600 truncate">
+              {/* Personality Type Card */}
+              <Card className="border-0 shadow-lg bg-white hover:shadow-xl transition-all duration-300 group">
+                <CardContent className="p-4 sm:p-5 md:p-7">
+                  <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2 sm:gap-0">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-gray-500 text-xs md:text-sm font-medium mb-1 sm:mb-2 uppercase tracking-wide">Personality Type</p>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 mb-1 truncate">
                         {userData.personalityType || "N/A"}
                       </p>
+                      <p className="text-gray-400 text-xs font-light">Assessment Result</p>
                     </div>
-                    <User className="h-6 w-6 md:h-8 md:w-8 text-blue-500 flex-shrink-0" />
+                    <div className="bg-blue-50 rounded-xl p-2 sm:p-3 group-hover:bg-blue-100 transition-colors flex-shrink-0">
+                      <Brain className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-blue-600" />
+                    </div>
                   </div>
+                  {userData.assessmentCompleted && (
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-gray-500">Status</span>
+                        <span className="text-blue-600 font-semibold">Completed</span>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-lg bg-white">
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0 flex-1">
-                      <p className="text-gray-600 text-xs md:text-sm">Recommendations</p>
-                      <p className="text-xl md:text-3xl font-bold text-indigo-600 truncate">{userData.recommendedCareers?.length || 0}</p>
+              {/* Recommendations Card */}
+              <Card className="border-0 shadow-lg bg-white hover:shadow-xl transition-all duration-300 group">
+                <CardContent className="p-4 sm:p-5 md:p-7">
+                  <div className="flex items-start justify-between mb-3 sm:mb-4 gap-3 sm:gap-4">
+                    <div className="flex-1 min-w-0 pr-2">
+                      <p className="text-gray-500 text-xs md:text-sm font-medium mb-1 sm:mb-2 uppercase tracking-wide">Recommendations</p>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 mb-1 truncate">{userData.recommendedCareers?.length || 0}</p>
+                      <p className="text-gray-400 text-xs font-light">Career Matches</p>
                     </div>
-                    <Target className="h-6 w-6 md:h-8 md:w-8 text-indigo-500 flex-shrink-0" />
+                    <div className="bg-blue-50 rounded-xl p-2 sm:p-3 group-hover:bg-blue-100 transition-colors flex-shrink-0">
+                      <Target className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-blue-600" />
+                    </div>
                   </div>
+                  {userData.resumeUploaded && (
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
+                      <div className="flex items-center justify-between text-xs mb-2">
+                        <span className="text-gray-500">Based on Resume</span>
+                        <span className="text-blue-600 font-semibold">
+                          {userData.recommendedCareers?.length > 0 ? "Available" : "Pending"}
+                        </span>
+                      </div>
+                      {userData.recommendedCareers?.length > 0 && (
+                        <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="bg-blue-600 h-full rounded-full transition-all duration-500"
+                            style={{ width: `${Math.min((userData.recommendedCareers.length / 10) * 100, 100)}%` }}
+                          ></div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
 
-            {/* Progress Overview */}
-            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="text-base md:text-lg">Your Progress</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-xs md:text-sm font-medium">Personality Assessment</span>
-                      <Badge variant={userData.assessmentCompleted ? "default" : "secondary"} className="text-xs">
-                        {userData.assessmentCompleted ? "Completed" : "Pending"}
-                      </Badge>
+            {/* Guidance Message & Progress Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-7">
+              {/* Guidance Message */}
+              <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
+                <CardHeader className="border-b border-gray-100 pb-3 sm:pb-4 px-4 sm:px-6">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-lg flex-shrink-0">
+                      <div className="h-4 w-4 sm:h-5 sm:w-5">{guidance.icon}</div>
                     </div>
-                    <Progress value={userData.assessmentCompleted ? 100 : 0} className="h-2" />
+                    <CardTitle className="text-sm sm:text-base md:text-lg font-semibold">{guidance.title}</CardTitle>
                   </div>
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-xs md:text-sm font-medium">Resume Upload</span>
-                      <Badge variant={userData.resumeUploaded ? "default" : "secondary"} className="text-xs">
-                        {userData.resumeUploaded ? "Uploaded" : "Pending"}
-                      </Badge>
+                </CardHeader>
+                <CardContent className="p-4 sm:p-5 md:p-7">
+                  <p className="text-xs sm:text-sm md:text-base text-gray-600 mb-3 sm:mb-4 leading-relaxed">{guidance.message}</p>
+                  <div className="flex flex-col sm:flex-row flex-wrap gap-2 md:gap-3">
+                    {!userData.assessmentCompleted && <Link to="/personality-test" className="w-full sm:w-auto">
+                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 w-full sm:w-auto text-xs sm:text-sm md:text-base">
+                        <Brain className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                        Take Assessment Test
+                      </Button>
+                    </Link>}
+                    {userData.assessmentCompleted && <Link to="/personality-test" className="w-full sm:w-auto">
+                      <Button variant="outline" className="w-full sm:w-auto text-xs sm:text-sm md:text-base">
+                        <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                        Retake Assessment Test
+                      </Button>
+                    </Link>}
+                    {!userData.resumeUploaded && <Link to="/resume-upload" className="w-full sm:w-auto">
+                      <Button variant="outline" className="w-full sm:w-auto text-xs sm:text-sm md:text-base">
+                        <Upload className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                        Upload Resume
+                      </Button>
+                    </Link>}
+                    {userData.resumeUploaded && <Link to="/resume-upload" className="w-full sm:w-auto">
+                      <Button variant="outline" className="w-full sm:w-auto text-xs sm:text-sm md:text-base">
+                        <FileText className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                        Update Resume
+                      </Button>
+                    </Link>}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Progress Overview */}
+              <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
+                <CardHeader className="border-b border-gray-100 pb-3 sm:pb-4 px-4 sm:px-6">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg flex-shrink-0">
+                      <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
-                    <Progress value={userData.resumeUploaded ? 100 : 0} className="h-2" />
+                    <CardTitle className="text-sm sm:text-base md:text-lg font-semibold">Your Progress</CardTitle>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent className="p-4 sm:p-5 md:p-7">
+                  <div className="space-y-4 sm:space-y-5">
+                    <div>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-2 sm:mb-3">
+                        <span className="text-xs sm:text-sm font-medium text-gray-700">Personality Assessment</span>
+                        <Badge variant={userData.assessmentCompleted ? "default" : "secondary"} className="text-xs w-fit">
+                          {userData.assessmentCompleted ? "Completed" : "Pending"}
+                        </Badge>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2 sm:h-2.5 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${userData.assessmentCompleted ? "bg-blue-600" : "bg-gray-300"}`}
+                          style={{ width: `${userData.assessmentCompleted ? 100 : 0}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-2 sm:mb-3">
+                        <span className="text-xs sm:text-sm font-medium text-gray-700">Resume Upload</span>
+                        <Badge variant={userData.resumeUploaded ? "default" : "secondary"} className="text-xs w-fit">
+                          {userData.resumeUploaded ? "Uploaded" : "Pending"}
+                        </Badge>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2 sm:h-2.5 overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${userData.resumeUploaded ? "bg-blue-600" : "bg-gray-300"}`}
+                          style={{ width: `${userData.resumeUploaded ? 100 : 0}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>}
 
           {/* Other sections remain the same but add responsive padding and text sizes */}
 
           {activeSection === "personality" && (
-  <Card className="border-0 shadow-lg bg-white/95 backdrop-blur-sm">
-    <CardHeader>
-      <CardTitle className="flex items-center gap-3 text-lg md:text-xl font-bold">
-        <Brain className="h-6 w-6 text-purple-600" />
-        Personality Assessment
-      </CardTitle>
-    </CardHeader>
+            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                    <Brain className="h-5 w-5 md:h-6 md:w-6" />
+                    Personality Assessment
+                  </CardTitle>
+                  {userData.assessmentCompleted && (
+                    <Badge variant="secondary" className="bg-white/20 text-white border-white/30">
+                      Completed
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
 
-    <CardContent className="p-4 md:p-6 space-y-6">
-      {userData.assessmentCompleted ? (
-        <>
-          {/* Personality Type */}
-          <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-6 shadow">
-            <p className="text-sm uppercase tracking-wide text-purple-200">
-              Your Personality Type
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold mt-1">
-              {userData.personalityType}
-            </h2>
-          </div>
+              <CardContent className="p-4 md:p-6">
+                {userData.assessmentCompleted ? (
+                  <div className="space-y-6">
+                    {/* Personality Type Section */}
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+                      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
+                        <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
+                          <Brain className="h-5 w-5 text-purple-600" />
+                          Your Personality Type
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-6 shadow-md">
+                          <p className="text-sm uppercase tracking-wide text-purple-200 mb-2">
+                            Assessment Result
+                          </p>
+                          <h2 className="text-3xl md:text-4xl font-bold">
+                            {userData.personalityType}
+                          </h2>
+                        </div>
+                      </CardContent>
+                    </div>
 
-          {/* Description */}
-          <Card className="p-5 md:p-6 bg-gradient-to-br from-purple-50 to-blue-50 shadow-md rounded-xl">
-            <h3 className="text-base md:text-lg font-semibold text-purple-700 mb-3">
-              Personality Insights
-            </h3>
+                    {/* Personality Insights Section */}
+                    {userData.personalityDescription && (
+                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+                        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
+                          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
+                            <BarChart3 className="h-5 w-5 text-blue-600" />
+                            Personality Insights
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                          <p className="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-line">
+                            {userData.personalityDescription}
+                          </p>
+                        </CardContent>
+                      </div>
+                    )}
 
-            <p className="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-line">
-              {userData.personalityDescription}
-            </p>
-          </Card>
+                    {/* Career Score Section */}
+                    {userData.careerScore > 0 && (
+                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
+                        <CardHeader className="bg-gradient-to-r from-green-50 to-amber-50 border-b border-green-200 rounded-t-xl px-6 py-4">
+                          <CardTitle className="text-lg font-semibold flex items-center gap-2.5">
+                            <Award className="h-5 w-5 text-green-600" />
+                            Career Match Score
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-6">
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <p className="text-sm text-gray-600 mb-2">Your career compatibility score</p>
+                                <div className="flex items-center gap-3">
+                                  <Progress value={userData.careerScore} className="flex-1 h-3" />
+                                  <span className="text-2xl font-bold text-green-600">{userData.careerScore}%</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Explanation */}
+                            <div className="mt-4 pt-4 border-t border-gray-200">
+                              <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                                Your Career Match Score is calculated by analyzing how well your personality traits, skills, and experience align with recommended career paths. We compare your assessment results and resume against career requirements to determine your compatibility percentage.
+                              </p>
+                              <ul className="text-sm text-gray-600 space-y-1.5 ml-4 list-disc">
+                                <li>Personality traits from your assessment</li>
+                                <li>Skills and experience from your resume</li>
+                                <li>Career requirements and job market trends</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </div>
+                    )}
 
-          {/* Retake Button */}
-          <Link to="/personality-test">
-            <Button variant="outline" className="mt-4">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Retake Assessment
-            </Button>
-          </Link>
-        </>
-      ) : (
-        <div className="text-center py-8">
-          <Brain className="h-16 w-16 text-purple-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">
-            Take Your Personality Assessment
-          </h3>
-          <p className="text-gray-600 mb-4">
-            Discover your personality type and get AI-powered career guidance.
-          </p>
-          <Link to="/personality-test">
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600">
-              Start Assessment
-            </Button>
-          </Link>
-        </div>
-      )}
-    </CardContent>
-  </Card>
-)}
+                    {/* Action Buttons */}
+                    <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                      <Link to="/personality-test" className="flex-1">
+                        <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base h-12 font-medium shadow-sm hover:shadow-md transition-all duration-200">
+                          <RefreshCw className="h-4 w-4 mr-2" />
+                          Retake Assessment
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  // No Assessment Completed
+                  <div className="text-center py-8 md:py-12">
+                    <div className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full mb-6">
+                      <Brain className="h-10 w-10 md:h-12 md:w-12 text-purple-600" />
+                    </div>
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">Take Your Personality Assessment</h3>
+                    <p className="text-sm md:text-base text-gray-600 mb-6 max-w-md mx-auto">
+                      Discover your personality type and get AI-powered career guidance based on your unique traits and preferences.
+                    </p>
+                    <Link to="/personality-test">
+                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base px-8 py-6 h-auto">
+                        <Brain className="h-5 w-5 mr-2" />
+                        Start Assessment
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
 
           {activeSection === "resume" && (
@@ -1060,16 +1220,17 @@ const Dashboard = () => {
                         <Input
                           type={showPasswords.old ? "text" : "password"}
                           placeholder="Enter current password"
-                          className="text-sm pr-10"
+                          className="text-sm pr-10 [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden"
                           value={oldPassword}
                           onChange={(e) => setOldPassword(e.target.value)}
+                          autoComplete="current-password"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPasswords({ ...showPasswords, old: !showPasswords.old })}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 z-10"
                         >
-                          {showPasswords.old ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          <Eye className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
@@ -1080,16 +1241,17 @@ const Dashboard = () => {
                         <Input
                           type={showPasswords.new ? "text" : "password"}
                           placeholder="Enter new password"
-                          className="text-sm pr-10"
+                          className="text-sm pr-10 [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden"
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
+                          autoComplete="new-password"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 z-10"
                         >
-                          {showPasswords.new ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          <Eye className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
@@ -1100,31 +1262,20 @@ const Dashboard = () => {
                         <Input
                           type={showPasswords.confirm ? "text" : "password"}
                           placeholder="Confirm new password"
-                          className="text-sm pr-10"
+                          className="text-sm pr-10 [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
+                          autoComplete="new-password"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 z-10"
                         >
-                          {showPasswords.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          <Eye className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
-
-                    {/* 🔹 Message display */}
-                    {message && (
-                      <p
-                        className={`text-sm ${message.includes("successfully")
-                          ? "text-green-600"
-                          : "text-red-600"
-                          }`}
-                      >
-                        {message}
-                      </p>
-                    )}
 
                     {/* 🔹 Submit button */}
                     <Button

@@ -17,27 +17,112 @@ const ResumeUpload = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  // Constants for validation
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+  const ALLOWED_FILE_TYPES = [
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  ];
+  const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+
+  // ===============================
+  // VALIDATE FILE
+  // ===============================
+  const validateFile = (file: File): { isValid: boolean; error?: string } => {
+    // Check if file exists
+    if (!file) {
+      return { isValid: false, error: "Please select a file." };
+    }
+
+    // Check if file is empty (size is 0)
+    if (file.size === 0) {
+      return { isValid: false, error: "The selected file is empty. Please choose a valid resume file." };
+    }
+
+    // Check file size (10MB limit)
+    if (file.size > MAX_FILE_SIZE) {
+      const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+      return {
+        isValid: false,
+        error: `File size (${fileSizeMB} MB) exceeds the maximum limit of 10 MB. Please choose a smaller file.`
+      };
+    }
+
+    // Check file type by MIME type
+    const isValidMimeType = ALLOWED_FILE_TYPES.includes(file.type);
+
+    // Fallback: Check by file extension if MIME type check fails (some browsers may not set MIME type correctly)
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = ALLOWED_EXTENSIONS.some(ext => fileName.endsWith(ext));
+
+    if (!isValidMimeType && !hasValidExtension) {
+      return {
+        isValid: false,
+        error: `Invalid file type. Please upload a PDF, DOC, or DOCX file.`
+      };
+    }
+
+    return { isValid: true };
+  };
+
   // ===============================
   // ON FILE CHANGE
   // ===============================
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.length) {
-      setUploadedFile(e.target.files[0]);
-    } else {
+    const file = e.target.files?.[0];
+
+    if (!file) {
       setUploadedFile(null);
+      return;
     }
+
+    // Validate file immediately when selected
+    const validation = validateFile(file);
+
+    if (!validation.isValid) {
+      toast({
+        title: "Invalid File",
+        description: validation.error,
+        variant: "destructive",
+      });
+      // Reset the input
+      e.target.value = '';
+      setUploadedFile(null);
+      return;
+    }
+
+    // File is valid, set it
+    setUploadedFile(file);
+    toast({
+      title: "File Selected",
+      description: `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) is ready to upload.`,
+    });
   };
 
   // ===============================
   // ANALYZE / UPLOAD
   // ===============================
   const handleAnalyze = async () => {
+    // Check if file is selected
     if (!uploadedFile) {
       toast({
         title: "No File Selected",
         description: "Please upload a resume file before analyzing.",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Validate file again before upload (safety check)
+    const validation = validateFile(uploadedFile);
+    if (!validation.isValid) {
+      toast({
+        title: "Invalid File",
+        description: validation.error,
+        variant: "destructive",
+      });
+      setUploadedFile(null);
       return;
     }
 
@@ -141,8 +226,8 @@ const ResumeUpload = () => {
                 {/* File Upload Area */}
                 <AnimatedElement delay={0}>
                   <div className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all ${uploadedFile
-                      ? 'border-green-500 bg-green-50'
-                      : 'border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50/30'
+                    ? 'border-green-500 bg-green-50'
+                    : 'border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50/30'
                     }`}>
                     {uploadedFile ? (
                       <div className="space-y-4">
@@ -161,7 +246,12 @@ const ResumeUpload = () => {
                         </div>
                         <Button
                           variant="outline"
-                          onClick={() => setUploadedFile(null)}
+                          onClick={() => {
+                            setUploadedFile(null);
+                            // Reset file input
+                            const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+                            if (fileInput) fileInput.value = '';
+                          }}
                           className="mt-4"
                         >
                           Change File
