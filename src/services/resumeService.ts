@@ -1,5 +1,5 @@
 import { ApiError } from "@/types/auth";
-import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
+import { TOKEN_KEY, API_ENDPOINTS} from "@/config/api";
 export const resumeService = {
   async uploadResume(file: File): Promise<{
     success?: { statusCode: number; data: unknown };

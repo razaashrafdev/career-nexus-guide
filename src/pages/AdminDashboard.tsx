@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, EyeOff, Trash2, Edit, Download, Plus, Key, Loader2 } from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,6 +19,17 @@ import { AddSkillModal } from "@/components/modals/AddSkillModal";
 import { AddCareerModal } from "@/components/modals/AddCareerModal";
 import { useToast } from "@/hooks/use-toast";
 import { adminService } from "@/services/adminService";
+import { TOKEN_KEY } from "@/config/api";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState("overview");
   const [searchTerm, setSearchTerm] = useState("");
@@ -84,6 +95,21 @@ const AdminDashboard = () => {
   const [addUserModal, setAddUserModal] = useState(false);
   const [addSkillModal, setAddSkillModal] = useState(false);
   const [addCareerModal, setAddCareerModal] = useState(false);
+  
+  // Delete confirmation modals state
+  const [deleteUserModal, setDeleteUserModal] = useState<{ isOpen: boolean; userId: number | null }>({
+    isOpen: false,
+    userId: null
+  });
+  const [deleteCareerModal, setDeleteCareerModal] = useState<{ isOpen: boolean; careerId: number | null }>({
+    isOpen: false,
+    careerId: null
+  });
+  const [deleteSkillModal, setDeleteSkillModal] = useState<{ isOpen: boolean; skillId: number | null }>({
+    isOpen: false,
+    skillId: null
+  });
+  
   const {
     toast
   } = useToast();
@@ -188,6 +214,70 @@ const AdminDashboard = () => {
       setLoading(false);
     }
   }, [toast]);
+
+  const handleDownloadResume = async (resume: any) => {
+    if (!resume.fileURL) {
+      toast({
+        title: "Error",
+        description: "Resume file URL not available",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem("token");
+      const headers: HeadersInit = {};
+      
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      // Fetch the file
+      const response = await fetch(resume.fileURL, {
+        method: "GET",
+        headers,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to download resume: ${response.statusText}`);
+      }
+
+      // Get the file as a blob
+      const blob = await response.blob();
+      
+      // Create a temporary URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      
+      // Create a temporary anchor element and trigger download
+      const link = document.createElement("a");
+      link.href = url;
+      
+      // Use the fileName from resume, or generate a default name
+      const fileName = resume.fileName || `resume_${resume.id || Date.now()}.pdf`;
+      link.download = fileName;
+      
+      // Append to body, click, and remove
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up the URL
+      window.URL.revokeObjectURL(url);
+
+      toast({
+        title: "Success",
+        description: "Resume downloaded successfully",
+      });
+    } catch (error: any) {
+      console.error("Error downloading resume:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to download resume",
+        variant: "destructive"
+      });
+    }
+  };
 
   // Fetch Overview Data
   useEffect(() => {
@@ -359,6 +449,11 @@ const AdminDashboard = () => {
         title: "Success",
         description: "User status updated successfully."
       });
+      // Close the modal after successful update
+      setViewUserModal({
+        isOpen: false,
+        user: null,
+      });
     } else if (result.error) {
       toast({
         title: "Error",
@@ -526,59 +621,77 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteUser = async (userId: number) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      const result = await adminService.deleteUser(userId);
-      if (result.success) {
-        await fetchUsers();
-        toast({
-          title: "User Deleted",
-          description: "User has been successfully deleted."
-        });
-      } else if (result.error) {
-        toast({
-          title: "Error",
-          description: result.error.message,
-          variant: "destructive"
-        });
-      }
+    setDeleteUserModal({ isOpen: true, userId });
+  };
+
+  const confirmDeleteUser = async () => {
+    if (!deleteUserModal.userId) return;
+    
+    const result = await adminService.deleteUser(deleteUserModal.userId);
+    if (result.success) {
+      await fetchUsers();
+      toast({
+        title: "User Deleted",
+        description: "User has been successfully deleted."
+      });
+      setDeleteUserModal({ isOpen: false, userId: null });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+      setDeleteUserModal({ isOpen: false, userId: null });
     }
   };
 
   const handleDeleteCareer = async (careerId: number) => {
-    if (window.confirm("Are you sure you want to delete this career?")) {
-      const result = await adminService.deleteCareer(careerId);
-      if (result.success) {
-        await fetchCareers();
-        toast({
-          title: "Career Deleted",
-          description: "Career has been successfully deleted."
-        });
-      } else if (result.error) {
-        toast({
-          title: "Error",
-          description: result.error.message,
-          variant: "destructive"
-        });
-      }
+    setDeleteCareerModal({ isOpen: true, careerId });
+  };
+
+  const confirmDeleteCareer = async () => {
+    if (!deleteCareerModal.careerId) return;
+    
+    const result = await adminService.deleteCareer(deleteCareerModal.careerId);
+    if (result.success) {
+      await fetchCareers();
+      toast({
+        title: "Career Deleted",
+        description: "Career has been successfully deleted."
+      });
+      setDeleteCareerModal({ isOpen: false, careerId: null });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+      setDeleteCareerModal({ isOpen: false, careerId: null });
     }
   };
 
   const handleDeleteSkill = async (skillId: number) => {
-    if (window.confirm("Are you sure you want to delete this skill?")) {
-      const result = await adminService.deleteSkill(skillId);
-      if (result.success) {
-        await fetchSkills();
-        toast({
-          title: "Skill Deleted",
-          description: "Skill has been successfully deleted."
-        });
-      } else if (result.error) {
-        toast({
-          title: "Error",
-          description: result.error.message,
-          variant: "destructive"
-        });
-      }
+    setDeleteSkillModal({ isOpen: true, skillId });
+  };
+
+  const confirmDeleteSkill = async () => {
+    if (!deleteSkillModal.skillId) return;
+    
+    const result = await adminService.deleteSkill(deleteSkillModal.skillId);
+    if (result.success) {
+      await fetchSkills();
+      toast({
+        title: "Skill Deleted",
+        description: "Skill has been successfully deleted."
+      });
+      setDeleteSkillModal({ isOpen: false, skillId: null });
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive"
+      });
+      setDeleteSkillModal({ isOpen: false, skillId: null });
     }
   };
 
@@ -964,27 +1077,39 @@ const AdminDashboard = () => {
             <CardContent className="p-5 md:p-7">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div className="text-center">
-                  <p className="text-xs text-gray-600 font-medium mb-1">Assessment Rate</p>
                   <p className="text-2xl md:text-3xl font-bold text-blue-600">
                     {overview.totalUsers > 0 ? Math.round((overview.assessmentsCompleted / overview.totalUsers) * 100) : 0}%
                   </p>
+                  <p className="text-xs text-gray-600 font-medium mb-1">Assessment Rate</p>
+                  <p className="text-[10px] text-gray-500 mt-1 px-2">
+                    (Assessments ÷ Total Users) × 100
+                  </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-600 font-medium mb-1">Resume Upload Rate</p>
                   <p className="text-2xl md:text-3xl font-bold text-blue-600">
                     {overview.totalUsers > 0 ? Math.round((overview.resumesUploaded / overview.totalUsers) * 100) : 0}%
                   </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-xs text-gray-600 font-medium mb-1">Match Success Rate</p>
-                  <p className="text-2xl md:text-3xl font-bold text-indigo-600">
-                    {overview.resumesUploaded > 0 ? Math.round((overview.careerMatches / overview.resumesUploaded) * 100) : 0}%
+                  <p className="text-xs text-gray-600 font-medium mb-1">Resume Upload Rate</p>
+                  <p className="text-[10px] text-gray-500 mt-1 px-2">
+                    (Resumes Uploaded ÷ Total Users) × 100
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-gray-600 font-medium mb-1">Avg Matches/Resume</p>
+                  <p className="text-2xl md:text-3xl font-bold text-indigo-600">
+                    {overview.resumesUploaded > 0 ? Math.round((overview.careerMatches / overview.resumesUploaded) * 100) : 0}%
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium mb-1">Match Success Rate</p>
+                  <p className="text-[10px] text-gray-500 mt-1 px-2">
+                    (Career Matches ÷ Resumes Uploaded) × 100
+                  </p>
+                </div>
+                <div className="text-center">
                   <p className="text-2xl md:text-3xl font-bold text-purple-600">
                     {overview.resumesUploaded > 0 ? (overview.careerMatches / overview.resumesUploaded).toFixed(1) : 0}
+                  </p>
+                  <p className="text-xs text-gray-600 font-medium mb-1">Avg Matches/Resume</p>
+                  <p className="text-[10px] text-gray-500 mt-1 px-2">
+                    Career Matches ÷ Resumes Uploaded
                   </p>
                 </div>
               </div>
@@ -1202,7 +1327,12 @@ const AdminDashboard = () => {
                           <td className="p-3">
                             <div className="flex space-x-2">
                               {resume.fileURL && (
-                                <Button size="sm" variant="outline" onClick={() => window.open(resume.fileURL, '_blank')}>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline" 
+                                  onClick={() => handleDownloadResume(resume)}
+                                  title="Download Resume"
+                                >
                                   <Download className="h-4 w-4" />
                                 </Button>
                               )}
@@ -1421,19 +1551,20 @@ const AdminDashboard = () => {
                       <Input
                         type={showPasswords.current ? "text" : "password"}
                         placeholder="Enter current password"
-                        className="text-sm pr-10"
+                        className="text-sm pr-10 [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden"
                         value={passwordSettings.currentPassword}
                         onChange={e => setPasswordSettings({
                           ...passwordSettings,
                           currentPassword: e.target.value
                         })}
+                        autoComplete="current-password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 z-10"
                       >
-                        {showPasswords.current ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        <Eye className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
@@ -1455,7 +1586,7 @@ const AdminDashboard = () => {
                         onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                       >
-                        {showPasswords.new ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        <Eye className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
@@ -1465,19 +1596,20 @@ const AdminDashboard = () => {
                       <Input
                         type={showPasswords.confirm ? "text" : "password"}
                         placeholder="Confirm new password"
-                        className="text-sm pr-10"
+                        className="text-sm pr-10 [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden"
                         value={passwordSettings.confirmPassword}
                         onChange={e => setPasswordSettings({
                           ...passwordSettings,
                           confirmPassword: e.target.value
                         })}
+                        autoComplete="new-password"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPasswords({ ...showPasswords, confirm: !showPasswords.confirm })}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 z-10"
                       >
-                        {showPasswords.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        <Eye className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
@@ -1530,6 +1662,67 @@ const AdminDashboard = () => {
     <AddSkillModal isOpen={addSkillModal} onClose={() => setAddSkillModal(false)} onAdd={handleAddSkill} />
 
     <AddCareerModal isOpen={addCareerModal} onClose={() => setAddCareerModal(false)} onAdd={handleAddCareer} />
+
+    {/* Delete Confirmation Modals */}
+    <AlertDialog open={deleteUserModal.isOpen} onOpenChange={(open) => !open && setDeleteUserModal({ isOpen: false, userId: null })}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete User</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this user? This action cannot be undone and will permanently remove the user from the system.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={confirmDeleteUser}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    <AlertDialog open={deleteCareerModal.isOpen} onOpenChange={(open) => !open && setDeleteCareerModal({ isOpen: false, careerId: null })}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete Career</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this career? This action cannot be undone and will permanently remove the career from the system.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={confirmDeleteCareer}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
+    <AlertDialog open={deleteSkillModal.isOpen} onOpenChange={(open) => !open && setDeleteSkillModal({ isOpen: false, skillId: null })}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete Skill</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to delete this skill? This action cannot be undone and will permanently remove the skill from the system.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={confirmDeleteSkill}
+            className="bg-red-600 hover:bg-red-700 text-white"
+          >
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 };
 export default AdminDashboard;
