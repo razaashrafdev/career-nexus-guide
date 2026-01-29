@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { User, LoginRequest, ApiError } from "@/types/auth";
 import { authService } from "@/services/authService";
+import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 
 interface AuthContextType {
   user: User | null;
@@ -110,67 +111,80 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     restoreSession();
   }, []);
 
-  const login = async (credentials: LoginRequest): Promise<{ success: boolean; error?: ApiError }> => {
-    setIsLoading(true);
-    try {
-      const result = await authService.login(credentials);
+  const login = async (
+  credentials: LoginRequest
+): Promise<{ success: boolean; error?: ApiError }> => {
+  setIsLoading(true);
 
-      if (result.error) return { success: false, error: result.error };
-
-      if (result.success?.data) {
-        const userData = result.success.data;
-
-        const roleName = (userData as any).roleName || userData.RoleName || localStorage.getItem("roleName") || "";
-
-        const loggedInUser: User = {
-          fullName: userData.fullName,
-          email: userData.email,
-          RoleName: roleName,
-          token: userData.token,
-          Id: undefined, // backend se id nahi aayi
-        };
-
-        setUser(loggedInUser);
-
-        localStorage.setItem("userData", JSON.stringify(userData));
-        localStorage.setItem("token", userData.token);
-        // Ensure roleName is stored in localStorage (authService already does this, but ensure it's there)
-        if (roleName) {
-          localStorage.setItem("roleName", roleName);
-        }
-
-// 🔥 GUEST DATA MIGRATION (ADD THIS)
-const guestSessionId = localStorage.getItem("guestSessionId");
-
-if (guestSessionId) {
   try {
-    await fetch("http://career-nexus.runasp.net/api/Resume/MigrateGuestData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userData.token}`,
-      },
-      body: JSON.stringify({ guestSessionId }),
-    });
+    const result = await authService.login(credentials);
 
-    // guest session clean
-    localStorage.removeItem("guestSessionId");
-  } catch (err) {
-    console.error("Guest data migration failed", err);
-  }
-}
+    if (result.error) return { success: false, error: result.error };
 
+    if (result.success?.data) {
+      const userData = result.success.data;
 
-        return { success: true };
+      const roleName =
+        (userData as any).roleName ||
+        userData.RoleName ||
+        localStorage.getItem("roleName") ||
+        "";
+
+      const loggedInUser: User = {
+        fullName: userData.fullName,
+        email: userData.email,
+        RoleName: roleName,
+        token: userData.token,
+        Id: undefined,
+      };
+
+      setUser(loggedInUser);
+
+      localStorage.setItem("userData", JSON.stringify(userData));
+      localStorage.setItem("token", userData.token);
+      if (roleName) localStorage.setItem("roleName", roleName);
+
+      // ✅ GUEST DATA MIGRATION (SINGLE CALL)
+      const guestSessionId = localStorage.getItem("guestSessionId");
+
+      if (guestSessionId) {
+        try {
+          await fetch(API_ENDPOINTS.MIGERATE_USER_DATA,{
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+                Authorization: `Bearer ${userData.token}`,
+              },
+              body: JSON.stringify({
+                tempSessionId: guestSessionId,
+              }),
+            }
+          );
+
+          // ✅ cleanup only after success
+          localStorage.removeItem("guestSessionId");
+        } catch (err) {
+          console.error("Guest data migration failed", err);
+          // ❗optional: don't block login if migration fails
+        }
       }
 
-      return { success: false, error: { message: "Unknown error occurred", isSuccess: false } };
-    } catch {
-      return { success: false, error: { message: "An unexpected error occurred", isSuccess: false } };
-    } finally {
-      setIsLoading(false);
+      return { success: true };
     }
-  };
+
+    return {
+      success: false,
+      error: { message: "Unknown error occurred", isSuccess: false },
+    };
+  } catch {
+    return {
+      success: false,
+      error: { message: "An unexpected error occurred", isSuccess: false },
+    };
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const logout = () => {
     authService.removeToken();

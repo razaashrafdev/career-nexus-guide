@@ -10,12 +10,16 @@ import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
+import { useAuth } from "@/contexts/AuthContext";
+
 
 const ResumeUpload = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
+
 
   // ===============================
   // ON FILE CHANGE
@@ -32,59 +36,57 @@ const ResumeUpload = () => {
   // ANALYZE / UPLOAD
   // ===============================
   const handleAnalyze = async () => {
-    if (!uploadedFile) {
+  if (!uploadedFile) {
+    toast({
+      title: "No File Selected",
+      description: "Please upload a resume file before analyzing.",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  setIsProcessing(true);
+
+  try {
+    const result = await resumeService.uploadResume(uploadedFile);
+
+    if (!result.success) {
       toast({
-        title: "No File Selected",
-        description: "Please upload a resume file before analyzing.",
+        title: "Upload Failed",
+        description: result.error?.message || "Something went wrong.",
         variant: "destructive",
       });
       return;
     }
 
-    setIsProcessing(true);
+    // ✅ CASE 1: USER LOGGED IN
+    if (isAuthenticated) {
+      const latest = await resumeService.getLatestResume();
 
-    try {
-      const result = await resumeService.uploadResume(uploadedFile);
-
-      if (result.success) {
-        // ===============================
-        // STEP 2: Just AFTER upload → now call GET /latest
-        // ===============================
-        const latest = await resumeService.getLatestResume();
-
-        if (!latest.success) {
-          toast({
-            title: "Resume Analyzed",
-            description: "But failed to load latest data.",
-          });
-        }
-
-        // ===============================
-        // Redirect to Dashboard with LATEST resume data
-        // ===============================
-        navigate("/dashboard", {
-          state: {
-            from: "resume",
-            resumeData: latest.success?.data, // <- Dashboard will receive this
-          },
-        });
-      } else {
-        toast({
-          title: "Upload Failed",
-          description: result.error?.message || "Something went wrong.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred.",
-        variant: "destructive",
+      navigate("/dashboard", {
+        state: {
+          from: "resume",
+          resumeData: latest.success?.data,
+        },
       });
-    } finally {
-      setIsProcessing(false);
     }
-  };
+    // ✅ CASE 2: GUEST USER
+    else {
+      navigate("/assessment"); 
+      // ya jahan tum guest flow le jana chahte ho
+    }
+
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "An unexpected error occurred.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsProcessing(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">

@@ -7,11 +7,11 @@ export const resumeService = {
 }> {
   try {
 const token = localStorage.getItem(TOKEN_KEY);
-if (!token) {
-  return {
-    error: { isSuccess: false, message: "User not logged in" },
-  };
-}
+// if (!token) {
+//   return {
+//     error: { isSuccess: false, message: "User not logged in" },
+//   };
+// }
 const guestSessionId = localStorage.getItem("guestSessionId");
 
 const formData = new FormData();
@@ -20,7 +20,7 @@ formData.append("ResumeFile", file);
 
 // 👇 guest case support
 if (!token && guestSessionId) {
-  formData.append("GuestSessionId", guestSessionId);
+  formData.append("TempSessionId", guestSessionId);
 }
 
 const headers: HeadersInit = {};
@@ -30,7 +30,7 @@ if (token) {
   headers.Authorization = `Bearer ${token}`;
 }
 
-const response = await fetch(`${API_BASE_URL}/UploadResume`, {
+const response = await fetch(API_ENDPOINTS.UPLOAD_RESUME, {
 
   method: "POST",
   body: formData,
