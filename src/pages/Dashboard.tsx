@@ -312,7 +312,7 @@ const Dashboard = () => {
         type: "success",
         title: "Great! You're all set!",
         message: "You've completed both your personality assessment and uploaded your resume. Explore your career recommendations below.",
-        icon: <CheckCircle className="h-6 w-6 text-green-500" />
+        icon: <CheckCircle className="h-6 w-6 text-white" />
       };
     } else if (assessmentCompleted && !resumeUploaded) {
       return {
