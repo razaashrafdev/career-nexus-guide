@@ -154,6 +154,14 @@ const PersonalityTest = () => {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
+      // 🔥 ENSURE guestSessionId exists (same as resume)
+let guestSessionId = localStorage.getItem("guestSessionId");
+
+if (!guestSessionId) {
+  guestSessionId = crypto.randomUUID();
+  localStorage.setItem("guestSessionId", guestSessionId);
+}
+
   submitAssessment();
 }
   };
@@ -166,17 +174,44 @@ const PersonalityTest = () => {
 
   const submitAssessment = async () => {
     try {
+      const mapAnswerToScore = (val: string) => {
+  switch (val) {
+    case "E++":
+    case "S++":
+    case "T++":
+    case "J++":
+      return 5;
+
+    case "E+":
+    case "S+":
+    case "T+":
+    case "J+":
+      return 4;
+
+    case "I+":
+    case "N+":
+    case "F+":
+    case "P+":
+      return 2;
+
+    case "I++":
+    case "N++":
+    case "F++":
+    case "P++":
+      return 1;
+
+    default:
+      return 3;
+  }
+};
+
       // 1️⃣ answers object → ordered array (0–19)
       const answerArray = Object.keys(answers)
-        .sort((a, b) => Number(a) - Number(b))
-        .map((key) => {
-          const val = answers[Number(key)];
-          // simple numeric mapping
-          if (val.endsWith("++")) return 5;
-          if (val.endsWith("+")) return 4;
-          return 2;
-        });
+  .sort((a, b) => Number(a) - Number(b))
+  .map((key) => mapAnswerToScore(answers[Number(key)]));
 
+  const token = localStorage.getItem(TOKEN_KEY);
+    const guestSessionId = localStorage.getItem("guestSessionId");
       // 2️⃣ API call
       const response = await fetch(
         `${API_ENDPOINTS.ANALYZE_PERSONALITY}?useAi=true`,
@@ -184,9 +219,12 @@ const PersonalityTest = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}`,
+             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
-          body: JSON.stringify({ answers: answerArray }),
+         body: JSON.stringify({
+  answers: answerArray,
+  tempSessionId: token ? null : guestSessionId
+}),
         }
       );
 
@@ -194,6 +232,7 @@ const PersonalityTest = () => {
 
       // 3️⃣ success
       if (result.isSuccess) {
+        //  if (!token && guestSessionId) localStorage.removeItem("guestSessionId");
         navigate("/dashboard", {
           state: {
             personalityResult: result.data,

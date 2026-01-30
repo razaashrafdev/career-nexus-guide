@@ -35,6 +35,7 @@ export const API_ENDPOINTS = {
   // Resume
   UPLOAD_RESUME: `${API_RESUME_BASE_URL}/UploadResume`,
   GET_LATEST_RESUME: `${API_RESUME_BASE_URL}/latest`,
+  MIGERATE_USER_DATA: `${API_RESUME_BASE_URL}/MigrateGuestData`,
   
   // Personality Assessment
   ANALYZE_PERSONALITY: `${API_PERSONALITY_BASE_URL}/analyze`,

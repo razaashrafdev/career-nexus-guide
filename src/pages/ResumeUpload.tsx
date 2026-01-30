@@ -10,12 +10,16 @@ import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
+import { useAuth } from "@/contexts/AuthContext";
+
 
 const ResumeUpload = () => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
+
 
   // Constants for validation
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
@@ -104,72 +108,57 @@ const ResumeUpload = () => {
   // ANALYZE / UPLOAD
   // ===============================
   const handleAnalyze = async () => {
-    // Check if file is selected
-    if (!uploadedFile) {
+  if (!uploadedFile) {
+    toast({
+      title: "No File Selected",
+      description: "Please upload a resume file before analyzing.",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  setIsProcessing(true);
+
+  try {
+    const result = await resumeService.uploadResume(uploadedFile);
+
+    if (!result.success) {
       toast({
-        title: "No File Selected",
-        description: "Please upload a resume file before analyzing.",
+        title: "Upload Failed",
+        description: result.error?.message || "Something went wrong.",
         variant: "destructive",
       });
       return;
     }
 
-    // Validate file again before upload (safety check)
-    const validation = validateFile(uploadedFile);
-    if (!validation.isValid) {
-      toast({
-        title: "Invalid File",
-        description: validation.error,
-        variant: "destructive",
+    // ✅ CASE 1: USER LOGGED IN
+    if (isAuthenticated) {
+      const latest = await resumeService.getLatestResume();
+
+      navigate("/dashboard", {
+        state: {
+          from: "resume",
+          resumeData: latest.success?.data,
+        },
       });
-      setUploadedFile(null);
-      return;
+    }
+    // ✅ CASE 2: GUEST USER
+    else {
+      navigate("/assessment"); 
+      // ya jahan tum guest flow le jana chahte ho
     }
 
-    setIsProcessing(true);
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "An unexpected error occurred.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsProcessing(false);
+  }
+};
 
-    try {
-      const result = await resumeService.uploadResume(uploadedFile);
-
-      if (result.success) {
-        // ===============================
-        // STEP 2: Just AFTER upload → now call GET /latest
-        // ===============================
-        const latest = await resumeService.getLatestResume();
-
-        if (!latest.success) {
-          toast({
-            title: "Resume Analyzed",
-            description: "But failed to load latest data.",
-          });
-        }
-
-        // ===============================
-        // Redirect to Dashboard with LATEST resume data
-        // ===============================
-        navigate("/dashboard", {
-          state: {
-            from: "resume",
-            resumeData: latest.success?.data, // <- Dashboard will receive this
-          },
-        });
-      } else {
-        toast({
-          title: "Upload Failed",
-          description: result.error?.message || "Something went wrong.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
