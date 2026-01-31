@@ -530,8 +530,8 @@ const Dashboard = () => {
               <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
                 <CardHeader className="border-b border-gray-100 pb-3 sm:pb-4 px-4 sm:px-6">
                   <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-lg flex-shrink-0">
-                      <div className="h-4 w-4 sm:h-5 sm:w-5">{guidance.icon}</div>
+                    <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-2 rounded-lg flex-shrink-0 flex items-center justify-center">
+                      <div className="h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center">{guidance.icon}</div>
                     </div>
                     <CardTitle className="text-sm sm:text-base md:text-lg font-semibold">{guidance.title}</CardTitle>
                   </div>
@@ -580,9 +580,9 @@ const Dashboard = () => {
                 <CardContent className="p-4 sm:p-5 md:p-7">
                   <div className="space-y-4 sm:space-y-5">
                     <div>
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-2 sm:mb-3">
+                      <div className="flex flex-row items-center justify-between gap-2 mb-2 sm:mb-3">
                         <span className="text-xs sm:text-sm font-medium text-gray-700">Personality Assessment</span>
-                        <Badge variant={userData.assessmentCompleted ? "default" : "secondary"} className=" bg-transparent border border-blue-600 text-black text-xs w-fit hover:bg-white">
+                        <Badge variant={userData.assessmentCompleted ? "default" : "secondary"} className="bg-transparent border border-blue-600 text-black text-xs w-fit hover:bg-white shrink-0">
                           {userData.assessmentCompleted ? "Completed" : "Pending"}
                         </Badge>
                       </div>
@@ -594,9 +594,9 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <div>
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-2 sm:mb-3">
+                      <div className="flex flex-row items-center justify-between gap-2 mb-2 sm:mb-3">
                         <span className="text-xs sm:text-sm font-medium text-gray-700">Resume Upload</span>
-                        <Badge variant={userData.resumeUploaded ? "default" : "secondary"} className=" bg-transparent border border-blue-600 text-black text-xs w-fit hover:bg-white">
+                        <Badge variant={userData.resumeUploaded ? "default" : "secondary"} className="bg-transparent border border-blue-600 text-black text-xs w-fit hover:bg-white shrink-0">
                           {userData.resumeUploaded ? "Uploaded" : "Pending"}
                         </Badge>
                       </div>
@@ -674,9 +674,9 @@ const Dashboard = () => {
                     {/* Career Score Section */}
                     {userData.careerScore > 0 && (
                       <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                        <CardHeader className="bg-gradient-to-r from-green-50 to-amber-50 border-b border-green-200 rounded-t-xl px-6 py-4">
+                        <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 border-b border-green-200 rounded-t-xl px-6 py-4">
                           <CardTitle className="text-lg font-semibold flex items-center gap-2.5">
-                            <Award className="h-5 w-5 text-green-600" />
+                            <Award className="h-5 w-5 text-blue-600" />
                             Career Match Score
                           </CardTitle>
                         </CardHeader>
@@ -687,7 +687,7 @@ const Dashboard = () => {
                                 <p className="text-sm text-gray-600 mb-2">Your career compatibility score</p>
                                 <div className="flex items-center gap-3">
                                   <Progress value={userData.careerScore} className="flex-1 h-3" />
-                                  <span className="text-2xl font-bold text-green-600">{userData.careerScore}%</span>
+                                  <span className="text-2xl font-bold text-blue-600">{userData.careerScore}%</span>
                                 </div>
                               </div>
                             </div>
@@ -923,7 +923,7 @@ const Dashboard = () => {
           {activeSection === "careers" && (
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
               <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <div className="flex flex-row items-center justify-between gap-3 sm:gap-4">
                   <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                     <Target className="h-5 w-5 md:h-6 md:w-6" />
                     Career Recommendations
@@ -1062,7 +1062,7 @@ const Dashboard = () => {
                         <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
                           <BookOpen className="h-5 w-5 text-blue-600" />
                           Tutorials to Improve Your Skills
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 ml-auto">
+                          <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 ml-auto hidden md:inline-flex">
                             {Object.keys(resumeData.analysis.tutorials).length} {Object.keys(resumeData.analysis.tutorials).length === 1 ? 'Skill' : 'Skills'}
                           </Badge>
                         </CardTitle>
@@ -1079,7 +1079,7 @@ const Dashboard = () => {
                                 <h4 className="text-base font-semibold text-gray-900">
                                   {skillName}
                                 </h4>
-                                <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 ml-auto">
+                                <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 ml-auto hidden md:inline-flex">
                                   {resumeData.analysis.tutorials[skillName].length} {resumeData.analysis.tutorials[skillName].length === 1 ? 'Tutorial' : 'Tutorials'}
                                 </Badge>
                               </div>

@@ -1401,7 +1401,7 @@ const AdminDashboard = () => {
               </div>
             </CardHeader>
             <CardContent className="p-4 md:p-6">
-              <div className="grid gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {careers.length > 0 ? careers.map((career: any) => {
                   const requiredTraits = career.PersonalityMatchs || career.personalityMatchs || [];
                   const skills = career.RequiredSkills || career.requiredSkills || [];
@@ -1411,13 +1411,13 @@ const AdminDashboard = () => {
                         <div className="flex-1 min-w-0 w-full">
                           <h3 className="font-semibold text-base sm:text-lg break-words">{career.name || career.Name}</h3>
                           <p className="text-gray-600 mb-3 text-sm sm:text-base break-words">{career.description || career.Description || ""}</p>
-                          <div className="space-y-2">
+                          <div className="flex flex-row flex-wrap gap-x-4 gap-y-2 sm:flex-col sm:space-y-2 sm:gap-x-0 sm:gap-y-0 items-start">
                             {requiredTraits.length > 0 && (
-                              <div>
-                                <span className="text-xs sm:text-sm font-medium">Required Traits: </span>
-                                <div className="flex flex-wrap gap-1 mt-1">
+                              <div className="min-w-0 flex-1 sm:flex-none">
+                                <span className="text-xs sm:text-sm font-medium block mb-1">Required Traits</span>
+                                <div className="flex flex-row flex-wrap gap-1.5">
                                   {requiredTraits.map((trait: string, index: number) => (
-                                    <Badge key={index} variant="outline" className="text-xs">
+                                    <Badge key={index} variant="outline" className="text-xs shrink-0">
                                       {trait}
                                     </Badge>
                                   ))}
@@ -1425,11 +1425,11 @@ const AdminDashboard = () => {
                               </div>
                             )}
                             {skills.length > 0 && (
-                              <div>
-                                <span className="text-xs sm:text-sm font-medium">Skills: </span>
-                                <div className="flex flex-wrap gap-1 mt-1">
+                              <div className="min-w-0 flex-1 sm:flex-none">
+                                <span className="text-xs sm:text-sm font-medium block mb-1">Skills</span>
+                                <div className="flex flex-row flex-wrap gap-1.5">
                                   {skills.map((skill: string, index: number) => (
-                                    <Badge key={index} variant="secondary" className="text-xs">
+                                    <Badge key={index} variant="secondary" className="text-xs shrink-0">
                                       {skill}
                                     </Badge>
                                   ))}

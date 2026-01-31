@@ -42,10 +42,8 @@ const SignUp = () => {
       [e.target.name]: e.target.value
     });
   };
-  //   setTimeout(() => {
-  //   authService.removeToken(); // clear any login session
-  //   navigate("/login");
-  // }, 1300);
+  const capitalizeFirst = (str: string) =>
+    str.trim() ? str.trim().charAt(0).toUpperCase() + str.trim().slice(1).toLowerCase() : str.trim();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
@@ -68,7 +66,7 @@ const SignUp = () => {
     const result = await authService.register({
       username: formData.email.split("@")[0],
       email: formData.email,
-      fullname: `${formData.firstName} ${formData.lastName}`,
+      fullname: `${capitalizeFirst(formData.firstName)} ${capitalizeFirst(formData.lastName)}`,
       roleid: 0,
       passswordHash: formData.password
     });
