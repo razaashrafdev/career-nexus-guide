@@ -8,11 +8,17 @@ import { Badge } from "@/components/ui/badge";
 import { Target, X } from "lucide-react";
 
 interface CareerData {
-  id: number;
-  name: string;
-  description: string;
-  requiredTraits: string[];
-  skills: string[];
+  id?: number;
+  name?: string;
+  description?: string;
+  requiredTraits?: string[];
+  skills?: string[];
+  Name?: string;
+  Description?: string;
+  PersonalityMatchs?: string[];
+  personalityMatchs?: string[];
+  RequiredSkills?: string[];
+  requiredSkills?: string[];
 }
 
 interface EditCareerModalProps {
@@ -34,11 +40,27 @@ export const EditCareerModal = ({ isOpen, onClose, career, onSave }: EditCareerM
 
   useEffect(() => {
     if (career) {
+      const name = career.name ?? career.Name ?? "";
+      const description = career.description ?? career.Description ?? "";
+      const requiredTraits = Array.isArray(career.requiredTraits)
+        ? career.requiredTraits
+        : Array.isArray(career.personalityMatchs)
+          ? career.personalityMatchs
+          : Array.isArray(career.PersonalityMatchs)
+            ? career.PersonalityMatchs
+            : [];
+      const skills = Array.isArray(career.skills)
+        ? career.skills
+        : Array.isArray(career.requiredSkills)
+          ? career.requiredSkills
+          : Array.isArray(career.RequiredSkills)
+            ? career.RequiredSkills
+            : [];
       setFormData({
-        name: career.name,
-        description: career.description,
-        requiredTraits: [...career.requiredTraits],
-        skills: [...career.skills]
+        name: typeof name === "string" ? name : "",
+        description: typeof description === "string" ? description : "",
+        requiredTraits: [...requiredTraits],
+        skills: [...skills]
       });
     }
   }, [career]);
