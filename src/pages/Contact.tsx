@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Send, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -19,28 +17,43 @@ const Contact = () => {
     firstName: "",
     lastName: "",
     email: "",
-    inquiry: "",
     message: ""
   });
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate form submission
-    setTimeout(() => {
+
+    const response = await fetch(
+      "https://formsubmit.co/ajax/careernexus.team@gmail.com",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          _captcha: "false",
+          _template: "table",
+          _subject: "New Contact Form Message",
+        }),
+      }
+    );
+
+    if (response.ok) {
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 24 hours.",
       });
-      // Reset form after showing toast
+
       setFormData({
         firstName: "",
         lastName: "",
         email: "",
-        inquiry: "",
-        message: ""
+        message: "",
       });
-    }, 1000);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -98,8 +111,8 @@ const Contact = () => {
               <div className="space-y-6 mb-8">
                 <AnimatedElement delay={0}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <Mail className="h-6 w-6 text-blue-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <Mail className="h-6 w-6 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1 text-lg">Email</h3>
@@ -116,8 +129,8 @@ const Contact = () => {
 
                 <AnimatedElement delay={100}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <Phone className="h-6 w-6 text-blue-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <Phone className="h-6 w-6 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1 text-lg">Phone</h3>
@@ -135,8 +148,8 @@ const Contact = () => {
 
                 <AnimatedElement delay={200}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
-                      <MapPin className="h-6 w-6 text-blue-600" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm">
+                      <MapPin className="h-6 w-6 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-1 text-lg">Office Location</h3>
