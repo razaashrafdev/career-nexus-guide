@@ -166,8 +166,8 @@ const About = () => {
               <div className="space-y-6 mb-8">
                 <AnimatedElement delay={0}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                      <CheckCircle className="h-5 w-5 text-blue-600" />
+                    <div className="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                      <CheckCircle className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-2 text-lg">Expertise</h3>
@@ -177,8 +177,8 @@ const About = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={100}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                      <CheckCircle className="h-5 w-5 text-blue-600" />
+                    <div className="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                      <CheckCircle className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-2 text-lg">Innovation</h3>
@@ -188,8 +188,8 @@ const About = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={200}>
                   <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
-                      <CheckCircle className="h-5 w-5 text-blue-600" />
+                    <div className="w-8 h-8 bg-purple-400 rounded-full flex items-center justify-center mt-1 flex-shrink-0">
+                      <CheckCircle className="h-5 w-5 text-white" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 mb-2 text-lg">End-to-End Solutions</h3>

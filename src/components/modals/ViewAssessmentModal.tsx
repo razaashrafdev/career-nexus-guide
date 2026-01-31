@@ -3,11 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { Brain, User, Calendar, TrendingUp } from "lucide-react";
 
 interface AssessmentData {
-  id: number;
-  userName: string;
-  personalityType: string;
-  completedDate: string;
-  score: number;
+  id?: number;
+  userName?: string;
+  personalityType?: string;
+  completedDate?: string;
+  score?: number;
+  UserName?: string;
+  PersonalityType?: string;
+  CompletedDate?: string;
+  Score?: number;
 }
 
 interface ViewAssessmentModalProps {
@@ -19,15 +23,20 @@ interface ViewAssessmentModalProps {
 export const ViewAssessmentModal = ({ isOpen, onClose, assessment }: ViewAssessmentModalProps) => {
   if (!assessment) return null;
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
+  const userName = assessment.userName ?? assessment.UserName ?? "N/A";
+  const personalityType = assessment.personalityType ?? assessment.PersonalityType ?? "N/A";
+  const completedDate = assessment.completedDate ?? assessment.CompletedDate ?? "N/A";
+  const score = Number(assessment.score ?? assessment.Score ?? 0);
+
+  const getScoreColor = (s: number) => {
+    if (s >= 80) return "text-green-600";
+    if (s >= 60) return "text-yellow-600";
     return "text-red-600";
   };
 
-  const getScoreBadge = (score: number) => {
-    if (score >= 80) return "Excellent";
-    if (score >= 60) return "Good";
+  const getScoreBadge = (s: number) => {
+    if (s >= 80) return "Excellent";
+    if (s >= 60) return "Good";
     return "Needs Improvement";
   };
 
@@ -53,14 +62,14 @@ export const ViewAssessmentModal = ({ isOpen, onClose, assessment }: ViewAssessm
               <label className="text-sm font-medium text-gray-600">Candidate</label>
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-gray-400" />
-                <p className="text-sm">{assessment.userName}</p>
+                <p className="text-sm">{userName}</p>
               </div>
             </div>
             
             <div>
               <label className="text-sm font-medium text-gray-600">Personality Type</label>
               <Badge variant="outline" className="text-sm font-medium">
-                {assessment.personalityType}
+                {personalityType}
               </Badge>
             </div>
             
@@ -68,7 +77,7 @@ export const ViewAssessmentModal = ({ isOpen, onClose, assessment }: ViewAssessm
               <label className="text-sm font-medium text-gray-600">Completion Date</label>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-gray-400" />
-                <p className="text-sm">{assessment.completedDate}</p>
+                <p className="text-sm">{completedDate}</p>
               </div>
             </div>
             
@@ -76,26 +85,14 @@ export const ViewAssessmentModal = ({ isOpen, onClose, assessment }: ViewAssessm
               <label className="text-sm font-medium text-gray-600">Score</label>
               <div className="flex items-center gap-3">
                 <TrendingUp className="h-4 w-4 text-gray-400" />
-                <span className={`text-2xl font-bold ${getScoreColor(assessment.score)}`}>
-                  {assessment.score}%
+                <span className={`text-2xl font-bold ${getScoreColor(score)}`}>
+                  {score}%
                 </span>
-                <Badge className={`${assessment.score >= 80 ? 'bg-green-100 text-green-800' : 
-                  assessment.score >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
-                  {getScoreBadge(assessment.score)}
+                <Badge className={`${score >= 80 ? 'bg-green-100 text-green-800' : 
+                  score >= 60 ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'}`}>
+                  {getScoreBadge(score)}
                 </Badge>
               </div>
-            </div>
-          </div>
-          
-          {/* Additional Details */}
-          <div className="border-t pt-4">
-            <h4 className="font-medium text-gray-800 mb-3">Assessment Summary</h4>
-            <div className="bg-gray-50 p-3 rounded-lg">
-              <p className="text-sm text-gray-600">
-                The candidate completed the personality assessment with a {assessment.personalityType} type, 
-                indicating strong analytical and strategic thinking abilities. The score of {assessment.score}% 
-                reflects {getScoreBadge(assessment.score).toLowerCase()} performance across all assessment criteria.
-              </p>
             </div>
           </div>
         </div>

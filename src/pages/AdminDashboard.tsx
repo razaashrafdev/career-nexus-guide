@@ -12,6 +12,7 @@ import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { ViewUserModal, type UserData } from "@/components/modals/ViewUserModal";
 import { ViewAssessmentModal } from "@/components/modals/ViewAssessmentModal";
+import { ViewResumeModal } from "@/components/modals/ViewResumeModal";
 import { EditCareerModal } from "@/components/modals/EditCareerModal";
 import { EditSkillModal } from "@/components/modals/EditSkillModal";
 import { AddUserModal } from "@/components/modals/AddUserModal";
@@ -38,7 +39,6 @@ const AdminDashboard = () => {
   const [resumesDisplayCount, setResumesDisplayCount] = useState(10);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
 
   const [apiSettings, setApiSettings] = useState({
     indeedApiKey: "",
@@ -67,7 +67,8 @@ const AdminDashboard = () => {
     confirm: false
   });
 
-  const handleLogout = () => {
+  const handleLogout = (closeSidebar: () => void) => {
+    closeSidebar();
     logout();
     navigate("/login");
   };
@@ -84,6 +85,10 @@ const AdminDashboard = () => {
     isOpen: false,
     assessment: null as any
   });
+  const [viewResumeModal, setViewResumeModal] = useState({
+    isOpen: false,
+    resume: null as any
+  });
   const [editCareerModal, setEditCareerModal] = useState({
     isOpen: false,
     career: null as any
@@ -95,7 +100,7 @@ const AdminDashboard = () => {
   const [addUserModal, setAddUserModal] = useState(false);
   const [addSkillModal, setAddSkillModal] = useState(false);
   const [addCareerModal, setAddCareerModal] = useState(false);
-  
+
   // Delete confirmation modals state
   const [deleteUserModal, setDeleteUserModal] = useState<{ isOpen: boolean; userId: number | null }>({
     isOpen: false,
@@ -109,7 +114,7 @@ const AdminDashboard = () => {
     isOpen: false,
     skillId: null
   });
-  
+
   const {
     toast
   } = useToast();
@@ -228,7 +233,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem("token");
       const headers: HeadersInit = {};
-      
+
       if (token) {
         headers.Authorization = `Bearer ${token}`;
       }
@@ -245,23 +250,23 @@ const AdminDashboard = () => {
 
       // Get the file as a blob
       const blob = await response.blob();
-      
+
       // Create a temporary URL for the blob
       const url = window.URL.createObjectURL(blob);
-      
+
       // Create a temporary anchor element and trigger download
       const link = document.createElement("a");
       link.href = url;
-      
+
       // Use the fileName from resume, or generate a default name
       const fileName = resume.fileName || `resume_${resume.id || Date.now()}.pdf`;
       link.download = fileName;
-      
+
       // Append to body, click, and remove
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       // Clean up the URL
       window.URL.revokeObjectURL(url);
 
@@ -490,20 +495,18 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleViewAssessment = async (assessmentId: number) => {
-    const result = await adminService.getAssessment(assessmentId);
-    if (result.success) {
-      setViewAssessmentModal({
-        isOpen: true,
-        assessment: result.success
-      });
-    } else if (result.error) {
-      toast({
-        title: "Error",
-        description: result.error.message,
-        variant: "destructive"
-      });
-    }
+  const handleViewAssessment = (assessment: any) => {
+    setViewAssessmentModal({
+      isOpen: true,
+      assessment
+    });
+  };
+
+  const handleViewResume = (resume: any) => {
+    setViewResumeModal({
+      isOpen: true,
+      resume
+    });
   };
 
   const handleEditCareer = (careerId: number) => {
@@ -626,7 +629,7 @@ const AdminDashboard = () => {
 
   const confirmDeleteUser = async () => {
     if (!deleteUserModal.userId) return;
-    
+
     const result = await adminService.deleteUser(deleteUserModal.userId);
     if (result.success) {
       await fetchUsers();
@@ -651,7 +654,7 @@ const AdminDashboard = () => {
 
   const confirmDeleteCareer = async () => {
     if (!deleteCareerModal.careerId) return;
-    
+
     const result = await adminService.deleteCareer(deleteCareerModal.careerId);
     if (result.success) {
       await fetchCareers();
@@ -676,7 +679,7 @@ const AdminDashboard = () => {
 
   const confirmDeleteSkill = async () => {
     if (!deleteSkillModal.skillId) return;
-    
+
     const result = await adminService.deleteSkill(deleteSkillModal.skillId);
     if (result.success) {
       await fetchSkills();
@@ -775,36 +778,46 @@ const AdminDashboard = () => {
   };
   return <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
     <ResponsiveSidebar>
-      <div className="p-4 md:p-6 border-b border-gray-200">
-        <Link to="/" className="flex items-center">
-          <img src="/header-icon.png" alt="Career Nexus Logo" className="h-8 w-auto md:h-10 md:w-auto" />
-        </Link>
-      </div>
+      {({ closeSidebar }) => (
+        <>
+          <div className="p-4 md:p-6 border-b border-gray-200">
+            <Link to="/" className="flex items-center" onClick={closeSidebar}>
+              <img src="/header-icon.png" alt="Career Nexus Logo" className="h-8 w-auto md:h-10 md:w-auto" />
+            </Link>
+          </div>
 
-      <nav className="p-2 md:p-4 flex-1 overflow-y-auto">
-        <ul className="space-y-1 md:space-y-2">
-          {sidebarItems.map(item => <li key={item.id}>
-            <button onClick={() => setActiveSection(item.id)} className={`w-full flex items-center space-x-2 md:space-x-3 px-2 md:px-3 py-2 rounded-lg transition-colors text-sm md:text-base ${activeSection === item.id ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}>
-              <item.icon className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />
-              <span className="text-left truncate md:block hidden">{item.label}</span>
-            </button>
-          </li>)}
-        </ul>
-      </nav>
+          <nav className="p-2 md:p-4 flex-1 overflow-y-auto">
+            <ul className="space-y-1 md:space-y-2">
+              {sidebarItems.map(item => <li key={item.id}>
+                <button
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    closeSidebar();
+                  }}
+                  className={`w-full flex items-center space-x-2 md:space-x-3 px-2 md:px-3 py-2 rounded-lg transition-colors text-sm md:text-base ${activeSection === item.id ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white' : 'text-gray-700 hover:bg-gray-100'}`}
+                >
+                  <item.icon className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />
+                  <span className="text-left truncate min-w-0">{item.label}</span>
+                </button>
+              </li>)}
+            </ul>
+          </nav>
 
-      <div className="p-2 md:p-4 border-t border-gray-200 mt-auto">
-        <Button onClick={handleLogout} variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
-          <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-          <span className="hidden md:inline">Logout</span>
-          <span className="md:hidden">Exit</span>
-        </Button>
-      </div>
+          <div className="p-2 md:p-4 border-t border-gray-200 mt-auto">
+            <Button onClick={() => handleLogout(closeSidebar)} variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
+              <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+              <span className="hidden md:inline">Logout</span>
+              <span className="md:hidden">Logout</span>
+            </Button>
+          </div>
+        </>
+      )}
     </ResponsiveSidebar>
 
     {/* Main Content */}
-    <div className="flex-1 flex flex-col min-h-screen md:ml-64">
+    <div className="flex-1 flex flex-col min-h-screen lg:ml-64 min-w-0">
       {/* Header */}
-      <header className="fixed top-0 right-0 left-0 md:left-64 bg-white backdrop-blur-sm border-b border-gray-200 py-2 px-3 md:py-[14px] md:px-6 z-40">
+      <header className="fixed top-0 right-0 left-0 lg:left-64 bg-white backdrop-blur-sm border-b border-gray-200 py-2 px-3 md:py-[14px] md:px-6 z-40">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-xl md:text-2xl font-bold text-gray-800">Admin Dashboard</h1>
@@ -814,7 +827,7 @@ const AdminDashboard = () => {
       </header>
 
       {/* Content */}
-      <div className="flex-1 p-3 md:p-6 mt-[76px] md:mt-[98px]">
+      <div className="flex-1 p-3 md:p-6 mt-[76px] md:mt-[98px] min-w-0 overflow-x-hidden">
         {loading && (
           <div className="flex items-center justify-center p-8">
             <Loader2 className="h-8 w-8 animate-spin text-purple-600" />
@@ -858,7 +871,7 @@ const AdminDashboard = () => {
                     <p className="text-3xl md:text-4xl font-bold text-blue-600 mb-1">{overview.assessmentsCompleted.toLocaleString()}</p>
                     <p className="text-gray-400 text-xs font-light">Completed Tests</p>
                   </div>
-                  <div className="bg-green-50 rounded-xl p-3 group-hover:bg-green-100 transition-colors">
+                  <div className="bg-blue-50 rounded-xl p-3 group-hover:bg-blue-100 transition-colors">
                     <Brain className="h-6 w-6 md:h-7 md:w-7 text-blue-600" />
                   </div>
                 </div>
@@ -1135,23 +1148,23 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
-                <table className="w-full min-w-[600px]">
+                <table className="w-full min-w-0 md:min-w-[600px]">
                   <thead>
                     <tr className="border-b">
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm">Name</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm">Email</th>
-                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Status</th>
-                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Joined</th>
-                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Assessment</th>
-                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Resume</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Status</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Joined</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Assessment</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Resume</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredUsers.length > 0 ? filteredUsers.slice(0, usersDisplayCount).map((user: any) => <tr key={user.id} className="border-b hover:bg-gray-50">
                       <td className="p-2 md:p-3 font-medium text-xs md:text-sm">{user.name || user.fullName || "N/A"}</td>
-                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.email || "N/A"}</td>
-                      <td className="p-2 md:p-3">
+                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm truncate max-w-[120px] md:max-w-none">{user.email || "N/A"}</td>
+                      <td className="p-2 md:p-3 hidden md:table-cell">
                         <div className="flex items-center space-x-2">
                           <Switch checked={user.status === "Active"} onCheckedChange={checked => handleUserStatusToggle(user.id, checked)} className="data-[state=checked]:bg-blue-600" />
                           <span className="text-xs text-gray-600">
@@ -1159,11 +1172,11 @@ const AdminDashboard = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{user.joined || "N/A"}</td>
-                      <td className="p-2 md:p-3">
+                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{user.joined || "N/A"}</td>
+                      <td className="p-2 md:p-3 hidden md:table-cell">
                         {user.assessmentCompleted ? <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-blue-500" /> : <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />}
                       </td>
-                      <td className="p-2 md:p-3">
+                      <td className="p-2 md:p-3 hidden md:table-cell">
                         {user.resumeUploaded ? <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-blue-500" /> : <AlertCircle className="h-4 w-4 md:h-5 md:w-5 text-yellow-500" />}
                       </td>
                       <td className="p-2 md:p-3">
@@ -1202,46 +1215,46 @@ const AdminDashboard = () => {
         {activeSection === "assessments" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
             <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
+              <div className="flex flex-row items-center justify-between gap-3 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <Brain className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Assessment Results</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={fetchAssessments}>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm shrink-0 p-2" onClick={fetchAssessments} title="Refresh">
                   <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="ml-1 sm:ml-2">Refresh</span>
+                  <span className="ml-1 sm:ml-2 hidden sm:inline">Refresh</span>
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-0 md:min-w-[500px]">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-3">User</th>
-                      <th className="text-left p-3">Personality Type</th>
-                      <th className="text-left p-3">Score</th>
-                      <th className="text-left p-3">Completed Date</th>
-                      <th className="text-left p-3">Actions</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">User</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Personality Type</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Score</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Completed Date</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {assessments.length > 0 ? assessments.slice(0, assessmentsDisplayCount).map((assessment: any) => <tr key={assessment.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3 font-medium">{assessment.userName || "Guest"}</td>
-                      <td className="p-3">
-                        <Badge variant="outline">{assessment.personalityType || "N/A"}</Badge>
+                      <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[100px] md:max-w-none">{assessment.userName || "Guest"}</td>
+                      <td className="p-2 md:p-3">
+                        <Badge variant="outline" className="text-xs">{assessment.personalityType || "N/A"}</Badge>
                       </td>
-                      <td className="p-3">
+                      <td className="p-2 md:p-3 hidden md:table-cell">
                         <div className="flex items-center space-x-2">
                           <Progress value={assessment.score || 0} className="w-16 h-2 [&>div]:bg-blue-600" />
                           <span className="text-sm">{assessment.score || 0}%</span>
                         </div>
                       </td>
-                      <td className="p-3 text-gray-600">{assessment.completedDate || "N/A"}</td>
-                      <td className="p-3">
-                        <Button size="sm" variant="outline" onClick={() => handleViewAssessment(assessment.id)}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
+                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{assessment.completedDate || "N/A"}</td>
+                      <td className="p-2 md:p-3">
+                        <Button size="sm" variant="outline" onClick={() => handleViewAssessment(assessment)} className="p-1 md:p-2" title="View Details">
+                          <Eye className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+                          <span className="hidden md:inline">View Details</span>
                         </Button>
                       </td>
                     </tr>) : (
@@ -1270,28 +1283,28 @@ const AdminDashboard = () => {
         {activeSection === "resumes" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
             <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
+              <div className="flex flex-row items-center justify-between gap-3 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <FileText className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Resume Management</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={fetchResumes}>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm shrink-0 p-2" onClick={fetchResumes} title="Refresh">
                   <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="ml-1 sm:ml-2">Refresh</span>
+                  <span className="ml-1 sm:ml-2 hidden sm:inline">Refresh</span>
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-0 md:min-w-[600px]">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-3">User</th>
-                      <th className="text-left p-3">File Name</th>
-                      <th className="text-left p-3">Status</th>
-                      <th className="text-left p-3">Upload Date</th>
-                      <th className="text-left p-3">Extracted Skills</th>
-                      <th className="text-left p-3">Actions</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">User</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">File Name</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Status</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Upload Date</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Extracted Skills</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1299,15 +1312,15 @@ const AdminDashboard = () => {
                       const skillsList = resume.skills || [];
                       return (
                         <tr key={resume.id} className="border-b hover:bg-gray-50">
-                          <td className="p-3 font-medium">{resume.userName || "Guest"}</td>
-                          <td className="p-3 text-gray-600">{resume.fileName || "N/A"}</td>
-                          <td className="p-3">
-                            <Badge className="bg-blue-600 text-white hover:bg-blue-700" variant={resume.status === "Analyzed" ? "default" : "secondary"}>
+                          <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[100px] md:max-w-none">{resume.userName || "Guest"}</td>
+                          <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{resume.fileName || "N/A"}</td>
+                          <td className="p-2 md:p-3">
+                            <Badge className="bg-blue-600 text-white hover:bg-blue-700 text-xs" variant={resume.status === "Analyzed" ? "default" : "secondary"}>
                               {resume.status || "Pending"}
                             </Badge>
                           </td>
-                          <td className="p-3 text-gray-600">{resume.uploadDate || "N/A"}</td>
-                          <td className="p-3">
+                          <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{resume.uploadDate || "N/A"}</td>
+                          <td className="p-2 md:p-3 hidden md:table-cell">
                             <div className="flex flex-wrap gap-1">
                               {skillsList.slice(0, 3).map((skill: string, index: number) => (
                                 <Badge key={index} variant="outline" className="text-xs">
@@ -1324,16 +1337,26 @@ const AdminDashboard = () => {
                               )}
                             </div>
                           </td>
-                          <td className="p-3">
-                            <div className="flex space-x-2">
+                          <td className="p-2 md:p-3">
+                            <div className="flex space-x-1 md:space-x-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleViewResume(resume)}
+                                title="View Details"
+                                className="p-1 md:p-2"
+                              >
+                                <Eye className="h-3 w-3 md:h-4 md:w-4" />
+                              </Button>
                               {resume.fileURL && (
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
+                                <Button
+                                  size="sm"
+                                  variant="outline"
                                   onClick={() => handleDownloadResume(resume)}
                                   title="Download Resume"
+                                  className="p-1 md:p-2"
                                 >
-                                  <Download className="h-4 w-4" />
+                                  <Download className="h-3 w-3 md:h-4 md:w-4" />
                                 </Button>
                               )}
                             </div>
@@ -1366,12 +1389,12 @@ const AdminDashboard = () => {
         {activeSection === "careers" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
             <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
+              <div className="flex flex-row items-center justify-between gap-3 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <Target className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Career Management</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={() => setAddCareerModal(true)}>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm shrink-0" onClick={() => setAddCareerModal(true)}>
                   <Plus className="h-4 w-4" />
                   <span className="ml-1 sm:ml-2">Add Career</span>
                 </Button>
@@ -1439,12 +1462,12 @@ const AdminDashboard = () => {
         {activeSection === "skills" && !loading && <div className="space-y-6">
           <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
             <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4 min-h-[65px] flex items-center">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
+              <div className="flex flex-row items-center justify-between gap-3 w-full">
                 <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
                   <BookOpen className="h-5 w-5 md:h-6 md:w-6" />
                   <span>Skills Management</span>
                 </CardTitle>
-                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm" onClick={() => setAddSkillModal(true)}>
+                <Button className="bg-white/20 text-white border-white/30 hover:bg-white/30 text-xs sm:text-sm shrink-0" onClick={() => setAddSkillModal(true)}>
                   <Plus className="h-4 w-4" />
                   <span className="ml-1 sm:ml-2">Add Skill</span>
                 </Button>
@@ -1452,13 +1475,13 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent className="p-4 md:p-6">
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-0 md:min-w-[400px]">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left p-3">Skill Name</th>
-                      <th className="text-left p-3">Category</th>
-                      <th className="text-left p-3">Linked Careers</th>
-                      <th className="text-left p-3">Actions</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Skill Name</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Category</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Linked Careers</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1466,13 +1489,13 @@ const AdminDashboard = () => {
                       const linkedCareers = skill.LinkedCareers || skill.linkedCareers || [];
                       return (
                         <tr key={skill.id} className="border-b hover:bg-gray-50">
-                          <td className="p-3 font-medium">{skill.name || skill.Name}</td>
-                          <td className="p-3">
-                            <Badge className="bg-blue-600 text-white hover:bg-blue-700" variant={skill.category === "Technical" || skill.Category === "Technical" ? "default" : "secondary"}>
+                          <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[120px] md:max-w-none">{skill.name || skill.Name}</td>
+                          <td className="p-2 md:p-3">
+                            <Badge className="bg-blue-600 text-white hover:bg-blue-700 text-xs" variant={skill.category === "Technical" || skill.Category === "Technical" ? "default" : "secondary"}>
                               {skill.category || skill.Category || "N/A"}
                             </Badge>
                           </td>
-                          <td className="p-3">
+                          <td className="p-2 md:p-3 hidden md:table-cell">
                             <div className="flex flex-wrap gap-1">
                               {linkedCareers.length > 0 ? linkedCareers.map((career: string, index: number) => (
                                 <Badge key={index} variant="outline" className="text-xs">
@@ -1483,13 +1506,13 @@ const AdminDashboard = () => {
                               )}
                             </div>
                           </td>
-                          <td className="p-3">
-                            <div className="flex space-x-2">
-                              <Button size="sm" variant="outline" onClick={() => handleEditSkill(skill.id)}>
-                                <Edit className="h-4 w-4" />
+                          <td className="p-2 md:p-3">
+                            <div className="flex space-x-1 md:space-x-2">
+                              <Button size="sm" variant="outline" onClick={() => handleEditSkill(skill.id)} className="p-1 md:p-2">
+                                <Edit className="h-3 w-3 md:h-4 md:w-4" />
                               </Button>
-                              <Button size="sm" variant="outline" className="text-red-600" onClick={() => handleDeleteSkill(skill.id)}>
-                                <Trash2 className="h-4 w-4" />
+                              <Button size="sm" variant="outline" className="text-red-600 p-1 md:p-2" onClick={() => handleDeleteSkill(skill.id)}>
+                                <Trash2 className="h-3 w-3 md:h-4 md:w-4" />
                               </Button>
                             </div>
                           </td>
@@ -1509,11 +1532,11 @@ const AdminDashboard = () => {
 
         {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
           <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg pt-5 pb-3 px-4 min-h-[65px] flex items-center">
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4 w-full">
-                <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
-                  <Settings className="h-5 w-5 md:h-6 md:w-6" />
-                  <span>Account Settings</span>
-                </CardTitle>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 w-full">
+              <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                <Settings className="h-5 w-5 md:h-6 md:w-6" />
+                <span>Account Settings</span>
+              </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="p-4 md:p-6">
@@ -1618,7 +1641,7 @@ const AdminDashboard = () => {
                     type="submit"
                     className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm w-full"
                   >
-                    Update Profile
+                    Update Password
                   </Button>
                 </form>
               </div>
@@ -1646,6 +1669,13 @@ const AdminDashboard = () => {
       isOpen: false,
       assessment: null
     })} assessment={viewAssessmentModal.assessment} />
+
+    <ViewResumeModal
+      isOpen={viewResumeModal.isOpen}
+      onClose={() => setViewResumeModal({ isOpen: false, resume: null })}
+      resume={viewResumeModal.resume}
+      onDownload={handleDownloadResume}
+    />
 
     <EditCareerModal isOpen={editCareerModal.isOpen} onClose={() => setEditCareerModal({
       isOpen: false,
