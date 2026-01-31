@@ -64,7 +64,7 @@ const Dashboard = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  
+
   // Password visibility state
   const [showPasswords, setShowPasswords] = useState({
     old: false,
@@ -74,16 +74,16 @@ const Dashboard = () => {
 
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
-  name: user.fullName || "User",
-  email: user.email || "",
-  assessmentCompleted: false,
-  resumeUploaded: true,
-  personalityType: "",
-  personalityDescription: "",
-  careerScore: 0,
-  recommendedCareers: [],
-  skills: []
-});
+    name: user.fullName || "User",
+    email: user.email || "",
+    assessmentCompleted: false,
+    resumeUploaded: true,
+    personalityType: "",
+    personalityDescription: "",
+    careerScore: 0,
+    recommendedCareers: [],
+    skills: []
+  });
   const [resumeData, setResumeData] = useState<ResumeData>({});
   const [careers, setCareers] = useState<CareerUIModel[]>([]);
 
@@ -200,7 +200,8 @@ const Dashboard = () => {
 
 
 
-  const handleLogout = () => {
+  const handleLogout = (closeSidebar: () => void) => {
+    closeSidebar();
     logout();
     navigate("/login");
   };
@@ -240,37 +241,37 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-  const fetchPersonalityResult = async () => {
-    try {
-      const response = await fetch(
-        "http://career-nexus.runasp.net/api/Personality/GetUserResult",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
-          },
+    const fetchPersonalityResult = async () => {
+      try {
+        const response = await fetch(
+          "http://career-nexus.runasp.net/api/Personality/GetUserResult",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
+            },
+          }
+        );
+
+        if (!response.ok) return;
+
+        const result = await response.json();
+
+        if (result.isSuccess && result.data) {
+          setUserData(prev => ({
+            ...prev,
+            assessmentCompleted: result.data.isCompleted,
+            personalityType: result.data.personalityType,
+            personalityDescription: result.data.description,
+            careerScore: result.data.careerScore
+          }));
         }
-      );
-
-      if (!response.ok) return;
-
-      const result = await response.json();
-
-      if (result.isSuccess && result.data) {
-        setUserData(prev => ({
-          ...prev,
-          assessmentCompleted: result.data.isCompleted,
-          personalityType: result.data.personalityType,
-          personalityDescription: result.data.description,
-          careerScore: result.data.careerScore
-        }));
+      } catch (error) {
+        console.log("Personality result error:", error);
       }
-    } catch (error) {
-      console.log("Personality result error:", error);
-    }
-  };
+    };
 
-  fetchPersonalityResult();
-}, []);
+    fetchPersonalityResult();
+  }, []);
 
   const sidebarItems = [{
     id: "overview",
@@ -343,37 +344,44 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
       <ResponsiveSidebar>
-        <div className="p-4 md:p-6 border-b border-gray-200">
-          <Link to="/" className="flex items-center">
-            <img src="/header-icon.png" alt="Career Nexus Logo" className="h-8 w-auto md:h-10 md:w-auto" />
-          </Link>
-        </div>
+        {({ closeSidebar }) => (
+          <>
+            <div className="p-4 md:p-6 border-b border-gray-200">
+              <Link to="/" className="flex items-center" onClick={closeSidebar}>
+                <img src="/header-icon.png" alt="Career Nexus Logo" className="h-8 w-auto md:h-10 md:w-auto" />
+              </Link>
+            </div>
 
-        <nav className="p-2 md:p-4 flex-1 overflow-y-auto">
-          <ul className="space-y-1 md:space-y-2">
-            {sidebarItems.map(item => (
-              <li key={item.id}>
-                <button
-                  onClick={() => setActiveSection(item.id)}
-                  className={`w-full flex items-center space-x-2 md:space-x-3 px-2 md:px-3 py-2 rounded-lg transition-colors text-sm md:text-base ${activeSection === item.id
-                    ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                >
-                  <item.icon className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />
-                  <span className="text-left truncate">{item.label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
+            <nav className="p-2 md:p-4 flex-1 overflow-y-auto">
+              <ul className="space-y-1 md:space-y-2">
+                {sidebarItems.map(item => (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        closeSidebar();
+                      }}
+                      className={`w-full flex items-center space-x-2 md:space-x-3 px-2 md:px-3 py-2 rounded-lg transition-colors text-sm md:text-base ${activeSection === item.id
+                        ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
+                        }`}
+                    >
+                      <item.icon className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />
+                      <span className="text-left truncate min-w-0">{item.label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-        <div className="p-2 md:p-4 border-t border-gray-200 mt-auto">
-          <Button onClick={handleLogout} variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
-            <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
-            <span>Logout</span>
-          </Button>
-        </div>
+            <div className="p-2 md:p-4 border-t border-gray-200 mt-auto">
+              <Button onClick={() => handleLogout(closeSidebar)} variant="outline" size="sm" className="w-full justify-start text-red-600 hover:text-red-700 text-xs md:text-sm">
+                <LogOut className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" />
+                <span>Logout</span>
+              </Button>
+            </div>
+          </>
+        )}
       </ResponsiveSidebar>
 
       {/* Main Content */}
@@ -389,7 +397,7 @@ const Dashboard = () => {
         </header>
 
         {/* Content */}
-        <div className="flex-1 p-3 md:p-6 overflow-x-hidden mt-[76px] md:mt-[98px]">
+        <div className="flex-1 p-3 md:p-6 overflow-x-hidden mt-[76px] md:mt-[98px] min-w-0">
           {activeSection === "overview" && <div className="space-y-5 md:space-y-7 max-w-full">
             {/* Enhanced Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -574,7 +582,7 @@ const Dashboard = () => {
                     <div>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-2 sm:mb-3">
                         <span className="text-xs sm:text-sm font-medium text-gray-700">Personality Assessment</span>
-                        <Badge variant={userData.assessmentCompleted ? "default" : "secondary"} className="text-xs w-fit">
+                        <Badge variant={userData.assessmentCompleted ? "default" : "secondary"} className=" bg-transparent border border-blue-600 text-black text-xs w-fit hover:bg-white">
                           {userData.assessmentCompleted ? "Completed" : "Pending"}
                         </Badge>
                       </div>
@@ -588,7 +596,7 @@ const Dashboard = () => {
                     <div>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0 mb-2 sm:mb-3">
                         <span className="text-xs sm:text-sm font-medium text-gray-700">Resume Upload</span>
-                        <Badge variant={userData.resumeUploaded ? "default" : "secondary"} className="text-xs w-fit">
+                        <Badge variant={userData.resumeUploaded ? "default" : "secondary"} className=" bg-transparent border border-blue-600 text-black text-xs w-fit hover:bg-white">
                           {userData.resumeUploaded ? "Uploaded" : "Pending"}
                         </Badge>
                       </div>
@@ -683,7 +691,7 @@ const Dashboard = () => {
                                 </div>
                               </div>
                             </div>
-                            
+
                             {/* Explanation */}
                             <div className="mt-4 pt-4 border-t border-gray-200">
                               <p className="text-sm text-gray-600 leading-relaxed mb-3">
@@ -1023,28 +1031,27 @@ const Dashboard = () => {
                 <div className="space-y-6">
                   {/* Missing Skills */}
                   {resumeData.analysis?.missingSkills && resumeData.analysis.missingSkills.length > 0 && (
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
-                        <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
-                          <XCircle className="h-5 w-5 text-orange-600" />
+                    <div className="p-4 items-center rounded-lg border-l-4 shadow-sm hover:shadow-md transition-all duration-300 border-orange-300 pb-2">
+                      <div className="flex items-center gap-2.5 mb-3 ">
+                        <XCircle className="h-4.5 w-4.5 text-orange-600" />
+                        <h4 className="text-base font-semibold text-orange-700">
                           Missing Skills
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-6">
-                        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-                          Focus on developing these skills to improve your career match score:
-                        </p>
-                        <div className="flex flex-wrap gap-2.5">
-                          {resumeData.analysis.missingSkills.map((skill: string, index: number) => (
-                            <Badge
-                              key={index}
-                              className="bg-orange-100 text-orange-800 hover:bg-orange-200 px-3.5 py-2 text-sm font-medium border border-orange-300 rounded-md transition-colors"
-                            >
-                              {skill}
-                            </Badge>
-                          ))}
-                        </div>
-                      </CardContent>
+                        </h4>
+                      </div>
+
+                      <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                        Focus on developing these skills to improve your career match score:
+                      </p>
+                      <div className="flex flex-wrap gap-2.5">
+                        {resumeData.analysis.missingSkills.map((skill: string, index: number) => (
+                          <Badge
+                            key={index}
+                            className="bg-orange-100 text-orange-800 hover:bg-orange-200 px-3.5 py-2 text-sm font-medium border border-orange-300 rounded-md transition-colors"
+                          >
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
                   )}
 
