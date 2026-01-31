@@ -243,7 +243,7 @@ const Dashboard = () => {
   const fetchPersonalityResult = async () => {
     try {
       const response = await fetch(
-        "http://career-nexus.runasp.net/api/Personality/GetUserResult",
+       API_ENDPOINTS.GET_USER_RESULT,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
