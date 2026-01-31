@@ -241,16 +241,16 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    const fetchPersonalityResult = async () => {
-      try {
-        const response = await fetch(
-          "http://career-nexus.runasp.net/api/Personality/GetUserResult",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
-            },
-          }
-        );
+  const fetchPersonalityResult = async () => {
+    try {
+      const response = await fetch(
+       API_ENDPOINTS.GET_USER_RESULT,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
+          },
+        }
+      );
 
         if (!response.ok) return;
 
