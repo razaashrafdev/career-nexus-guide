@@ -4,9 +4,14 @@
  */
 
 // API Base URLs
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://career-nexus.runasp.net";
+// export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://career-nexus.runasp.net";
+// export const API_RESUME_BASE_URL = import.meta.env.VITE_API_RESUME_BASE_URL || `${API_BASE_URL}/api/Resume`;
+// export const API_PERSONALITY_BASE_URL = import.meta.env.VITE_API_PERSONALITY_BASE_URL || `${API_BASE_URL}/api/Personality`;
+
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://careernexus.somee.com";
 export const API_RESUME_BASE_URL = import.meta.env.VITE_API_RESUME_BASE_URL || `${API_BASE_URL}/api/Resume`;
 export const API_PERSONALITY_BASE_URL = import.meta.env.VITE_API_PERSONALITY_BASE_URL || `${API_BASE_URL}/api/Personality`;
+
 
 // Debug: Log API configuration (only in development)
 if (import.meta.env.DEV) {
@@ -39,6 +44,7 @@ export const API_ENDPOINTS = {
   
   // Personality Assessment
   ANALYZE_PERSONALITY: `${API_PERSONALITY_BASE_URL}/analyze`,
+  GET_USER_RESULT: `${API_PERSONALITY_BASE_URL}/GetUserResult`,
   
   // Admin
   ADMIN_OVERVIEW: `${API_BASE_URL}/api/Admin/Overview`,
