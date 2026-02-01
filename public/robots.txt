@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://careernexus-guide.netlify.app/sitemap.xml

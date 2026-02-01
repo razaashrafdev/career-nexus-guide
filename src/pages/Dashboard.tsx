@@ -15,6 +15,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { XCircle, Lightbulb } from "lucide-react";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { DashboardAIChat } from "@/components/DashboardAIChat";
 
 // Dashboard.tsx ke upar imports ke baad
 interface ResumeAnalysis {
@@ -81,9 +82,18 @@ const Dashboard = () => {
     personalityType: "",
     personalityDescription: "",
     careerScore: 0,
-    recommendedCareers: [],
-    skills: []
+    resumeMatchScore: null as number | null,
+    assessmentCareerScore: null as number | null,
+    recommendedCareers: [] as string[],
+    skills: [] as string[],
   });
+  // Career Score = average of resume + assessment when both exist; else whichever is available
+  const displayCareerScore = (() => {
+    const r = userData.resumeMatchScore ?? null;
+    const a = userData.assessmentCareerScore ?? null;
+    if (r != null && a != null) return Math.round((r + a) / 2);
+    return r ?? a ?? 0;
+  })();
   const [resumeData, setResumeData] = useState<ResumeData>({});
   const [careers, setCareers] = useState<CareerUIModel[]>([]);
 
@@ -92,12 +102,12 @@ const Dashboard = () => {
   useEffect(() => {
     if (location.state?.from === "resume") {
       const data = location.state;
-
+      const resumeScore = data.analysis?.matchPercentage ?? data.analysis?.careerCount ?? null;
       setUserData((prev) => ({
         ...prev,
         resumeUploaded: true,
         recommendedCareers: data.analysis?.careerRecommendation || [],
-        careerScore: data.analysis?.careerCount || 0,
+        resumeMatchScore: resumeScore != null ? Number(resumeScore) : prev.resumeMatchScore,
       }));
     }
   }, [location.state]);
@@ -129,8 +139,7 @@ const Dashboard = () => {
         setUserData(prev => ({
           ...prev,
           resumeUploaded: true,
-          // personalityType: data.analysis?.experience || "",
-          careerScore: data.analysis?.matchPercentage || 0,
+          resumeMatchScore: data.analysis?.matchPercentage ?? prev.resumeMatchScore,
           recommendedCareers: data.analysis?.careerRecommendation || [],
           skills: data.analysis?.matchedSkills || []
         }));
@@ -262,7 +271,7 @@ const Dashboard = () => {
             assessmentCompleted: result.data.isCompleted,
             personalityType: result.data.personalityType,
             personalityDescription: result.data.description,
-            careerScore: result.data.careerScore
+            assessmentCareerScore: result.data.careerScore ?? prev.assessmentCareerScore,
           }));
         }
       } catch (error) {
@@ -342,7 +351,7 @@ const Dashboard = () => {
   const guidance = getGuidanceMessage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex">
+    <div className="min-h-screen min-h-[100dvh] bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex overflow-x-hidden w-full">
       <ResponsiveSidebar>
         {({ closeSidebar }) => (
           <>
@@ -384,20 +393,20 @@ const Dashboard = () => {
         )}
       </ResponsiveSidebar>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen md:ml-64">
-        {/* Header */}
-        <header className="fixed top-0 right-0 left-0 md:left-64 bg-white backdrop-blur-sm border-b border-gray-200 py-2 px-3 md:py-[14px] md:px-6 z-40">
-          <div className="flex justify-between items-center">
+      {/* Main Content - lg:ml-64 matches ResponsiveSidebar (visible from lg) */}
+      <div className="flex-1 flex flex-col min-h-screen w-full min-w-0 lg:ml-64">
+        {/* Header - pr-14 leaves space for mobile menu button */}
+        <header className="fixed top-0 right-0 left-0 lg:left-64 bg-white/95 backdrop-blur-sm border-b border-gray-200 py-3 pl-4 pr-14 sm:pl-5 sm:pr-16 lg:py-4 lg:px-6 lg:pr-6 z-40">
+          <div className="flex justify-between items-center gap-3">
             <div className="min-w-0 flex-1">
-              <h1 className="text-lg md:text-2xl font-bold text-gray-800 truncate">User Dashboard</h1>
-              <p className="text-sm md:text-base text-gray-600 truncate">Welcome back {userData.name}</p>
+              <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-800 truncate">User Dashboard</h1>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600 truncate">Welcome back, {userData.name}</p>
             </div>
           </div>
         </header>
 
-        {/* Content */}
-        <div className="flex-1 p-3 md:p-6 overflow-x-hidden mt-[76px] md:mt-[98px] min-w-0">
+        {/* Content - mt accounts for fixed header height on mobile/desktop */}
+        <div className="flex-1 w-full min-w-0 p-3 sm:p-4 md:p-5 lg:p-6 overflow-x-hidden mt-[72px] sm:mt-[76px] lg:mt-[82px]">
           {activeSection === "overview" && <div className="space-y-5 md:space-y-7 max-w-full">
             {/* Enhanced Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -431,31 +440,31 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
 
-              {/* Career Score Card */}
+              {/* Career Score Card - average of resume + assessment */}
               <Card className="border-0 shadow-lg bg-white hover:shadow-xl transition-all duration-300 group">
                 <CardContent className="p-4 sm:p-5 md:p-7">
                   <div className="flex items-start justify-between mb-3 sm:mb-4 gap-2 sm:gap-0">
                     <div className="flex-1 min-w-0">
                       <p className="text-gray-500 text-xs md:text-sm font-medium mb-1 sm:mb-2 uppercase tracking-wide">Career Score</p>
-                      <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 mb-1 truncate">{userData.careerScore || 0}%</p>
-                      <p className="text-gray-400 text-xs font-light">Match Compatibility</p>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 mb-1 truncate">{displayCareerScore}%</p>
+                      <p className="text-gray-400 text-xs font-light break-words">Match Compatibility (Resume + Assessment avg)</p>
                     </div>
                     <div className="bg-blue-50 rounded-xl p-2 sm:p-3 group-hover:bg-blue-100 transition-colors flex-shrink-0">
                       <Award className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-blue-600" />
                     </div>
                   </div>
-                  {userData.careerScore > 0 && (
+                  {displayCareerScore > 0 && (
                     <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-100">
                       <div className="flex items-center justify-between text-xs mb-2">
                         <span className="text-gray-500">Match Quality</span>
                         <span className="text-blue-600 font-semibold">
-                          {userData.careerScore >= 80 ? "Excellent" : userData.careerScore >= 60 ? "Good" : "Fair"}
+                          {displayCareerScore >= 80 ? "Excellent" : displayCareerScore >= 60 ? "Good" : "Fair"}
                         </span>
                       </div>
                       <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                         <div
                           className="bg-blue-600 h-full rounded-full transition-all duration-500"
-                          style={{ width: `${userData.careerScore}%` }}
+                          style={{ width: `${displayCareerScore}%` }}
                         ></div>
                       </div>
                     </div>
@@ -635,14 +644,14 @@ const Dashboard = () => {
                 {userData.assessmentCompleted ? (
                   <div className="space-y-6">
                     {/* Personality Type Section */}
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
-                        <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
-                          <Brain className="h-5 w-5 text-purple-600" />
-                          Your Personality Type
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-4 sm:px-6 py-4">
+                        <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2.5">
+                          <Brain className="h-5 w-5 text-purple-600 flex-shrink-0" />
+                          <span className="break-words">Your Personality Type</span>
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-6">
+                      <CardContent className="p-4 sm:p-6">
                         <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-6 shadow-md">
                           <p className="text-sm uppercase tracking-wide text-purple-200 mb-2">
                             Assessment Result
@@ -656,14 +665,14 @@ const Dashboard = () => {
 
                     {/* Personality Insights Section */}
                     {userData.personalityDescription && (
-                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
-                          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
-                            <BarChart3 className="h-5 w-5 text-blue-600" />
+                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-4 sm:px-6 py-4">
+                          <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2.5">
+                            <BarChart3 className="h-5 w-5 text-blue-600 flex-shrink-0" />
                             Personality Insights
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6">
+                        <CardContent className="p-4 sm:p-6">
                           <p className="text-sm md:text-base text-gray-700 leading-relaxed whitespace-pre-line">
                             {userData.personalityDescription}
                           </p>
@@ -671,23 +680,23 @@ const Dashboard = () => {
                       </div>
                     )}
 
-                    {/* Career Score Section */}
-                    {userData.careerScore > 0 && (
-                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                        <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 border-b border-green-200 rounded-t-xl px-6 py-4">
-                          <CardTitle className="text-lg font-semibold flex items-center gap-2.5">
-                            <Award className="h-5 w-5 text-blue-600" />
+                    {/* Career Score Section - average of resume + assessment */}
+                    {displayCareerScore > 0 && (
+                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                        <CardHeader className="bg-gradient-to-r from-purple-50 to-blue-50 border-b border-green-200 rounded-t-xl px-4 sm:px-6 py-4">
+                          <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2.5 flex-wrap">
+                            <Award className="h-5 w-5 text-blue-600 flex-shrink-0" />
                             Career Match Score
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6">
+                        <CardContent className="p-4 sm:p-6">
                           <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex-1">
-                                <p className="text-sm text-gray-600 mb-2">Your career compatibility score</p>
-                                <div className="flex items-center gap-3">
-                                  <Progress value={userData.careerScore} className="flex-1 h-3" />
-                                  <span className="text-2xl font-bold text-blue-600">{userData.careerScore}%</span>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs sm:text-sm text-gray-600 mb-2 break-words">Your career compatibility score (average of resume + assessment)</p>
+                                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                                  <Progress value={displayCareerScore} className="flex-1 h-3" />
+                                  <span className="text-2xl font-bold text-blue-600">{displayCareerScore}%</span>
                                 </div>
                               </div>
                             </div>
@@ -766,14 +775,14 @@ const Dashboard = () => {
                   <div className="space-y-6">
                     {/* Skills Section - Combined */}
                     {(resumeData.analysis?.matchedSkills?.length > 0 || resumeData.parsedSkills || resumeData.analysis?.missingSkills?.length > 0) && (
-                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
-                          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
-                            <BarChart3 className="h-5 w-5 text-blue-600" />
+                      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-4 sm:px-6 py-4">
+                          <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 flex items-center gap-2.5 flex-wrap">
+                            <BarChart3 className="h-5 w-5 text-blue-600 flex-shrink-0" />
                             Skills Analysis
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6 space-y-7">
+                        <CardContent className="p-4 sm:p-6 space-y-6 sm:space-y-7">
                           {/* Matched Skills */}
                           {/* {resumeData.analysis?.matchedSkills && resumeData.analysis.matchedSkills.length > 0 && (
                             <div className="flex justify-between p-4 items-center rounded-lg border-l-4 shadow-sm hover:shadow-md transition-all duration-300 border-green-300 pb-4">
@@ -799,7 +808,7 @@ const Dashboard = () => {
                           {resumeData.parsedSkills && (
                             <div className="p-4 items-center rounded-lg border-l-4 shadow-sm hover:shadow-md transition-all duration-300 border-blue-300 pb-4">
                               <div className="flex items-center gap-2.5 mb-4">
-                                <FileText className="w-5 md:h-6 md:w-6" />
+                                <FileText className="h-5 w-5 md:h-6 md:w-6 flex-shrink-0" />
                                 <h4 className="text-base font-semibold">
                                   Extracted Skills
                                 </h4>
@@ -851,14 +860,14 @@ const Dashboard = () => {
 
                     {/* Suggestions */}
                     {resumeData.analysis?.suggestions && resumeData.analysis.suggestions.length > 0 && (
-                      <div className="bg-white border border-green-200 rounded-xl shadow-sm">
-                        <CardHeader className="bg-gradient-to-r from-green-50 to-amber-50 border-b border-green-200 rounded-t-xl px-6 py-4">
-                          <CardTitle className="text-lg font-semibold flex items-center gap-2.5">
-                            <Lightbulb className="h-5 w-5" />
+                      <div className="bg-white border border-green-200 rounded-xl shadow-sm overflow-hidden">
+                        <CardHeader className="bg-gradient-to-r from-green-50 to-amber-50 border-b border-green-200 rounded-t-xl px-4 sm:px-6 py-4">
+                          <CardTitle className="text-base sm:text-lg font-semibold flex items-center gap-2.5 flex-wrap">
+                            <Lightbulb className="h-5 w-5 flex-shrink-0" />
                             AI-Powered Suggestions
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6">
+                        <CardContent className="p-4 sm:p-6">
                           <ul className="space-y-4">
                             {resumeData.analysis.suggestions.map((suggestion: string, index: number) => (
                               <li key={index} className="flex items-start gap-3.5">
@@ -956,17 +965,17 @@ const Dashboard = () => {
                 ) : (
                   <div className="space-y-6">
                     {careers.map((career, index) => (
-                      <div key={index} className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
-                          <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
-                            <Target className="h-5 w-5 text-blue-600" />
-                            {career.careerName}
-                            <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 ml-auto">
+                      <div key={index} className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                        <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-4 sm:px-6 py-4">
+                          <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 flex flex-wrap items-center gap-2 sm:gap-2.5">
+                            <Target className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                            <span className="break-words">{career.careerName}</span>
+                            <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 ml-auto shrink-0">
                               {career.jobs.length} {career.jobs.length === 1 ? 'Job' : 'Jobs'}
                             </Badge>
                           </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-6">
+                        <CardContent className="p-4 sm:p-6">
                           <div className="space-y-4">
                             {career.jobs.map((job, j) => (
                               <div key={j} className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200">
@@ -1057,17 +1066,17 @@ const Dashboard = () => {
 
                   {/* Tutorials Section */}
                   {resumeData.analysis?.tutorials && Object.keys(resumeData.analysis.tutorials).length > 0 && (
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-                      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-6 py-4">
-                        <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2.5">
-                          <BookOpen className="h-5 w-5 text-blue-600" />
-                          Tutorials to Improve Your Skills
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 ml-auto hidden md:inline-flex">
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 rounded-t-xl px-4 sm:px-6 py-4">
+                        <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 flex flex-wrap items-center gap-2 sm:gap-2.5">
+                          <BookOpen className="h-5 w-5 text-blue-600 flex-shrink-0" />
+                          <span className="break-words">Tutorials to Improve Your Skills</span>
+                          <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200 sm:ml-auto shrink-0">
                             {Object.keys(resumeData.analysis.tutorials).length} {Object.keys(resumeData.analysis.tutorials).length === 1 ? 'Skill' : 'Skills'}
                           </Badge>
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="p-6">
+                      <CardContent className="p-4 sm:p-6">
                         <div className="space-y-4">
                           {Object.keys(resumeData.analysis.tutorials).map((skillName: string, i: number) => (
                             <div
@@ -1132,61 +1141,12 @@ const Dashboard = () => {
 
 
           {activeSection === "ai-chat" && (
-            <div className="space-y-4 md:space-y-6 max-w-full">
-              <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
-                <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
-                      <Brain className="h-5 w-5 md:h-6 md:w-6" />
-                      AI Chat Counselor
-                    </CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 md:p-6">
-                  <div className="space-y-4">
-                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-3 md:p-4 rounded-lg">
-                      <h3 className="font-semibold text-base md:text-lg mb-2">Ask Your Career Questions</h3>
-                      <p className="text-xs md:text-sm text-gray-600 mb-4">
-                        Get personalized career advice powered by AI. Ask about career paths, skills development,
-                        job market trends, or any career-related questions you have.
-                      </p>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="border rounded-lg p-4 bg-white min-h-48 md:min-h-64 max-h-64 md:max-h-96 overflow-y-auto">
-                        <div className="text-center text-gray-500 py-6 md:py-8">
-                          <Brain className="h-8 w-8 md:h-12 md:w-12 mx-auto mb-3 text-purple-400" />
-                          <p className="text-sm md:text-base">Start a conversation with your AI Career Counselor</p>
-                          <p className="text-xs md:text-sm">Ask questions about careers, skills, or job opportunities</p>
-                        </div>
-                      </div>
-
-                      <div className="flex space-x-2">
-                        <Input
-                          placeholder="Type your career question here..."
-                          className="flex-1 text-sm md:text-base min-w-0"
-                        />
-                        <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-sm md:text-base px-3 md:px-4 flex-shrink-0">
-                          Send
-                        </Button>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row flex-wrap gap-2">
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">
-                          "What career suits my personality?"
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">
-                          "How can I improve my skills?"
-                        </Button>
-                        <Button variant="outline" size="sm" className="text-xs md:text-sm">
-                          "What's the job market like?"
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <DashboardAIChat
+              user={user}
+              userData={{ ...userData, careerScore: displayCareerScore }}
+              resumeData={resumeData}
+              careers={careers}
+            />
           )}
 
           {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface HeaderProps {
   variant?: "default" | "back";
@@ -11,7 +10,6 @@ interface HeaderProps {
 const Header = ({ variant = "default" }: HeaderProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
 
   const menuItems = [
     { label: "Home", path: "/" },
@@ -166,24 +164,22 @@ const Header = ({ variant = "default" }: HeaderProps) => {
                   {item.label}
                 </Link>
               ))}
-              {!isAuthenticated && (
-                <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
-                  <Link
-                    to="/login"
-                    className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all text-center"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="border border-purple-600 text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-all text-center"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              )}
+              <div className="flex flex-col space-y-2 pt-2 border-t border-gray-200">
+                <Link
+                  to="/login"
+                  className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all text-center"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="border border-purple-600 text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition-all text-center"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </div>
             </div>
           </div>
         )}
