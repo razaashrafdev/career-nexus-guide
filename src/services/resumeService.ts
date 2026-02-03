@@ -19,7 +19,7 @@ formData.append("ResumeFile", file);
 
 
 // 👇 guest case support
-if (!token && guestSessionId) {
+if (guestSessionId) {
   formData.append("TempSessionId", guestSessionId);
 }
 

@@ -144,30 +144,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("token", userData.token);
       if (roleName) localStorage.setItem("roleName", roleName);
 
-      // ✅ GUEST DATA MIGRATION (SINGLE CALL)
+
+
       const guestSessionId = localStorage.getItem("guestSessionId");
+      const hasGuestData = localStorage.getItem("hasGuestData");
 
-      if (guestSessionId) {
-        try {
-          await fetch(API_ENDPOINTS.MIGERATE_USER_DATA,{
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-                Authorization: `Bearer ${userData.token}`,
-              },
-              body: JSON.stringify({
-                tempSessionId: guestSessionId,
-              }),
-            }
-          );
+if (guestSessionId || hasGuestData === "true") {
+  try {
+    await fetch(API_ENDPOINTS.MIGERATE_USER_DATA, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userData.token}`,
+      },
+      body: JSON.stringify({
+        tempSessionId: guestSessionId,
+      }),
+    });
 
-          // ✅ cleanup only after success
-          localStorage.removeItem("guestSessionId");
-        } catch (err) {
-          console.error("Guest data migration failed", err);
-          // ❗optional: don't block login if migration fails
-        }
-      }
+    // cleanup
+    localStorage.removeItem("guestSessionId");
+    localStorage.removeItem("hasGuestData");
+
+  } catch (err) {
+    console.error("Guest data migration failed", err);
+  }
+}
 
       return { success: true };
     }
