@@ -151,14 +151,14 @@ const AdminDashboard = () => {
     label: "Resumes",
     icon: FileText
   }, {
-    id: "careers",
-    label: "Careers",
-    icon: Target
-  }, {
-    id: "skills",
-    label: "Skills",
-    icon: BookOpen
-  }, {
+    //   id: "careers",
+    //   label: "Careers",
+    //   icon: Target
+    // }, {
+    //   id: "skills",
+    //   label: "Skills",
+    //   icon: BookOpen
+    // }, {
     id: "settings",
     label: "Settings",
     icon: Settings
@@ -960,7 +960,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Enhanced Activity & Trends Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-7">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-7"> */}
             {/* Most Recommended Careers - Enhanced */}
             <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
               <CardHeader className="border-b border-gray-100 pb-4">
@@ -987,29 +987,60 @@ const AdminDashboard = () => {
                       const maxMatches = topCareers[0]?.MatchCount || topCareers[0]?.matchCount || 1;
                       const percentage = Math.round((matchCount / maxMatches) * 100);
                       return (
-                        <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors group">
-                          <div className="flex items-center gap-3 flex-1 min-w-0">
-                            <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">
-                              {index + 1}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-sm md:text-base text-gray-800 truncate group-hover:text-purple-600 transition-colors">
-                                {career.CareerName || career.careerName}
-                              </p>
-                              <div className="flex items-center gap-2 mt-1">
-                                <div className="flex-1 bg-gray-200 rounded-full h-1.5 overflow-hidden max-w-[100px]">
-                                  <div
-                                    className="bg-gradient-to-r from-purple-500 to-blue-500 h-full rounded-full transition-all duration-500"
-                                    style={{ width: `${percentage}%` }}
-                                  ></div>
-                                </div>
-                                <span className="text-xs text-gray-500">{matchCount} matches</span>
-                              </div>
+                        // <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors group">
+                        //   <div className="flex items-center gap-3 flex-1 min-w-0">
+                        //     <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-lg w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        //       {index + 1}
+                        //     </div>
+                        //     <div className="flex-1 min-w-0">
+                        //       <p className="font-semibold text-sm md:text-base text-gray-800 truncate group-hover:text-purple-600 transition-colors">
+                        //         {career.CareerName || career.careerName}
+                        //       </p>
+                        //       <div className="flex items-center gap-2 mt-1">
+                        //         <div className="flex-1 bg-gray-200 rounded-full h-1.5 overflow-hidden max-w-[100px]">
+                        //           <div
+                        //             className="bg-gradient-to-r from-purple-500 to-blue-500 h-full rounded-full transition-all duration-500"
+                        //             style={{ width: `${percentage}%` }}
+                        //           ></div>
+                        //         </div>
+                        //         <span className="text-xs text-gray-500">{matchCount} matches</span>
+                        //       </div>
+                        //     </div>
+                        //   </div>
+                        //   <Badge className="text-xs font-semibold bg-purple-100 text-purple-700 border-purple-200">
+                        //     {matchCount}
+                        //   </Badge>
+                        // </div>
+                        <div
+                          key={index}
+                          className="flex items-center gap-4 px-4 py-3 rounded-xl bg-white border border-gray-200"
+                        >
+                          {/* Name */}
+                          <div className="w-24 flex-shrink-0">
+                            <p className="font-semibold text-sm md:text-base text-gray-800 truncate">
+                              {career.CareerName || career.careerName}
+                            </p>
+                          </div>
+
+                          {/* Separator */}
+                          <div className="h-8 w-px bg-gray-300" />
+
+                          {/* Progress Bar */}
+                          <div className="flex-1">
+                            <div className="w-full bg-gray-100 rounded-full h-2.5">
+                              <div
+                                className="h-2.5 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500"
+                                style={{ width: `${percentage}%` }}
+                              />
                             </div>
                           </div>
-                          <Badge className="text-xs font-semibold bg-purple-100 text-purple-700 border-purple-200">
-                            {matchCount}
-                          </Badge>
+
+                          {/* Value */}
+                          <div className="w-14 text-right">
+                            <span className="text-sm font-bold text-gray-700">
+                              {matchCount}
+                            </span>
+                          </div>
                         </div>
                       );
                     })
@@ -1024,7 +1055,7 @@ const AdminDashboard = () => {
             </Card>
 
             {/* Top Skills Trends - Enhanced */}
-            <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
+            {/* <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
               <CardHeader className="border-b border-gray-100 pb-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -1082,8 +1113,8 @@ const AdminDashboard = () => {
                   )}
                 </div>
               </CardContent>
-            </Card>
-          </div>
+            </Card> */}
+          {/* </div> */}
 
           {/* Quick Stats Summary */}
           <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-50 via-blue-50 to-indigo-50">
@@ -1113,7 +1144,7 @@ const AdminDashboard = () => {
                   </p>
                   <p className="text-xs text-gray-600 font-medium mb-1">Match Success Rate</p>
                   <p className="text-[10px] text-gray-500 mt-1 px-2">
-                    (Career Matches ÷ Resumes Uploaded) × 100
+                    (Career Matches ÷ Resumes) × 100
                   </p>
                 </div>
                 <div className="text-center">
