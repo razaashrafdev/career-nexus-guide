@@ -22,15 +22,16 @@ const ResponsiveSidebar = ({ children, className }: ResponsiveSidebarProps) => {
 
   return (
     <>
-      {/* Mobile & Tablet Menu Button - visible below lg (1024px) */}
-      <div className="lg:hidden fixed top-4 right-4 z-50">
+      {/* Mobile & Tablet Menu Button - visible below lg (1024px), touch-friendly */}
+      <div className="lg:hidden fixed top-3 right-3 sm:top-4 sm:right-4 z-50">
         <Button
           variant="outline"
-          size="sm"
+          size="icon"
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-white shadow-lg"
+          className="h-10 w-10 sm:h-11 sm:w-11 bg-white shadow-lg border-gray-200 rounded-lg touch-manipulation"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
         >
-          {isOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          {isOpen ? <X className="h-5 w-5 sm:h-5 sm:w-5" /> : <Menu className="h-5 w-5 sm:h-5 sm:w-5" />}
         </Button>
       </div>
 

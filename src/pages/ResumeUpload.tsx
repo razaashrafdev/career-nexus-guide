@@ -130,7 +130,7 @@ const ResumeUpload = () => {
       });
       return;
     }
-localStorage.setItem("hasGuestData", "true");
+
     // ✅ CASE 1: USER LOGGED IN
     if (isAuthenticated) {
       const latest = await resumeService.getLatestResume();
@@ -144,7 +144,7 @@ localStorage.setItem("hasGuestData", "true");
     }
     // ✅ CASE 2: GUEST USER
     else {
-      navigate("/login"); 
+      navigate("/assessment"); 
       // ya jahan tum guest flow le jana chahte ho
     }
 
