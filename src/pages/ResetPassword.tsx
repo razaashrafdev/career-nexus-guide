@@ -30,6 +30,13 @@ const ResetPassword = () => {
     return;
   }
 
+  if (result.success) {
+    toast({
+      title: "Email Sent",
+      description: result.success.message ?? "Password reset link sent. Please check your email.",
+    });
+  }
+
   setIsLoading(false);
   setIsSubmitted(true);
 };

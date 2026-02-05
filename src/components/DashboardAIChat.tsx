@@ -23,6 +23,7 @@ interface UserDataLike {
   resumeUploaded?: boolean;
   assessmentCompleted?: boolean;
   personalityType?: string;
+  personalityDescription?: string;
 }
 
 interface ResumeDataLike {
@@ -40,13 +41,16 @@ interface DashboardAIChatProps {
   userData: UserDataLike;
   resumeData?: ResumeDataLike;
   careers?: CareerLike[];
+  /** User's personality type from assessment; used to tailor career advice. */
+  personalityType?: string;
 }
 
 function buildSystemPrompt(
   user: User | null,
   userData: UserDataLike,
   resumeData?: ResumeDataLike,
-  careers?: CareerLike[]
+  careers?: CareerLike[],
+  personalityTypeOverride?: string
 ): string {
   const name = user?.fullName || userData?.name || "User";
   const role = user?.RoleName || "User";
@@ -60,6 +64,14 @@ function buildSystemPrompt(
   const careerList = careers?.length
     ? careers.map((c) => c.careerName).join(", ")
     : "None";
+  const personalityType = personalityTypeOverride ?? userData?.personalityType ?? "";
+  const personalityDescription = userData?.personalityDescription ?? "";
+  const personalityBlock =
+    personalityType || personalityDescription
+      ? `Personality type: ${personalityType || "Not assessed"}
+${personalityDescription ? `Personality description: ${personalityDescription}` : ""}
+Use the user's personality type and traits above to tailor your career advice, recommendations, and tone. When they ask about careers or fit, consider their personality.`
+      : "Personality type: Not assessed. If the user asks about personality-fit careers, suggest they complete the personality assessment for personalized advice.";
 
   return `You are an AI assistant inside a SaaS user dashboard for career guidance.
 User data (do not use or ask for email):
@@ -69,6 +81,9 @@ Plan/Context: ${plan}
 Recommended careers: ${recommended}
 Skills: ${skills}
 Careers in system: ${careerList}
+
+${personalityBlock}
+
 Only respond based on this dashboard context and career-related questions. Keep answers helpful and concise.
 Respond only in English or Roman Urdu (Urdu in Latin script). Do not use Urdu/Arabic script. Use Roman Urdu when the user writes in Roman Urdu; otherwise use English.`;
 }
@@ -78,7 +93,9 @@ export function DashboardAIChat({
   userData,
   resumeData,
   careers,
+  personalityType: personalityTypeProp,
 }: DashboardAIChatProps) {
+  const personalityType = personalityTypeProp ?? userData.personalityType;
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
     try {
       const raw = sessionStorage.getItem(CHAT_STORAGE_KEY);
@@ -124,7 +141,7 @@ export function DashboardAIChat({
       setInputValue("");
       setIsLoading(true);
 
-      const systemPrompt = buildSystemPrompt(user, userData, resumeData, careers);
+      const systemPrompt = buildSystemPrompt(user, userData, resumeData, careers, personalityType);
       const geminiContents: { role: string; parts: { text: string }[] }[] = [
         ...messages.map((m) => ({
           role: m.role === "assistant" ? "model" : "user",
@@ -175,7 +192,7 @@ export function DashboardAIChat({
         setIsLoading(false);
       }
     },
-    [user, userData, resumeData, careers, messages, isLoading, toast]
+    [user, userData, resumeData, careers, personalityType, messages, isLoading, toast]
   );
 
   // FALLBACK: Dono APIs Gemini (alag accounts). Primary = VITE_GEMINI_API_KEY, Fallback = VITE_GEMINI_API_KEY_2

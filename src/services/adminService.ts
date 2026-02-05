@@ -573,4 +573,32 @@ export const adminService = {
       };
     }
   },
+
+  // Feedback (admin)
+  async getFeedback(): Promise<{ success?: FeedbackItem[]; error?: { isSuccess: false; message: string } }> {
+    try {
+      const response = await fetch(API_ENDPOINTS.ADMIN_FEEDBACK, {
+        method: "GET",
+        headers: getAuthHeaders(),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.isSuccess) {
+        return {
+          error: { isSuccess: false, message: data.message || "Failed to load feedback" },
+        };
+      }
+      return { success: data.data ?? [] };
+    } catch (error) {
+      return { error: { isSuccess: false, message: "Unable to connect to server." } };
+    }
+  },
 };
+
+export interface FeedbackItem {
+  id: number;
+  userName: string;
+  userEmail: string;
+  message: string;
+  feedbackType: string;
+  submittedAt: string;
+}
