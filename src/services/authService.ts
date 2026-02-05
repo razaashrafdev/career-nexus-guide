@@ -51,15 +51,25 @@ export const authService = {
     }
   },
 
-  // ✅ REGISTER
+  // ✅ REGISTER — capitalize first letter of user's name before sending
   async register(
     newUser: RegisterRequest
   ): Promise<{ success?: RegisterResponse; error?: ApiError }> {
+    const capitalizeName = (name: string) =>
+      (name || "")
+        .trim()
+        .split(/\s+/)
+        .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : ""))
+        .join(" ");
+    const payload = {
+      ...newUser,
+      fullname: capitalizeName(newUser.fullname ?? ""),
+    };
     try {
       const response = await fetch(API_ENDPOINTS.REGISTER, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
+        body: JSON.stringify(payload),
       });
 
       const data: RegisterResponse | ApiError = await response.json();
@@ -97,7 +107,7 @@ async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
 
     const data = await response.json();
 
-    if (!response.ok || !data.isSuccess) {
+    if (!response.ok) {
       return {
         error: {
           statusCode: response.status,
@@ -118,6 +128,38 @@ async forgotPassword(email: string): Promise<{ success?; error?: ApiError }> {
   }
 },
 
+  // ✅ SUBMIT FEEDBACK (user dashboard)
+  async submitFeedback(message: string, feedbackType: "suggestion" | "error"): Promise<{ success?: { data: number }; error?: ApiError }> {
+    try {
+      const token = this.getToken();
+      if (!token) {
+        return { error: { message: "Please sign in to submit feedback.", isSuccess: false } };
+      }
+      const response = await fetch(API_ENDPOINTS.SUBMIT_FEEDBACK, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ message: message.trim(), feedbackType }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.isSuccess) {
+        return {
+          error: {
+            statusCode: response.status,
+            message: data.message || "Failed to submit feedback",
+            isSuccess: false,
+          },
+        };
+      }
+      return { success: { data: data.data } };
+    } catch (error) {
+      return {
+        error: { message: "Unable to connect to server.", isSuccess: false },
+      };
+    }
+  },
 
   // ✅ CHANGE PASSWORD (Authorization header fixed)
   async changePassword(oldPassword: string, newPassword: string) {

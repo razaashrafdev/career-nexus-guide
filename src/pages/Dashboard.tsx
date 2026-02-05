@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Eye } from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Eye, MessageSquare } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +16,8 @@ import { XCircle, Lightbulb } from "lucide-react";
 import { Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { DashboardAIChat } from "@/components/DashboardAIChat";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 // Dashboard.tsx ke upar imports ke baad
 interface ResumeAnalysis {
@@ -72,6 +74,11 @@ const Dashboard = () => {
     new: false,
     confirm: false
   });
+
+  // Feedback form state (frontend-only; wire to your API when ready)
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackType, setFeedbackType] = useState<"suggestion" | "error">("suggestion");
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
 
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
@@ -249,6 +256,37 @@ const Dashboard = () => {
     }
   };
 
+  const handleFeedbackSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = feedbackMessage?.trim();
+    if (!trimmed) {
+      toast({
+        title: "Message required",
+        description: "Please enter your feedback before submitting.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setFeedbackSubmitting(true);
+    const result = await authService.submitFeedback(trimmed, feedbackType);
+    if (result.error) {
+      toast({
+        title: "Submission failed",
+        description: result.error.message,
+        variant: "destructive",
+      });
+      setFeedbackSubmitting(false);
+      return;
+    }
+    toast({
+      title: "Feedback submitted",
+      description: "Thank you for your feedback. We will review it shortly.",
+    });
+    setFeedbackMessage("");
+    setFeedbackType("suggestion");
+    setFeedbackSubmitting(false);
+  };
+
   useEffect(() => {
   const fetchPersonalityResult = async () => {
     try {
@@ -306,6 +344,10 @@ const Dashboard = () => {
     id: "ai-chat",
     label: "AI Chat Counselor",
     icon: Brain
+  }, {
+    id: "feedback",
+    label: "Feedback",
+    icon: MessageSquare
   }, {
     id: "settings",
     label: "Settings",
@@ -1147,6 +1189,56 @@ const Dashboard = () => {
               resumeData={resumeData}
               careers={careers}
             />
+          )}
+
+          {activeSection === "feedback" && (
+            <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm w-full max-w-full overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-3 sm:py-3 sm:px-4 md:py-4 md:px-5">
+                <CardTitle className="flex items-center space-x-2 text-sm sm:text-base md:text-lg font-semibold text-white gap-2">
+                  <MessageSquare className="h-5 w-5 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0" />
+                  <span className="break-words">Feedback</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-3 sm:p-4 md:p-6">
+                <form onSubmit={handleFeedbackSubmit} className="space-y-3 sm:space-y-4">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="feedback-type" className="text-xs sm:text-sm">Type</Label>
+                    <select
+                      id="feedback-type"
+                      value={feedbackType}
+                      onChange={(e) => setFeedbackType(e.target.value as "suggestion" | "error")}
+                      className="w-full min-h-[44px] sm:min-h-0 rounded-md border border-gray-300 bg-white px-3 py-2.5 sm:py-2 text-sm focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 touch-manipulation"
+                    >
+                      <option value="suggestion">Suggestion</option>
+                      <option value="error">Report an error</option>
+                    </select>
+                  </div>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <Label htmlFor="feedback-message" className="text-xs sm:text-sm">Your feedback</Label>
+                    <Textarea
+                      id="feedback-message"
+                      placeholder={
+                        feedbackType === "error"
+                          ? "Describe the error you encountered..."
+                          : "Share your suggestion or idea..."
+                      }
+                      value={feedbackMessage}
+                      onChange={(e) => setFeedbackMessage(e.target.value)}
+                      rows={5}
+                      className="resize-none text-sm min-h-[120px] sm:min-h-[100px] w-full max-w-full"
+                      required
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={feedbackSubmitting || !feedbackMessage.trim()}
+                    className="w-full sm:w-auto min-h-[44px] sm:min-h-0 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 touch-manipulation"
+                  >
+                    {feedbackSubmitting ? "Submitting..." : "Submit feedback"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           )}
 
           {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">

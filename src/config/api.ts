@@ -36,6 +36,7 @@ export const API_ENDPOINTS = {
   REGISTER: `${API_BASE_URL}/api/Account/Register`,
   FORGOT_PASSWORD: `${API_BASE_URL}/api/Account/ForgotPassword`,
   CHANGE_PASSWORD: `${API_BASE_URL}/api/Account/ChangePassword`,
+  SUBMIT_FEEDBACK: `${API_BASE_URL}/api/Account/SubmitFeedback`,
   
   // Resume
   UPLOAD_RESUME: `${API_RESUME_BASE_URL}/UploadResume`,
@@ -62,6 +63,7 @@ export const API_ENDPOINTS = {
   ADMIN_SKILL_BY_ID: (id: number) => `${API_BASE_URL}/api/Admin/Skill/${id}`,
   ADMIN_SETTINGS: `${API_BASE_URL}/api/Admin/Settings`,
   ADMIN_STATS_TOP_CAREERS: `${API_BASE_URL}/api/Admin/Stats/TopCareers`,
+  ADMIN_FEEDBACK: `${API_BASE_URL}/api/Admin/Feedback`,
 } as const;
 
 // Helper function to get WhatsApp link

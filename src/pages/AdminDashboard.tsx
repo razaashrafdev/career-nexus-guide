@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key, Loader2 } from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Search, Eye, Trash2, Edit, Download, Plus, Key, Loader2, MessageSquare } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -134,6 +134,8 @@ const AdminDashboard = () => {
   const [skills, setSkills] = useState<any[]>([]);
   const [topCareers, setTopCareers] = useState<any[]>([]);
   const [settings, setSettings] = useState<Record<string, string>>({});
+  // Feedback from users (loaded from API)
+  const [feedbackList, setFeedbackList] = useState<{ id: number; userName: string; userEmail: string; message: string; submittedAt: string; feedbackType: "error" | "suggestion" }[]>([]);
   const sidebarItems = [{
     id: "overview",
     label: "Overview",
@@ -159,6 +161,10 @@ const AdminDashboard = () => {
     //   label: "Skills",
     //   icon: BookOpen
     // }, {
+    id: "feedback",
+    label: "Feedback",
+    icon: MessageSquare
+  }, {
     id: "settings",
     label: "Settings",
     icon: Settings
@@ -443,6 +449,36 @@ const AdminDashboard = () => {
       });
     }
   };
+
+  const fetchFeedback = useCallback(async () => {
+    const result = await adminService.getFeedback();
+    if (result.success) {
+      setFeedbackList(
+        result.success.map((item) => ({
+          id: item.id,
+          userName: item.userName,
+          userEmail: item.userEmail,
+          message: item.message,
+          submittedAt: typeof item.submittedAt === "string" ? item.submittedAt : new Date(item.submittedAt).toISOString(),
+          feedbackType: (item.feedbackType === "error" ? "error" : "suggestion") as "error" | "suggestion",
+        }))
+      );
+    } else if (result.error) {
+      toast({
+        title: "Error",
+        description: result.error.message,
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  // Fetch Feedback
+  useEffect(() => {
+    if (activeSection === "feedback") {
+      fetchFeedback();
+    }
+  }, [activeSection, fetchFeedback]);
+
   const handleUserStatusToggle = async (userId: number, newStatus: boolean) => {
     const result = await adminService.updateUserStatus(userId, newStatus);
     if (result.success) {
@@ -1172,7 +1208,7 @@ const AdminDashboard = () => {
                 <div className="flex items-center space-x-4 w-full sm:w-auto">
                   <div className="relative flex-1 sm:flex-none">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input placeholder="Search users..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 w-full sm:w-64 text-sm" />
+                    <Input placeholder="Search users..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10 w-full text-black sm:w-64 text-sm" />
                   </div>
                 </div>
               </div>
@@ -1560,6 +1596,53 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
         </div>}
+
+        {activeSection === "feedback" && (
+          <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm w-full max-w-full overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-3 sm:py-3 sm:px-4 md:py-4 md:px-5">
+              <CardTitle className="flex items-center space-x-2 text-sm sm:text-base md:text-lg font-semibold text-white gap-2">
+                <MessageSquare className="h-5 w-5 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0" />
+                <span className="break-words">User Feedback</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-4 md:p-6">
+              {feedbackList.length === 0 ? (
+                <div className="text-center py-8 sm:py-12 text-gray-500 px-2">
+                  <MessageSquare className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-3 text-gray-300" />
+                  <p className="font-medium text-sm sm:text-base">No feedback yet</p>
+                  <p className="text-xs sm:text-sm mt-1 max-w-sm mx-auto">
+                    When users submit feedback from their dashboard, it will appear here.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3 sm:space-y-4">
+                  {feedbackList.map((item) => (
+                    <div
+                      key={item.id}
+                      className="border border-gray-200 rounded-lg p-3 sm:p-4 bg-gray-50/50 hover:bg-gray-50 transition-colors w-full max-w-full overflow-hidden"
+                    >
+                      <div className="flex flex-col gap-y-2 text-sm mb-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
+                        <div className="flex justify-between items-center gap-2 w-full sm:contents">
+                          <div className="flex items-center gap-x-2 flex-wrap min-w-0 sm:contents">
+                            <span className="font-semibold text-gray-800 text-xs sm:text-sm break-words sm:order-1">{item.userName}</span>
+                            <Badge variant={item.feedbackType === "error" ? "destructive" : "secondary"} className="text-xs w-fit sm:order-3">
+                              {item.feedbackType === "error" ? "Error" : "Suggestion"}
+                            </Badge>
+                          </div>
+                          <span className="text-gray-400 text-xs flex-shrink-0 sm:order-4 sm:ml-auto">
+                            {item.submittedAt ? new Date(item.submittedAt).toLocaleDateString(undefined, { dateStyle: "medium" }) : "—"}
+                          </span>
+                        </div>
+                        <span className="text-gray-500 text-xs sm:text-sm break-all sm:order-2">{item.userEmail}</span>
+                      </div>
+                      <p className="text-gray-700 text-xs sm:text-sm whitespace-pre-wrap break-words">{item.message}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {activeSection === "settings" && <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm">
           <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg pt-5 pb-3 px-4 min-h-[65px] flex items-center">
