@@ -19,14 +19,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let guestSessionId = localStorage.getItem("guestSessionId");
-  if (!guestSessionId) {
-    guestSessionId = crypto.randomUUID();
-    localStorage.setItem("guestSessionId", guestSessionId);
-  }
+    if (!guestSessionId) {
+      guestSessionId = crypto.randomUUID();
+      localStorage.setItem("guestSessionId", guestSessionId);
+    }
     const restoreSession = async () => {
       try {
         const token = authService.getToken();
-        
+
         // If no token exists, user is not authenticated
         if (!token) {
           setIsLoading(false);
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         // Restore user from token and localStorage
         const restoredUser = await authService.restoreSession();
-        
+
         // Only set user if we have a valid restored user with token
         if (restoredUser && restoredUser.token) {
           // Also restore from localStorage if available for consistency
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               // Ignore parse errors
             }
           }
-          
+
           // Final check: ensure we have at least email or unique_name (from token)
           // If email is still missing, try to get it from unique_name in token
           if (!restoredUser.email) {
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               restoredUser.email = decoded.unique_name;
             }
           }
-          
+
           // Only set user if we have essential fields (token and email)
           if (restoredUser.email) {
             setUser(restoredUser);
@@ -112,79 +112,80 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = async (
-  credentials: LoginRequest
-): Promise<{ success: boolean; error?: ApiError }> => {
-  setIsLoading(true);
+    credentials: LoginRequest
+  ): Promise<{ success: boolean; error?: ApiError }> => {
+    setIsLoading(true);
 
-  try {
-    const result = await authService.login(credentials);
+    try {
+      const result = await authService.login(credentials);
 
-    if (result.error) return { success: false, error: result.error };
+      if (result.error) return { success: false, error: result.error };
 
-    if (result.success?.data) {
-      const userData = result.success.data;
+      if (result.success?.data) {
+        const userData = result.success.data;
 
-      const roleName =
-        (userData as any).roleName ||
-        userData.RoleName ||
-        localStorage.getItem("roleName") ||
-        "";
+        const roleName =
+          (userData as any).roleName ||
+          userData.RoleName ||
+          localStorage.getItem("roleName") ||
+          "";
 
-      const loggedInUser: User = {
-        fullName: userData.fullName,
-        email: userData.email,
-        RoleName: roleName,
-        token: userData.token,
-        Id: undefined,
-      };
+        const loggedInUser: User = {
+          fullName: userData.fullName,
+          email: userData.email,
+          RoleName: roleName,
+          token: userData.token,
+          Id: undefined,
+        };
 
-      setUser(loggedInUser);
+        setUser(loggedInUser);
 
-      localStorage.setItem("userData", JSON.stringify(userData));
-      localStorage.setItem("token", userData.token);
-      if (roleName) localStorage.setItem("roleName", roleName);
+        localStorage.setItem("userData", JSON.stringify(userData));
+        localStorage.setItem("token", userData.token);
+        if (roleName) localStorage.setItem("roleName", roleName);
 
-      // ✅ GUEST DATA MIGRATION (SINGLE CALL)
-      const guestSessionId = localStorage.getItem("guestSessionId");
+        // ✅ GUEST DATA MIGRATION (SINGLE CALL)
+        const guestSessionId = localStorage.getItem("guestSessionId");
+        const hasGuestData = localStorage.getItem("hasGuestData");
 
-      if (guestSessionId) {
-        try {
-          await fetch(API_ENDPOINTS.MIGERATE_USER_DATA,{
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+        if (guestSessionId || hasGuestData === "true") {
+          try {
+            await fetch(API_ENDPOINTS.MIGERATE_USER_DATA, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${userData.token}`,
               },
               body: JSON.stringify({
                 tempSessionId: guestSessionId,
               }),
-            }
-          );
+            });
 
-          // ✅ cleanup only after success
-          localStorage.removeItem("guestSessionId");
-        } catch (err) {
-          console.error("Guest data migration failed", err);
-          // ❗optional: don't block login if migration fails
+            // cleanup
+            localStorage.removeItem("guestSessionId");
+            localStorage.removeItem("hasGuestData");
+
+          } catch (err) {
+            console.error("Guest data migration failed", err);
+          }
         }
+
+        return { success: true };
       }
 
-      return { success: true };
+      return {
+        success: false,
+        error: { message: "Unknown error occurred", isSuccess: false },
+      };
+    } catch {
+      return {
+        success: false,
+        error: { message: "An unexpected error occurred", isSuccess: false },
+      };
+    } finally {
+      setIsLoading(false);
     }
-
-    return {
-      success: false,
-      error: { message: "Unknown error occurred", isSuccess: false },
-    };
-  } catch {
-    return {
-      success: false,
-      error: { message: "An unexpected error occurred", isSuccess: false },
-    };
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   const logout = () => {
     authService.removeToken();

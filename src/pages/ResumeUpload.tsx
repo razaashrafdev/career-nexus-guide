@@ -108,56 +108,56 @@ const ResumeUpload = () => {
   // ANALYZE / UPLOAD
   // ===============================
   const handleAnalyze = async () => {
-  if (!uploadedFile) {
-    toast({
-      title: "No File Selected",
-      description: "Please upload a resume file before analyzing.",
-      variant: "destructive",
-    });
-    return;
-  }
-
-  setIsProcessing(true);
-
-  try {
-    const result = await resumeService.uploadResume(uploadedFile);
-
-    if (!result.success) {
+    if (!uploadedFile) {
       toast({
-        title: "Upload Failed",
-        description: result.error?.message || "Something went wrong.",
+        title: "No File Selected",
+        description: "Please upload a resume file before analyzing.",
         variant: "destructive",
       });
       return;
     }
 
-    // ✅ CASE 1: USER LOGGED IN
-    if (isAuthenticated) {
-      const latest = await resumeService.getLatestResume();
+    setIsProcessing(true);
 
-      navigate("/dashboard", {
-        state: {
-          from: "resume",
-          resumeData: latest.success?.data,
-        },
+    try {
+      const result = await resumeService.uploadResume(uploadedFile);
+
+      if (!result.success) {
+        toast({
+          title: "Upload Failed",
+          description: result.error?.message || "Something went wrong.",
+          variant: "destructive",
+        });
+        return;
+      }
+      localStorage.setItem("hasGuestData", "true");
+      // ✅ CASE 1: USER LOGGED IN
+      if (isAuthenticated) {
+        const latest = await resumeService.getLatestResume();
+
+        navigate("/dashboard", {
+          state: {
+            from: "resume",
+            resumeData: latest.success?.data,
+          },
+        });
+      }
+      // ✅ CASE 2: GUEST USER 
+      else {
+        navigate("/login");
+        // ya jahan tum guest flow le jana chahte ho
+      }
+
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+        variant: "destructive",
       });
+    } finally {
+      setIsProcessing(false);
     }
-    // ✅ CASE 2: GUEST USER
-    else {
-      navigate("/assessment"); 
-      // ya jahan tum guest flow le jana chahte ho
-    }
-
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: "An unexpected error occurred.",
-      variant: "destructive",
-    });
-  } finally {
-    setIsProcessing(false);
-  }
-};
+  };
 
 
   return (
@@ -385,8 +385,8 @@ const ResumeUpload = () => {
             <div className="grid md:grid-cols-2 gap-8">
               <AnimatedElement delay={0}>
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-purple-400 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-white" />
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 text-lg">Instant Analysis</h3>
@@ -399,8 +399,8 @@ const ResumeUpload = () => {
 
               <AnimatedElement delay={100}>
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-purple-400 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-white" />
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 text-lg">Skill Gap Identification</h3>
@@ -413,8 +413,8 @@ const ResumeUpload = () => {
 
               <AnimatedElement delay={200}>
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-purple-400 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-white" />
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 text-lg">Job Recommendations</h3>
@@ -427,8 +427,8 @@ const ResumeUpload = () => {
 
               <AnimatedElement delay={300}>
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-purple-400 rounded-full flex items-center justify-center flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-white" />
+                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-2 text-lg">Privacy Protected</h3>

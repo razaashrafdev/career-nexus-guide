@@ -1,64 +1,64 @@
 import { ApiError } from "@/types/auth";
-import { TOKEN_KEY, API_ENDPOINTS} from "@/config/api";
+import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 export const resumeService = {
   async uploadResume(file: File): Promise<{
     success?: { statusCode: number; data: unknown };
     error?: ApiError;
-}> {
-  try {
-const token = localStorage.getItem(TOKEN_KEY);
-// if (!token) {
-//   return {
-//     error: { isSuccess: false, message: "User not logged in" },
-//   };
-// }
-const guestSessionId = localStorage.getItem("guestSessionId");
+  }> {
+    try {
+      const token = localStorage.getItem(TOKEN_KEY);
+      // if (!token) {
+      //   return {
+      //     error: { isSuccess: false, message: "User not logged in" },
+      //   };
+      // }
+      const guestSessionId = localStorage.getItem("guestSessionId");
 
-const formData = new FormData();
-formData.append("ResumeFile", file);
+      const formData = new FormData();
+      formData.append("ResumeFile", file);
 
 
-// 👇 guest case support
-if (!token && guestSessionId) {
-  formData.append("TempSessionId", guestSessionId);
-}
+      // 👇 guest case support
+      if (guestSessionId) {
+        formData.append("TempSessionId", guestSessionId);
+      }
 
-const headers: HeadersInit = {};
+      const headers: HeadersInit = {};
 
-// 👇 logged-in case
-if (token) {
-  headers.Authorization = `Bearer ${token}`;
-}
+      // 👇 logged-in case
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
 
-const response = await fetch(API_ENDPOINTS.UPLOAD_RESUME, {
+      const response = await fetch(API_ENDPOINTS.UPLOAD_RESUME, {
 
-  method: "POST",
-  body: formData,
-  headers,
-});
+        method: "POST",
+        body: formData,
+        headers,
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (!response.ok) {
+      if (!response.ok) {
+        return {
+          error: { isSuccess: false, message: result?.message || "Failed" },
+        };
+      }
+
       return {
-        error: { isSuccess: false, message: result?.message || "Failed" },
+        success: {
+          statusCode: response.status,
+          data: result.data,
+        },
       };
-    }
+    } catch (error) {
+      return {
+        error: { isSuccess: false, message: "Failed to load latest resume" },
+      };
 
-    return {
-      success: {
-        statusCode: response.status,
-        data: result.data,
-      },
-    };
-  } catch (error) {
-    return {
-      error: { isSuccess: false, message: "Failed to load latest resume" },
-    };
-    
-  }
-},
- async getLatestResume(): Promise<{
+    }
+  },
+  async getLatestResume(): Promise<{
     success?: { statusCode: number; data: unknown };
     error?: ApiError;
   }> {
@@ -90,6 +90,5 @@ const response = await fetch(API_ENDPOINTS.UPLOAD_RESUME, {
     }
   },
 };
-
 
 
