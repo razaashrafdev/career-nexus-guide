@@ -135,7 +135,7 @@ const AdminDashboard = () => {
   const [topCareers, setTopCareers] = useState<any[]>([]);
   const [settings, setSettings] = useState<Record<string, string>>({});
   // Feedback from users (loaded from API)
-  const [feedbackList, setFeedbackList] = useState<{ id: number; userName: string; userEmail: string; message: string; submittedAt: string; feedbackType: "error" | "suggestion" }[]>([]);
+  const [feedbackList, setFeedbackList] = useState<{ id: number; username: string; email: string; message: string; submittedAt: string; feedbackType: "error" | "suggestion" }[]>([]);
   const sidebarItems = [{
     id: "overview",
     label: "Overview",
@@ -452,15 +452,17 @@ const AdminDashboard = () => {
 
   const fetchFeedback = useCallback(async () => {
     const result = await adminService.getFeedback();
+     console.log("Feedback API result:", result);
     if (result.success) {
       setFeedbackList(
         result.success.map((item) => ({
           id: item.id,
-          userName: item.userName,
-          userEmail: item.userEmail,
+          username: item.username,
+          email: item.email,
           message: item.message,
+          feedbackType: item.feedbackType as "error" | "suggestion", 
           submittedAt: typeof item.submittedAt === "string" ? item.submittedAt : new Date(item.submittedAt).toISOString(),
-          feedbackType: (item.feedbackType === "error" ? "error" : "suggestion") as "error" | "suggestion",
+          
         }))
       );
     } else if (result.error) {
@@ -1624,7 +1626,7 @@ const AdminDashboard = () => {
                       <div className="flex flex-col gap-y-2 text-sm mb-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
                         <div className="flex justify-between items-center gap-2 w-full sm:contents">
                           <div className="flex items-center gap-x-2 flex-wrap min-w-0 sm:contents">
-                            <span className="font-semibold text-gray-800 text-xs sm:text-sm break-words sm:order-1">{item.userName}</span>
+                            <span className="font-semibold text-gray-800 text-xs sm:text-sm break-words sm:order-1">{item.username}</span>
                             <Badge variant={item.feedbackType === "error" ? "destructive" : "secondary"} className="text-xs w-fit sm:order-3">
                               {item.feedbackType === "error" ? "Error" : "Suggestion"}
                             </Badge>
@@ -1633,7 +1635,7 @@ const AdminDashboard = () => {
                             {item.submittedAt ? new Date(item.submittedAt).toLocaleDateString(undefined, { dateStyle: "medium" }) : "—"}
                           </span>
                         </div>
-                        <span className="text-gray-500 text-xs sm:text-sm break-all sm:order-2">{item.userEmail}</span>
+                        <span className="text-gray-500 text-xs sm:text-sm break-all sm:order-2">{item.email}</span>
                       </div>
                       <p className="text-gray-700 text-xs sm:text-sm whitespace-pre-wrap break-words">{item.message}</p>
                     </div>

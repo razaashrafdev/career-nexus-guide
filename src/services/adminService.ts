@@ -596,8 +596,8 @@ export const adminService = {
 
 export interface FeedbackItem {
   id: number;
-  userName: string;
-  userEmail: string;
+  username: string;
+  email: string;
   message: string;
   feedbackType: string;
   submittedAt: string;
