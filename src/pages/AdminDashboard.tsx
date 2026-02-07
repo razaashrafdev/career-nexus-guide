@@ -1301,6 +1301,7 @@ const AdminDashboard = () => {
                   <thead>
                     <tr className="border-b">
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm">User</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Attempt</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm">Personality Type</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Score</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Completed Date</th>
@@ -1310,6 +1311,7 @@ const AdminDashboard = () => {
                   <tbody>
                     {assessments.length > 0 ? assessments.slice(0, assessmentsDisplayCount).map((assessment: any) => <tr key={assessment.id} className="border-b hover:bg-gray-50">
                       <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[100px] md:max-w-none">{assessment.userName || "Guest"}</td>
+                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{assessment.attempt != null ? assessment.attempt : "—"}</td>
                       <td className="p-2 md:p-3">
                         <Badge variant="outline" className="text-xs">{assessment.personalityType || "N/A"}</Badge>
                       </td>
@@ -1328,7 +1330,7 @@ const AdminDashboard = () => {
                       </td>
                     </tr>) : (
                       <tr>
-                        <td colSpan={5} className="p-4 text-center text-gray-500">No assessments found</td>
+                        <td colSpan={6} className="p-4 text-center text-gray-500">No assessments found</td>
                       </tr>
                     )}
                   </tbody>
@@ -1369,6 +1371,7 @@ const AdminDashboard = () => {
                   <thead>
                     <tr className="border-b">
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm">User</th>
+                      <th className="text-left p-2 md:p-3 text-xs md:text-sm">Attempt</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">File Name</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm">Status</th>
                       <th className="text-left p-2 md:p-3 text-xs md:text-sm hidden md:table-cell">Upload Date</th>
@@ -1382,6 +1385,7 @@ const AdminDashboard = () => {
                       return (
                         <tr key={resume.id} className="border-b hover:bg-gray-50">
                           <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[100px] md:max-w-none">{resume.userName || "Guest"}</td>
+                          <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{resume.attempt != null ? resume.attempt : "—"}</td>
                           <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{resume.fileName || "N/A"}</td>
                           <td className="p-2 md:p-3">
                             <Badge className="bg-blue-600 text-white hover:bg-blue-700 text-xs" variant={resume.status === "Analyzed" ? "default" : "secondary"}>
@@ -1391,14 +1395,14 @@ const AdminDashboard = () => {
                           <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{resume.uploadDate || "N/A"}</td>
                           <td className="p-2 md:p-3 hidden md:table-cell">
                             <div className="flex flex-wrap gap-1">
-                              {skillsList.slice(0, 3).map((skill: string, index: number) => (
+                              {skillsList.slice(0, 2).map((skill: string, index: number) => (
                                 <Badge key={index} variant="outline" className="text-xs">
                                   {skill}
                                 </Badge>
                               ))}
-                              {skillsList.length > 3 && (
+                              {skillsList.length > 2 && (
                                 <Badge variant="outline" className="text-xs">
-                                  +{skillsList.length - 3}
+                                  +{skillsList.length - 2}
                                 </Badge>
                               )}
                               {skillsList.length === 0 && (
@@ -1434,7 +1438,7 @@ const AdminDashboard = () => {
                       );
                     }) : (
                       <tr>
-                        <td colSpan={6} className="p-4 text-center text-gray-500">No resumes found</td>
+                        <td colSpan={7} className="p-4 text-center text-gray-500">No resumes found</td>
                       </tr>
                     )}
                   </tbody>
@@ -1626,8 +1630,11 @@ const AdminDashboard = () => {
                       <div className="flex flex-col gap-y-2 text-sm mb-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
                         <div className="flex justify-between items-center gap-2 w-full sm:contents">
                           <div className="flex items-center gap-x-2 flex-wrap min-w-0 sm:contents">
-                            <span className="font-semibold text-gray-800 text-xs sm:text-sm break-words sm:order-1">{item.username}</span>
-                            <Badge variant={item.feedbackType === "error" ? "destructive" : "secondary"} className="text-xs w-fit sm:order-3">
+                            <span className="font-semibold text-gray-800 text-xs sm:text-sm break-words sm:order-1">{item.userName}</span>
+                            <Badge
+                              variant="secondary"
+                              className={`text-xs w-fit sm:order-3 ${item.feedbackType === "error" ? "bg-red-600 text-white hover:bg-red-700" : "bg-blue-600 text-white hover:bg-blue-700"}`}
+                            >
                               {item.feedbackType === "error" ? "Error" : "Suggestion"}
                             </Badge>
                           </div>

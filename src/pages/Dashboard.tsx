@@ -79,6 +79,11 @@ const Dashboard = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackType, setFeedbackType] = useState<"suggestion" | "error">("suggestion");
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
+  const [myFeedbackList, setMyFeedbackList] = useState<{ message: string; type: "suggestion" | "error"; submittedAt: string }[]>([
+    { message: "Assessment result page sometimes takes too long to load. Please optimize.", type: "error", submittedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() },
+    { message: "It would be great to add dark mode support for the dashboard.", type: "suggestion", submittedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() },
+    { message: "Resume upload is working fine. Suggestion: allow PDF and DOCX both.", type: "suggestion", submittedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString() },
+  ]);
 
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
@@ -267,6 +272,15 @@ const Dashboard = () => {
       });
       return;
     }
+    const wordCount = trimmed.split(/\s+/).filter(Boolean).length;
+    if (wordCount > 50) {
+      toast({
+        title: "Word limit exceeded",
+        description: "Feedback must be 50 words or less.",
+        variant: "destructive",
+      });
+      return;
+    }
     setFeedbackSubmitting(true);
     const result = await authService.submitFeedback(trimmed, feedbackType);
     if (result.error) {
@@ -282,22 +296,26 @@ const Dashboard = () => {
       title: "Feedback submitted",
       description: "Thank you for your feedback. We will review it shortly.",
     });
+    setMyFeedbackList((prev) => [
+      ...prev,
+      { message: trimmed, type: feedbackType, submittedAt: new Date().toISOString() },
+    ]);
     setFeedbackMessage("");
     setFeedbackType("suggestion");
     setFeedbackSubmitting(false);
   };
 
   useEffect(() => {
-  const fetchPersonalityResult = async () => {
-    try {
-      const response = await fetch(
-       API_ENDPOINTS.GET_USER_RESULT,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
-          },
-        }
-      );
+    const fetchPersonalityResult = async () => {
+      try {
+        const response = await fetch(
+          API_ENDPOINTS.GET_USER_RESULT,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("career_nexus_token")}`,
+            },
+          }
+        );
 
         if (!response.ok) return;
 
@@ -1223,20 +1241,61 @@ const Dashboard = () => {
                           : "Share your suggestion or idea..."
                       }
                       value={feedbackMessage}
-                      onChange={(e) => setFeedbackMessage(e.target.value)}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        const words = v.trim().split(/\s+/).filter(Boolean);
+                        if (words.length > 50) {
+                          setFeedbackMessage(words.slice(0, 50).join(" "));
+                        } else {
+                          setFeedbackMessage(v);
+                        }
+                      }}
                       rows={5}
                       className="resize-none text-sm min-h-[120px] sm:min-h-[100px] w-full max-w-full"
                       required
                     />
+                    <p className="text-right text-xs text-gray-500">
+                      Max 50 words {feedbackMessage.trim() ? `(${feedbackMessage.trim().split(/\s+/).filter(Boolean).length}/50)` : ""}
+                    </p>
                   </div>
                   <Button
                     type="submit"
-                    disabled={feedbackSubmitting || !feedbackMessage.trim()}
+                    disabled={feedbackSubmitting || !feedbackMessage.trim() || feedbackMessage.trim().split(/\s+/).filter(Boolean).length > 50}
                     className="w-full sm:w-auto min-h-[44px] sm:min-h-0 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 touch-manipulation"
                   >
                     {feedbackSubmitting ? "Submitting..." : "Submit feedback"}
                   </Button>
                 </form>
+
+                {myFeedbackList.length > 0 && (
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3">Your submitted feedback</h3>
+                    <div className="space-y-3 max-h-[320px] overflow-y-auto">
+                      {myFeedbackList.slice().reverse().map((item, index) => (
+                        <div key={`${item.submittedAt}-${index}`} className="relative rounded-xl border-2 border-gray-200 bg-white overflow-visible">
+                          {/* Top-right: date + badge (badge extends beyond corner) */}
+                          <div className="flex justify-between mb-3 border p-3 rounded-lg">
+                            <span
+                              className={`rounded-lg px-3 py-1 text-white text-xs font-medium whitespace-nowrap shadow ${item.type === "error" ? "bg-red-600" : "bg-blue-600"}`}
+                            >
+                              {item.type === "error" ? "Error" : "Suggestion"}
+                            </span>
+                            <span className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-gray-600 text-xs shrink-0">
+                              {new Date(item.submittedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+                            </span>
+                          </div>
+                          {/* Para: prominent rounded box in center/lower area */}
+                          <div className="mx-3 rounded-xl border border-gray-200 bg-gray-50/80 p-3 min-h-[50px]">
+                            <p className="text-gray-700 text-sm whitespace-pre-wrap break-words text-left">
+                              {item.message}
+                            </p>
+                          </div>
+                          <div className="h-[1px] mt-3 mb-3 bg-gray-200 w-full"></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
