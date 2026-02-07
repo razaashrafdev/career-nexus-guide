@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Brain } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { AnimatedElement } from "@/components/AnimatedElement";
@@ -258,6 +259,29 @@ if (!guestSessionId) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100">
       <Header variant="back" />
+
+      {/* Hero Section */}
+      <section className="py-16 md:py-20 relative bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 text-white overflow-hidden">
+        <div className="relative container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <AnimatedElement delay={0}>
+              <Badge className="mb-6 bg-white/20 hover:bg-white/20 text-white border-0">
+                Personality Assessment
+              </Badge>
+            </AnimatedElement>
+            <AnimatedElement delay={80}>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                Discover Your MBTI Personality
+              </h1>
+            </AnimatedElement>
+            <AnimatedElement delay={160}>
+              <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+                Answer a few questions to uncover your personality type and get AI-powered career recommendations that match who you are.
+              </p>
+            </AnimatedElement>
+          </div>
+        </div>
+      </section>
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
