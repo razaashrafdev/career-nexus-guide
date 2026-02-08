@@ -1260,7 +1260,7 @@ const Dashboard = () => {
                   <span className="break-words">Feedback</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-3 sm:p-4 md:p-6">
+              <CardContent className="p-3 sm:p-4 md:p-6 overflow-x-hidden min-w-0">
                 <form onSubmit={handleFeedbackSubmit} className="space-y-3 sm:space-y-4">
                   <div className="space-y-1.5 sm:space-y-2">
                     <Label htmlFor="feedback-type" className="text-xs sm:text-sm">Type</Label>
@@ -1311,14 +1311,14 @@ const Dashboard = () => {
                 </form>
                 {loadingFeedback && <p className="text-sm text-gray-500 mt-4">Loading feedback...</p>}
                 {myFeedbackList.length > 0 && (
-                  <div className="mt-6 pt-4 border-t border-gray-200">
+                  <div className="mt-6 pt-4 border-t border-gray-200 overflow-x-hidden min-w-0">
                     <h3 className="text-sm font-semibold text-gray-800 mb-3">Your submitted feedback</h3>
-                    <div className="space-y-3">
+                    <div className="space-y-3 min-w-0">
 
                       {myFeedbackList.slice().reverse().map((item, index) => (
-                        <div key={`${item.submittedAt}-${index}`} className="relative rounded-xl border-2 border-gray-200 bg-white overflow-visible">
+                        <div key={`${item.submittedAt}-${index}`} className="relative rounded-xl border-2 border-gray-200 bg-white min-w-0 overflow-hidden">
                           {/* Top-right: date + badge (badge extends beyond corner) */}
-                          <div className="SubmitFeedback flex justify-between mb-3 border p-3 rounded-lg">
+                          <div className="flex justify-between mb-3 border p-3 rounded-lg">
 
                             <span
                               className={`rounded-lg px-3 py-1 text-white text-xs font-medium whitespace-nowrap shadow ${item.type === "error" ? "bg-red-600" : "bg-blue-600"}`}
@@ -1342,7 +1342,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                           {/* Para: prominent rounded box in center/lower area */}
-                          <div className="mx-3 rounded-xl border border-gray-200 bg-gray-50/80 p-3 min-h-[50px]">
+                          <div className="mx-3 rounded-xl border border-gray-200 bg-gray-50/80 p-3 min-w-0 overflow-hidden">
                             <p className="text-gray-700 text-sm whitespace-pre-wrap break-words text-left">
                               {item.message}
                             </p>
