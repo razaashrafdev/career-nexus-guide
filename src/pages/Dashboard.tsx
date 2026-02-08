@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
-import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Eye, MessageSquare } from "lucide-react";
+import { User, BookOpen, FileText, Target, TrendingUp, Award, ArrowRight, CheckCircle, AlertCircle, Upload, RefreshCw, Brain, BarChart3, Settings, LogOut, Home, Eye, MessageSquare, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,6 +19,16 @@ import { useToast } from "@/hooks/use-toast";
 import { DashboardAIChat } from "@/components/DashboardAIChat";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 
 // Dashboard.tsx ke upar imports ke baad
@@ -84,7 +94,9 @@ const Dashboard = () => {
   const [GetFeedbackList, GetMyFeedbackList] = useState<any[]>([]);
   const [loadingFeedback, setLoadingFeedback] = useState(false);
   const [myFeedbackList, setMyFeedbackList] = useState<{ message: string; type: "suggestion" | "error"; submittedAt: string }[]>([
- ]);
+
+  const [deleteFeedbackIndex, setDeleteFeedbackIndex] = useState<number | null>(null);
+
 
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
@@ -442,7 +454,7 @@ useEffect(() => {
   const guidance = getGuidanceMessage();
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex overflow-x-hidden w-full">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex overflow-x-hidden w-full">
       <ResponsiveSidebar>
         {({ closeSidebar }) => (
           <>
@@ -1302,18 +1314,32 @@ useEffect(() => {
                   <div className="mt-6 pt-4 border-t border-gray-200">
                     <h3 className="text-sm font-semibold text-gray-800 mb-3">Your submitted feedback</h3>
                     <div className="space-y-3 max-h-[320px] overflow-y-auto">
+
                       {myFeedbackList.slice().reverse().map((item, index) => (
                         <div key={`${item.submittedAt}-${index}`} className="relative rounded-xl border-2 border-gray-200 bg-white overflow-visible">
                           {/* Top-right: date + badge (badge extends beyond corner) */}
                           <div className="SubmitFeedbackflex justify-between mb-3 border p-3 rounded-lg">
+
                             <span
                               className={`rounded-lg px-3 py-1 text-white text-xs font-medium whitespace-nowrap shadow ${item.type === "error" ? "bg-red-600" : "bg-blue-600"}`}
                             >
                               {item.type === "error" ? "Error" : "Suggestion"}
                             </span>
-                            <span className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-gray-600 text-xs shrink-0">
-                              {new Date(item.submittedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1 text-gray-600 text-xs shrink-0">
+                                {new Date(item.submittedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+                              </span>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="p-1.5 h-auto text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+                                onClick={() => setDeleteFeedbackIndex(originalIndex)}
+                                title="Delete feedback"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                           {/* Para: prominent rounded box in center/lower area */}
                           <div className="mx-3 rounded-xl border border-gray-200 bg-gray-50/80 p-3 min-h-[50px]">
@@ -1323,7 +1349,7 @@ useEffect(() => {
                           </div>
                           <div className="h-[1px] mt-3 mb-3 bg-gray-200 w-full"></div>
                         </div>
-                      ))}
+                      ); })}
                     </div>
                   </div>
                 )}
@@ -1442,6 +1468,31 @@ useEffect(() => {
           </Card>}
         </div>
       </div>
+
+      <AlertDialog open={deleteFeedbackIndex !== null} onOpenChange={(open) => !open && setDeleteFeedbackIndex(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete feedback?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will remove this feedback from your list. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              onClick={() => {
+                if (deleteFeedbackIndex !== null) {
+                  setMyFeedbackList(prev => prev.filter((_, i) => i !== deleteFeedbackIndex));
+                  setDeleteFeedbackIndex(null);
+                }
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
