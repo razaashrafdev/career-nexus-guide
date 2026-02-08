@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { authService } from "@/services/authService";
 import { useState } from "react";
+
 import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { DashboardAIChat } from "@/components/DashboardAIChat";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+
 
 // Dashboard.tsx ke upar imports ke baad
 interface ResumeAnalysis {
@@ -79,11 +81,10 @@ const Dashboard = () => {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackType, setFeedbackType] = useState<"suggestion" | "error">("suggestion");
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
+  const [GetFeedbackList, GetMyFeedbackList] = useState<any[]>([]);
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
   const [myFeedbackList, setMyFeedbackList] = useState<{ message: string; type: "suggestion" | "error"; submittedAt: string }[]>([
-    { message: "Assessment result page sometimes takes too long to load. Please optimize.", type: "error", submittedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString() },
-    { message: "It would be great to add dark mode support for the dashboard.", type: "suggestion", submittedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString() },
-    { message: "Resume upload is working fine. Suggestion: allow PDF and DOCX both.", type: "suggestion", submittedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString() },
-  ]);
+ ]);
 
   // Mock user data - in real app this would come from backend
   const [userData, setUserData] = useState({
@@ -260,7 +261,35 @@ const Dashboard = () => {
       setConfirmPassword("");
     }
   };
+const fetchMyFeedback = async () => {      // <-- add this after state
+  try {
+    setLoadingFeedback(true);
 
+    const token = localStorage.getItem("token");
+    const res = await fetch(API_ENDPOINTS.GET_FEEDBACK_BYUSERID, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log("Fetching:", API_ENDPOINTS.GET_FEEDBACK_BYUSERID);
+console.log("Token:", token);
+    const result = await res.json();
+    if (result.isSuccess) {
+      const mapped = result.data.map((item: any) => ({
+        id: item.id,
+        message: item.message,
+        type: item.feedbackType,
+        submittedAt: item.submittedAt,
+      }));
+      setMyFeedbackList(mapped);
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoadingFeedback(false);
+  }
+};
+useEffect(() => {
+  if (activeSection === "feedback") fetchMyFeedback();
+}, [activeSection]);
   const handleFeedbackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = feedbackMessage?.trim();
@@ -301,6 +330,8 @@ const Dashboard = () => {
       { message: trimmed, type: feedbackType, submittedAt: new Date().toISOString() },
     ]);
     setFeedbackMessage("");
+    setFeedbackMessage("")
+    await fetchMyFeedback(); 
     setFeedbackType("suggestion");
     setFeedbackSubmitting(false);
   };
@@ -1266,7 +1297,7 @@ const Dashboard = () => {
                     {feedbackSubmitting ? "Submitting..." : "Submit feedback"}
                   </Button>
                 </form>
-
+               {loadingFeedback && <p className="text-sm text-gray-500 mt-4">Loading feedback...</p>}
                 {myFeedbackList.length > 0 && (
                   <div className="mt-6 pt-4 border-t border-gray-200">
                     <h3 className="text-sm font-semibold text-gray-800 mb-3">Your submitted feedback</h3>
@@ -1274,7 +1305,7 @@ const Dashboard = () => {
                       {myFeedbackList.slice().reverse().map((item, index) => (
                         <div key={`${item.submittedAt}-${index}`} className="relative rounded-xl border-2 border-gray-200 bg-white overflow-visible">
                           {/* Top-right: date + badge (badge extends beyond corner) */}
-                          <div className="flex justify-between mb-3 border p-3 rounded-lg">
+                          <div className="SubmitFeedbackflex justify-between mb-3 border p-3 rounded-lg">
                             <span
                               className={`rounded-lg px-3 py-1 text-white text-xs font-medium whitespace-nowrap shadow ${item.type === "error" ? "bg-red-600" : "bg-blue-600"}`}
                             >

@@ -1311,7 +1311,7 @@ const AdminDashboard = () => {
                   <tbody>
                     {assessments.length > 0 ? assessments.slice(0, assessmentsDisplayCount).map((assessment: any) => <tr key={assessment.id} className="border-b hover:bg-gray-50">
                       <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[100px] md:max-w-none">{assessment.userName || "Guest"}</td>
-                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{assessment.attempt != null ? assessment.attempt : "—"}</td>
+                      <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{assessment.attemptCount != null ? assessment.attemptCount : "—"}</td>
                       <td className="p-2 md:p-3">
                         <Badge variant="outline" className="text-xs">{assessment.personalityType || "N/A"}</Badge>
                       </td>
@@ -1385,7 +1385,7 @@ const AdminDashboard = () => {
                       return (
                         <tr key={resume.id} className="border-b hover:bg-gray-50">
                           <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[100px] md:max-w-none">{resume.userName || "Guest"}</td>
-                          <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{resume.attempt != null ? resume.attempt : "—"}</td>
+                          <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{resume.attemptCount != null ? resume.attemptCount : "—"}</td>
                           <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{resume.fileName || "N/A"}</td>
                           <td className="p-2 md:p-3">
                             <Badge className="bg-blue-600 text-white hover:bg-blue-700 text-xs" variant={resume.status === "Analyzed" ? "default" : "secondary"}>
@@ -1630,7 +1630,7 @@ const AdminDashboard = () => {
                       <div className="flex flex-col gap-y-2 text-sm mb-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-1">
                         <div className="flex justify-between items-center gap-2 w-full sm:contents">
                           <div className="flex items-center gap-x-2 flex-wrap min-w-0 sm:contents">
-                            <span className="font-semibold text-gray-800 text-xs sm:text-sm break-words sm:order-1">{item.userName}</span>
+                            <span className="font-semibold text-gray-800 text-xs sm:text-sm break-words sm:order-1">{item.username}</span>
                             <Badge
                               variant="secondary"
                               className={`text-xs w-fit sm:order-3 ${item.feedbackType === "error" ? "bg-red-600 text-white hover:bg-red-700" : "bg-blue-600 text-white hover:bg-blue-700"}`}
