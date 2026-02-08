@@ -2,7 +2,7 @@ import { ApiError } from "@/types/auth";
 import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
 export const resumeService = {
   async uploadResume(file: File): Promise<{
-    success?: { statusCode: number; data: unknown };
+    success?: { statusCode: number; data: unknown; message?: string };
     error?: ApiError;
   }> {
     try {
@@ -38,10 +38,15 @@ export const resumeService = {
       });
 
       const result = await response.json();
+      const message = result?.message ?? result?.Message ?? "";
 
       if (!response.ok) {
         return {
-          error: { isSuccess: false, message: result?.message || "Failed" },
+          error: {
+            isSuccess: result?.isSuccess ?? false,
+            message: message || "Something went wrong.",
+            statusCode: result?.statusCode ?? response.status,
+          },
         };
       }
 
@@ -49,13 +54,13 @@ export const resumeService = {
         success: {
           statusCode: response.status,
           data: result.data,
+          message: message || "Resume analyzed successfully.",
         },
       };
-    } catch (error) {
+    } catch {
       return {
-        error: { isSuccess: false, message: "Failed to load latest resume" },
+        error: { isSuccess: false, message: "Failed to upload resume. Please try again." },
       };
-
     }
   },
   async getLatestResume(): Promise<{

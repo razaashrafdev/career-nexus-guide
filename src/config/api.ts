@@ -37,7 +37,8 @@ export const API_ENDPOINTS = {
   FORGOT_PASSWORD: `${API_BASE_URL}/api/Account/ForgotPassword`,
   CHANGE_PASSWORD: `${API_BASE_URL}/api/Account/ChangePassword`,
   SUBMIT_FEEDBACK: `${API_BASE_URL}/api/Account/SubmitFeedback`,
- GET_FEEDBACK_BYUSERID: `${API_BASE_URL}/api/Account/GetFeedbackByUserId`,
+  GET_FEEDBACK_BYUSERID: `${API_BASE_URL}/api/Account/GetFeedbackByUserId`,
+  DELETE_FEEDBACK_BY_ID: (id: number) => `${API_BASE_URL}/api/Account/DeleteFeedbackById?id=${id}`,
   
   // Resume
   UPLOAD_RESUME: `${API_RESUME_BASE_URL}/UploadResume`,
