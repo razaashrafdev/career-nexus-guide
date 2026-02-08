@@ -93,7 +93,7 @@ const Dashboard = () => {
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
   const [GetFeedbackList, GetMyFeedbackList] = useState<any[]>([]);
   const [loadingFeedback, setLoadingFeedback] = useState(false);
-  const [myFeedbackList, setMyFeedbackList] = useState<{ message: string; type: "suggestion" | "error"; submittedAt: string }[]>([]);
+  const [myFeedbackList, setMyFeedbackList] = useState<{ id?: number; message: string; type: "suggestion" | "error"; submittedAt: string }[]>([]);
 
   const [deleteFeedbackIndex, setDeleteFeedbackIndex] = useState<number | null>(null);
 
@@ -103,7 +103,7 @@ const Dashboard = () => {
     name: user.fullName || "User",
     email: user.email || "",
     assessmentCompleted: false,
-    resumeUploaded: true,
+    resumeUploaded: false,
     personalityType: "",
     personalityDescription: "",
     careerScore: 0,
@@ -153,6 +153,8 @@ const Dashboard = () => {
         }
 
         const data = await response.json();
+        const hasResume = data && (data.fileURL || data.uploadedAt);
+        if (!hasResume) return;
 
         setResumeData({
           fileURL: data.fileURL,
@@ -288,7 +290,7 @@ const Dashboard = () => {
         const mapped = result.data.map((item: any) => ({
           id: item.id,
           message: item.message,
-          type: item.feedbackType,
+          type: (item.feedbackType === "error" ? "error" : "suggestion") as "suggestion" | "error",
           submittedAt: item.submittedAt,
         }));
         setMyFeedbackList(mapped);
@@ -432,21 +434,21 @@ const Dashboard = () => {
         type: "info",
         title: "Upload your resume for better counselling",
         message: "You've completed your personality assessment. Now upload your resume to get personalized career recommendations based on your skills and experience.",
-        icon: <Upload className="h-6 w-6 text-blue-500" />
+        icon: <Upload className="h-6 w-6 text-white" />
       };
     } else if (!assessmentCompleted && resumeUploaded) {
       return {
         type: "info",
         title: "Take the personality assessment for better counselling",
         message: "Great! You've uploaded your resume. Now take our personality assessment to get more accurate career recommendations.",
-        icon: <Brain className="h-6 w-6 text-purple-500" />
+        icon: <Brain className="h-6 w-6 text-white" />
       };
     } else {
       return {
         type: "warning",
         title: "Get started with your career journey!",
         message: "Complete your personality assessment and upload your resume to unlock personalized career guidance.",
-        icon: <AlertCircle className="h-6 w-6 text-orange-500" />
+        icon: <AlertCircle className="h-6 w-6 text-white" />
       };
     }
   };
@@ -1315,8 +1317,10 @@ const Dashboard = () => {
                     <h3 className="text-sm font-semibold text-gray-800 mb-3">Your submitted feedback</h3>
                     <div className="space-y-3 min-w-0">
 
-                      {myFeedbackList.slice().reverse().map((item, index) => (
-                        <div key={`${item.submittedAt}-${index}`} className="relative rounded-xl border-2 border-gray-200 bg-white min-w-0 overflow-hidden">
+                      {myFeedbackList.slice().reverse().map((item, revIndex) => {
+                        const originalIndex = myFeedbackList.length - 1 - revIndex;
+                        return (
+                        <div key={item.id != null ? `fb-${item.id}` : `${item.submittedAt}-${originalIndex}`} className="relative rounded-xl border-2 border-gray-200 bg-white min-w-0 overflow-hidden">
                           {/* Top-right: date + badge (badge extends beyond corner) */}
                           <div className="flex justify-between mb-3 border p-3 rounded-lg">
 
@@ -1334,7 +1338,7 @@ const Dashboard = () => {
                                 variant="outline"
                                 size="sm"
                                 className="p-1.5 h-auto text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
-                                onClick={() => setDeleteFeedbackIndex(index)}
+                                onClick={() => setDeleteFeedbackIndex(originalIndex)}
                                 title="Delete feedback"
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -1349,7 +1353,7 @@ const Dashboard = () => {
                           </div>
                           <div className="h-[1px] mt-3 mb-3 bg-gray-200 w-full"></div>
                         </div>
-                      ))}
+                      ); })}
                     </div>
                   </div>
                 )}
@@ -1481,11 +1485,34 @@ const Dashboard = () => {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               className="bg-red-600 hover:bg-red-700"
-              onClick={() => {
-                if (deleteFeedbackIndex !== null) {
-                  setMyFeedbackList(prev => prev.filter((_, i) => i !== deleteFeedbackIndex));
-                  setDeleteFeedbackIndex(null);
+              onClick={async () => {
+                if (deleteFeedbackIndex === null) return;
+                const item = myFeedbackList[deleteFeedbackIndex];
+                const originalIndex = deleteFeedbackIndex;
+
+                if (item?.id != null) {
+                  try {
+                    const res = await fetch(API_ENDPOINTS.DELETE_FEEDBACK_BY_ID(item.id), {
+                      method: "DELETE",
+                      headers: { Authorization: `Bearer ${localStorage.getItem(TOKEN_KEY)}` },
+                    });
+                    const result = await res.json();
+                    if (result?.isSuccess) {
+                      toast({ title: "Success", description: result.message ?? "Feedback deleted successfully." });
+                    } else {
+                      toast({ title: "Error", description: result?.message ?? "Failed to delete feedback.", variant: "destructive" });
+                      setDeleteFeedbackIndex(null);
+                      return;
+                    }
+                  } catch (e) {
+                    toast({ title: "Error", description: "Failed to delete feedback.", variant: "destructive" });
+                    setDeleteFeedbackIndex(null);
+                    return;
+                  }
                 }
+
+                setMyFeedbackList(prev => prev.filter((_, i) => i !== originalIndex));
+                setDeleteFeedbackIndex(null);
               }}
             >
               Delete

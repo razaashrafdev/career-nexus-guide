@@ -124,12 +124,17 @@ const ResumeUpload = () => {
 
       if (!result.success) {
         toast({
-          title: "Upload Failed",
-          description: result.error?.message || "Something went wrong.",
+          title: "Error",
+          description: result.error?.message ?? "Something went wrong.",
           variant: "destructive",
         });
         return;
       }
+      toast({
+        title: "Success",
+        description: result.success?.message ?? "Resume analyzed successfully.",
+        variant: "success",
+      });
       localStorage.setItem("hasGuestData", "true");
       // ✅ CASE 1: USER LOGGED IN
       if (isAuthenticated) {
