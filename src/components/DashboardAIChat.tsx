@@ -84,7 +84,14 @@ Careers in system: ${careerList}
 
 ${personalityBlock}
 
-Only respond based on this dashboard context and career-related questions. Keep answers helpful and concise.
+Only respond based on this dashboard context and career-related questions.
+
+Response length and format:
+- By default give SHORT, CONCISE answers: 2–4 sentences or brief bullet points. No long paragraphs.
+- When your answer has multiple points, steps, or items, ALWAYS show them as bullet points (use • or - at the start of each line). Do not write points in a single long sentence or paragraph.
+- Give a DETAILED answer only when the user clearly asks for it (e.g. "detail do", "explain in detail", "mujhe detail chahiye", "elaborate", "full explanation", "step by step", "in depth", "detailed answer"). Even then, use bullet points for any list of points.
+- If the user did not ask for detail, keep your reply brief and to the point.
+
 Respond only in English or Roman Urdu (Urdu in Latin script). Do not use Urdu/Arabic script. Use Roman Urdu when the user writes in Roman Urdu; otherwise use English.`;
 }
 
@@ -241,7 +248,7 @@ export function DashboardAIChat({
                             m.role === "user"
                               ? "bg-purple-600 text-white"
                               : "bg-gray-100 text-gray-800"
-                          }`}
+                          } ${m.role === "assistant" ? "whitespace-pre-wrap" : ""}`}
                         >
                           {m.content}
                         </div>
