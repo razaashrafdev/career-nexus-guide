@@ -93,7 +93,7 @@ const Dashboard = () => {
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
   const [GetFeedbackList, GetMyFeedbackList] = useState<any[]>([]);
   const [loadingFeedback, setLoadingFeedback] = useState(false);
-  const [myFeedbackList, setMyFeedbackList] = useState<{ message: string; type: "suggestion" | "error"; submittedAt: string }[]>([
+  const [myFeedbackList, setMyFeedbackList] = useState<{ message: string; type: "suggestion" | "error"; submittedAt: string }[]>([]);
 
   const [deleteFeedbackIndex, setDeleteFeedbackIndex] = useState<number | null>(null);
 
@@ -273,35 +273,35 @@ const Dashboard = () => {
       setConfirmPassword("");
     }
   };
-const fetchMyFeedback = async () => {      // <-- add this after state
-  try {
-    setLoadingFeedback(true);
+  const fetchMyFeedback = async () => {      // <-- add this after state
+    try {
+      setLoadingFeedback(true);
 
-    const token = localStorage.getItem("token");
-    const res = await fetch(API_ENDPOINTS.GET_FEEDBACK_BYUSERID, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log("Fetching:", API_ENDPOINTS.GET_FEEDBACK_BYUSERID);
-console.log("Token:", token);
-    const result = await res.json();
-    if (result.isSuccess) {
-      const mapped = result.data.map((item: any) => ({
-        id: item.id,
-        message: item.message,
-        type: item.feedbackType,
-        submittedAt: item.submittedAt,
-      }));
-      setMyFeedbackList(mapped);
+      const token = localStorage.getItem("token");
+      const res = await fetch(API_ENDPOINTS.GET_FEEDBACK_BYUSERID, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log("Fetching:", API_ENDPOINTS.GET_FEEDBACK_BYUSERID);
+      console.log("Token:", token);
+      const result = await res.json();
+      if (result.isSuccess) {
+        const mapped = result.data.map((item: any) => ({
+          id: item.id,
+          message: item.message,
+          type: item.feedbackType,
+          submittedAt: item.submittedAt,
+        }));
+        setMyFeedbackList(mapped);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingFeedback(false);
     }
-  } catch (err) {
-    console.error(err);
-  } finally {
-    setLoadingFeedback(false);
-  }
-};
-useEffect(() => {
-  if (activeSection === "feedback") fetchMyFeedback();
-}, [activeSection]);
+  };
+  useEffect(() => {
+    if (activeSection === "feedback") fetchMyFeedback();
+  }, [activeSection]);
   const handleFeedbackSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = feedbackMessage?.trim();
@@ -343,7 +343,7 @@ useEffect(() => {
     ]);
     setFeedbackMessage("");
     setFeedbackMessage("")
-    await fetchMyFeedback(); 
+    await fetchMyFeedback();
     setFeedbackType("suggestion");
     setFeedbackSubmitting(false);
   };
@@ -1309,16 +1309,16 @@ useEffect(() => {
                     {feedbackSubmitting ? "Submitting..." : "Submit feedback"}
                   </Button>
                 </form>
-               {loadingFeedback && <p className="text-sm text-gray-500 mt-4">Loading feedback...</p>}
+                {loadingFeedback && <p className="text-sm text-gray-500 mt-4">Loading feedback...</p>}
                 {myFeedbackList.length > 0 && (
                   <div className="mt-6 pt-4 border-t border-gray-200">
                     <h3 className="text-sm font-semibold text-gray-800 mb-3">Your submitted feedback</h3>
-                    <div className="space-y-3 max-h-[320px] overflow-y-auto">
+                    <div className="space-y-3">
 
                       {myFeedbackList.slice().reverse().map((item, index) => (
                         <div key={`${item.submittedAt}-${index}`} className="relative rounded-xl border-2 border-gray-200 bg-white overflow-visible">
                           {/* Top-right: date + badge (badge extends beyond corner) */}
-                          <div className="SubmitFeedbackflex justify-between mb-3 border p-3 rounded-lg">
+                          <div className="SubmitFeedback flex justify-between mb-3 border p-3 rounded-lg">
 
                             <span
                               className={`rounded-lg px-3 py-1 text-white text-xs font-medium whitespace-nowrap shadow ${item.type === "error" ? "bg-red-600" : "bg-blue-600"}`}
@@ -1334,7 +1334,7 @@ useEffect(() => {
                                 variant="outline"
                                 size="sm"
                                 className="p-1.5 h-auto text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
-                                onClick={() => setDeleteFeedbackIndex(originalIndex)}
+                                onClick={() => setDeleteFeedbackIndex(index)}
                                 title="Delete feedback"
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -1349,7 +1349,7 @@ useEffect(() => {
                           </div>
                           <div className="h-[1px] mt-3 mb-3 bg-gray-200 w-full"></div>
                         </div>
-                      ); })}
+                      ))}
                     </div>
                   </div>
                 )}
