@@ -843,7 +843,7 @@ const Dashboard = () => {
                       Discover your personality type and get AI-powered career guidance based on your unique traits and preferences.
                     </p>
                     <Link to="/personality-test">
-                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base px-8 py-6 h-auto">
+                      <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base px-8 py-3 h-auto">
                         <Brain className="h-5 w-5 mr-2" />
                         Start Assessment
                       </Button>
@@ -870,7 +870,7 @@ const Dashboard = () => {
                         month: 'long',
                         day: 'numeric'
                       })}`
-                      : "Resume uploaded"}
+                      : "No Resume Uploaded"}
                   </Badge>
                 </div>
               </CardHeader>
@@ -1022,7 +1022,7 @@ const Dashboard = () => {
                       Upload your resume to get AI-powered analysis, personalized career recommendations, and skill insights.
                     </p>
                     <Link to="/resume-upload">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm md:text-base px-8 py-6 h-auto">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm md:text-base px-8 py-3 h-auto">
                         <Upload className="h-5 w-5 mr-2" />
                         Upload Resume
                       </Button>
@@ -1061,7 +1061,7 @@ const Dashboard = () => {
                       Upload your resume to see AI-powered career recommendations based on your skills and experience.
                     </p>
                     <Link to="/resume-upload">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm md:text-base px-8 py-6 h-auto">
+                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm md:text-base px-8 py-3 h-auto">
                         <Upload className="h-5 w-5 mr-2" />
                         Upload Resume
                       </Button>
@@ -1231,7 +1231,7 @@ const Dashboard = () => {
                           Upload your resume to get personalized skill development recommendations and tutorials.
                         </p>
                         <Link to="/resume-upload">
-                          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm md:text-base px-8 py-6 h-auto">
+                          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-sm md:text-base px-8 py-3 h-auto">
                             <Upload className="h-5 w-5 mr-2" />
                             Upload Resume
                           </Button>
@@ -1256,11 +1256,13 @@ const Dashboard = () => {
 
           {activeSection === "feedback" && (
             <Card className="border-0 shadow-lg bg-white/90 backdrop-blur-sm w-full max-w-full overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-3 sm:py-3 sm:px-4 md:py-4 md:px-5">
-                <CardTitle className="flex items-center space-x-2 text-sm sm:text-base md:text-lg font-semibold text-white gap-2">
-                  <MessageSquare className="h-5 w-5 sm:h-5 sm:w-5 md:h-6 md:w-6 flex-shrink-0" />
-                  <span className="break-words">Feedback</span>
-                </CardTitle>
+              <CardHeader className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg py-3 px-4">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="flex items-center space-x-2 text-base md:text-lg font-semibold text-white gap-2">
+                    <MessageSquare className="h-5 w-5 md:h-6 md:w-6" />
+                    Feedback
+                  </CardTitle>
+                </div>
               </CardHeader>
               <CardContent className="p-3 sm:p-4 md:p-6 overflow-x-hidden min-w-0">
                 <form onSubmit={handleFeedbackSubmit} className="space-y-3 sm:space-y-4">

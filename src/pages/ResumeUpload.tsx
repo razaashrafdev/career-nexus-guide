@@ -185,7 +185,7 @@ const ResumeUpload = () => {
             </AnimatedElement>
             <AnimatedElement delay={160}>
               <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-                Get personalized career recommendations, skill gap analysis, and job matching based on your resume. Our AI will analyze your experience and suggest the perfect career paths.
+                Get personalized career recommendations, skill gap analysis based on your resume. Our AI will analyze your experience and suggest the perfect career paths.
               </p>
             </AnimatedElement>
           </div>

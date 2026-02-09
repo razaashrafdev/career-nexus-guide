@@ -44,8 +44,21 @@ const SignUp = () => {
   };
   const capitalizeFirst = (str: string) =>
     str.trim() ? str.trim().charAt(0).toUpperCase() + str.trim().slice(1).toLowerCase() : str.trim();
+
+  const ALLOWED_EMAIL_DOMAINS = ["gmail.com", "yahoo.com", "yopmail.com"];
+  const getEmailDomain = (email: string) => email.trim().toLowerCase().split("@")[1] ?? "";
+  const isAllowedEmail = (email: string) => ALLOWED_EMAIL_DOMAINS.includes(getEmailDomain(email));
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAllowedEmail(formData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Only Gmail and Yahoo email are accepted.",
+        variant: "destructive",
+      });
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Password Mismatch",
