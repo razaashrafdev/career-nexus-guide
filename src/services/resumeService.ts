@@ -94,6 +94,63 @@ export const resumeService = {
       };
     }
   },
+
+  async downloadLatestResume(userId?: number): Promise<{
+    success?: true;
+    error?: ApiError;
+  }> {
+    try {
+      const token = localStorage.getItem(TOKEN_KEY);
+      if (!token) {
+        return { error: { isSuccess: false, message: "Please sign in to download resume." } };
+      }
+
+      const urls =
+        userId != null && userId > 0
+          ? `${API_ENDPOINTS.DOWNLOAD_LATEST_RESUME}?UserId=${userId}`
+          : API_ENDPOINTS.DOWNLOAD_LATEST_RESUME;
+      const response = await fetch(urls, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          return { error: { isSuccess: false, message: "No resume found to download." } };
+        }
+        return {
+          error: { isSuccess: false, message: response.statusText || "Failed to download resume." },
+        };
+      }
+
+      const buffer = await response.arrayBuffer();
+      const blob = new Blob([buffer], { type: "application/pdf" });
+      const contentDisposition = response.headers.get("content-disposition");
+      let fileName = "resume.pdf";
+      if (contentDisposition) {
+        const match = contentDisposition.match(/filename\*?=(?:UTF-8'')?([^;]+)/i) || contentDisposition.match(/filename="?([^";]+)"?/i);
+        if (match && match[1]) {
+          fileName = decodeURIComponent(match[1].trim().replace(/^["']|["']$/g, ""));
+        }
+      }
+      if (!fileName.toLowerCase().endsWith(".pdf")) {
+        fileName = fileName ? `${fileName.replace(/\.[^/.]+$/, "")}.pdf` : "resume.pdf";
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      return { success: true };
+    } catch {
+      return { error: { isSuccess: false, message: "Failed to download resume. Please try again." } };
+    }
+  },
 };
 
 

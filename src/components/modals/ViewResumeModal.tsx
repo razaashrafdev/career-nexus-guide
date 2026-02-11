@@ -5,6 +5,7 @@ import { FileText, User, Calendar, Download } from "lucide-react";
 
 export interface ResumeData {
   id: number;
+  userId?: number;
   userName: string;
   fileName: string;
   status: string;
@@ -17,8 +18,15 @@ interface ViewResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
   resume: ResumeData | null;
-  onDownload?: (resume: ResumeData) => void;
+  onDownload?: (resume: ResumeData) => void | Promise<void>;
 }
+
+/** Show only filename (no path) e.g. "resumes/47/RazaResume.pdf" → "RazaResume.pdf" */
+const getDisplayFileName = (fileName: string | null | undefined) => {
+  if (!fileName) return "N/A";
+  const parts = String(fileName).replace(/\\/g, "/").split("/");
+  return parts[parts.length - 1] || fileName;
+};
 
 export const ViewResumeModal = ({ isOpen, onClose, resume, onDownload }: ViewResumeModalProps) => {
   if (!resume) return null;
@@ -42,6 +50,14 @@ export const ViewResumeModal = ({ isOpen, onClose, resume, onDownload }: ViewRes
               <div className="flex items-center gap-2 mt-1">
                 <User className="h-4 w-4 text-gray-400" />
                 <p className="text-sm font-medium">{resume.userName || "Guest"}</p>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-600">File</label>
+              <div className="flex items-center gap-2 mt-1">
+                <FileText className="h-4 w-4 text-gray-400" />
+                <p className="text-sm truncate" title={resume.fileName}>{getDisplayFileName(resume.fileName)}</p>
               </div>
             </div>
 
