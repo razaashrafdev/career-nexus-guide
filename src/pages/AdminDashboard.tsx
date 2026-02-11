@@ -12,7 +12,7 @@ import ResponsiveSidebar from "@/components/ResponsiveSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { ViewUserModal, type UserData } from "@/components/modals/ViewUserModal";
 import { ViewAssessmentModal } from "@/components/modals/ViewAssessmentModal";
-import { ViewResumeModal } from "@/components/modals/ViewResumeModal";
+import { ViewResumeModal, type ResumeData } from "@/components/modals/ViewResumeModal";
 import { EditCareerModal } from "@/components/modals/EditCareerModal";
 import { EditSkillModal } from "@/components/modals/EditSkillModal";
 import { AddUserModal } from "@/components/modals/AddUserModal";
@@ -20,6 +20,7 @@ import { AddSkillModal } from "@/components/modals/AddSkillModal";
 import { AddCareerModal } from "@/components/modals/AddCareerModal";
 import { useToast } from "@/hooks/use-toast";
 import { adminService } from "@/services/adminService";
+import { resumeService } from "@/services/resumeService";
 import { TOKEN_KEY } from "@/config/api";
 import {
   AlertDialog,
@@ -226,68 +227,28 @@ const AdminDashboard = () => {
     }
   }, [toast]);
 
-  const handleDownloadResume = async (resume: any) => {
-    if (!resume.fileURL) {
+  const handleDownloadResume = async (resume?: ResumeData | null) => {
+    const userId = resume?.userId != null && resume.userId > 0 ? resume.userId : undefined;
+    const result = await resumeService.downloadLatestResume(userId);
+    if (result.error) {
       toast({
         title: "Error",
-        description: "Resume file URL not available",
+        description: result.error.message,
         variant: "destructive"
       });
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem(TOKEN_KEY) || localStorage.getItem("token");
-      const headers: HeadersInit = {};
-
-      if (token) {
-        headers.Authorization = `Bearer ${token}`;
-      }
-
-      // Fetch the file
-      const response = await fetch(resume.fileURL, {
-        method: "GET",
-        headers,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to download resume: ${response.statusText}`);
-      }
-
-      // Get the file as a blob
-      const blob = await response.blob();
-
-      // Create a temporary URL for the blob
-      const url = window.URL.createObjectURL(blob);
-
-      // Create a temporary anchor element and trigger download
-      const link = document.createElement("a");
-      link.href = url;
-
-      // Use the fileName from resume, or generate a default name
-      const fileName = resume.fileName || `resume_${resume.id || Date.now()}.pdf`;
-      link.download = fileName;
-
-      // Append to body, click, and remove
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Clean up the URL
-      window.URL.revokeObjectURL(url);
-
+    } else {
       toast({
         title: "Success",
         description: "Resume downloaded successfully",
       });
-    } catch (error: any) {
-      console.error("Error downloading resume:", error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to download resume",
-        variant: "destructive"
-      });
     }
+  };
+
+  /** Show only filename (no path) e.g. "resumes/47/RazaResume.pdf" → "RazaResume.pdf" */
+  const getDisplayFileName = (fileName: string | null | undefined) => {
+    if (!fileName) return "N/A";
+    const parts = fileName.replace(/\\/g, "/").split("/");
+    return parts[parts.length - 1] || fileName;
   };
 
   // Fetch Overview Data
@@ -1386,7 +1347,7 @@ const AdminDashboard = () => {
                         <tr key={resume.id} className="border-b hover:bg-gray-50">
                           <td className="p-2 md:p-3 font-medium text-xs md:text-sm truncate max-w-[100px] md:max-w-none">{resume.userName || "Guest"}</td>
                           <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm">{resume.attemptCount != null ? resume.attemptCount : "—"}</td>
-                          <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{resume.fileName || "N/A"}</td>
+                          <td className="p-2 md:p-3 text-gray-600 text-xs md:text-sm hidden md:table-cell">{getDisplayFileName(resume.fileName)}</td>
                           <td className="p-2 md:p-3">
                             <Badge className="bg-blue-600 text-white hover:bg-blue-700 text-xs" variant={resume.status === "Analyzed" ? "default" : "secondary"}>
                               {resume.status || "Pending"}
@@ -1427,7 +1388,7 @@ const AdminDashboard = () => {
                                   variant="outline"
                                   onClick={() => handleDownloadResume(resume)}
                                   title="Download Resume"
-                                  className="p-1 md:p-2"
+                                  className="hidden md:inline-flex p-1 md:p-2"
                                 >
                                   <Download className="h-3 w-3 md:h-4 md:w-4" />
                                 </Button>

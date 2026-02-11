@@ -21,14 +21,10 @@ const ResumeUpload = () => {
   const { isAuthenticated } = useAuth();
 
 
-  // Constants for validation
+  // Constants for validation (PDF only)
   const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
-  const ALLOWED_FILE_TYPES = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  ];
-  const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx'];
+  const ALLOWED_FILE_TYPES = ['application/pdf'];
+  const ALLOWED_EXTENSIONS = ['.pdf'];
 
   // ===============================
   // VALIDATE FILE
@@ -49,11 +45,11 @@ const ResumeUpload = () => {
       const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
       return {
         isValid: false,
-        error: `File size (${fileSizeMB} MB) exceeds the maximum limit of 10 MB. Please choose a smaller file.`
+        error: `File size (${fileSizeMB} MB) exceeds the maximum limit of 10 MB. Please choose a smaller PDF file.`
       };
     }
 
-    // Check file type by MIME type
+    // Check file type by MIME type (PDF only)
     const isValidMimeType = ALLOWED_FILE_TYPES.includes(file.type);
 
     // Fallback: Check by file extension if MIME type check fails (some browsers may not set MIME type correctly)
@@ -63,7 +59,7 @@ const ResumeUpload = () => {
     if (!isValidMimeType && !hasValidExtension) {
       return {
         isValid: false,
-        error: `Invalid file type. Please upload a PDF, DOC, or DOCX file.`
+        error: "Invalid file type. Please upload a PDF file only."
       };
     }
 
@@ -212,7 +208,7 @@ const ResumeUpload = () => {
                 </AnimatedElement>
                 <AnimatedElement delay={160}>
                   <p className="text-gray-600 mt-2">
-                    Supported formats: PDF, DOC, DOCX (Max 10MB)
+                    PDF only (Max 5MB)
                   </p>
                 </AnimatedElement>
               </CardHeader>
@@ -260,15 +256,15 @@ const ResumeUpload = () => {
                         </div>
                         <div>
                           <p className="text-lg font-semibold text-gray-900 mb-2">
-                            Drag and drop your resume here
+                            Drag and drop your resume (PDF) here
                           </p>
                           <p className="text-sm text-gray-600 mb-4">
-                            or click to browse files
+                            or click to browse — PDF only, max 10MB
                           </p>
                         </div>
                         <Input
                           type="file"
-                          accept=".pdf,.doc,.docx"
+                          accept=".pdf,application/pdf"
                           onChange={handleFileChange}
                           className="cursor-pointer max-w-xs mx-auto"
                         />

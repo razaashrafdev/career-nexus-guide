@@ -4,6 +4,7 @@ import { authService } from "@/services/authService";
 import { useState } from "react";
 
 import { TOKEN_KEY, API_ENDPOINTS } from "@/config/api";
+import { resumeService } from "@/services/resumeService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -991,17 +992,21 @@ const Dashboard = () => {
 
                     {/* Action Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3 pt-1">
-                      {resumeData.fileURL && (
-                        <a
-                          href={resumeData.fileURL}
-                          download
-                          className="flex-1"
+                      {(resumeData.fileURL || resumeData.uploadedAt) && (
+                        <Button
+                          className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base h-12 font-medium shadow-sm hover:shadow-md transition-all duration-200"
+                          onClick={async () => {
+                            const result = await resumeService.downloadLatestResume();
+                            if (result.error) {
+                              toast({ title: "Error", description: result.error.message, variant: "destructive" });
+                            } else {
+                              toast({ title: "Success", description: "Resume downloaded successfully." });
+                            }
+                          }}
                         >
-                          <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base h-12 font-medium shadow-sm hover:shadow-md transition-all duration-200">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download Resume
-                          </Button>
-                        </a>
+                          <Download className="h-4 w-4 mr-2" />
+                          Download Resume
+                        </Button>
                       )}
                       <Link to="/resume-upload" className="flex-1">
                         <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-700 hover:to-blue-700 text-sm md:text-base h-12 font-medium shadow-sm hover:shadow-md transition-all duration-200">

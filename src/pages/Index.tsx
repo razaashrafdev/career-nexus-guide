@@ -195,7 +195,7 @@ const Index = () => {
                   2
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Upload Resume</h3>
-                <p className="text-white/70">Share your resume for AI-powered skills analysis</p>
+                <p className="text-white/70">Share your resume (PDF) for AI-powered skills analysis</p>
               </div>
             </AnimatedElement>
 
